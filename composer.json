@@ -13,5 +13,8 @@
             "App\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "symfony/http-foundation": "^6.3",
+        "symfony/var-dumper": "^6.3"
+    }
 }
