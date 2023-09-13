@@ -1,0 +1,17 @@
+{
+    "name": "aurelienlab/blog",
+    "description": "Projet 5 du parcours PHP/Symfony OpenClassrooms",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Aurélien Lorence",
+            "email": "aurelien.lorence@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {}
+}
