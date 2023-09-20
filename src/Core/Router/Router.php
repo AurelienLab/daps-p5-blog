@@ -2,6 +2,7 @@
 
 namespace App\Core\Router;
 
+use Spatie\FlareClient\Http\Exceptions\NotFound;
 use Symfony\Component\HttpFoundation\Request;
 
 class Router
@@ -42,6 +43,9 @@ class Router
         $this->routeCollection[$route->getMethod()][] = $route;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function handle()
     {
         $request = Request::createFromGlobals();
@@ -54,9 +58,12 @@ class Router
                 $controller = new $class();
 
                 $method = $route->getFunction()['method'];
-                return $controller->$method();
+                echo $controller->$method();
+                return;
             }
         }
+
+        throw new \Exception(sprintf('Undefined route for %s', $requestedUri));
     }
 
     private function removeLastSlash($uri)

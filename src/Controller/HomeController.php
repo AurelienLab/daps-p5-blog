@@ -3,15 +3,12 @@
 namespace App\Controller;
 
 
-class HomeController
+use App\Core\Abstracts\AbstractController;
+
+class HomeController extends AbstractController
 {
     public function index()
     {
-        echo('Bonjour les gens');
-    }
-
-    public function test()
-    {
-        echo('Ca marche bien !');
+        return $this->render('homepage/index.html.twig');
     }
 }
