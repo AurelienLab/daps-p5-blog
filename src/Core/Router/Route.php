@@ -2,16 +2,30 @@
 
 namespace App\Core\Router;
 
+use Exception;
+
 class Route
 {
+
+    /** @var string */
     private string $method;
+
+    /** @var string */
     private string $uri;
+
+    /** @var array */
     private array $function;
+
+    /** @var array */
     private array $parameters;
+
+    /** @var string */
     private string $matchRegex;
 
+
     /**
-     * @throws \Exception
+     * @return void
+     * @throws Exception
      */
     private function addToRouter(): void
     {
@@ -19,8 +33,9 @@ class Route
         Router::getInstance()->add($this);
     }
 
+
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function get(string $path, array $function): void
     {
@@ -39,8 +54,9 @@ class Route
         $route->addToRouter();
     }
 
+
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function post(string $path, array $function): void
     {
@@ -59,9 +75,13 @@ class Route
         $route->addToRouter();
     }
 
+
+    /**
+     * @return void
+     */
     private function parseParameters(): void
     {
-        $regex = '#{([a-zA-Z0-9]+)(\?)?}#s';
+        $regex = '#{([a-zA-Z0-9]+)(\?)?}#';
 
         //Get list of parameters
         preg_match_all($regex, $this->uri, $matches);
@@ -82,7 +102,11 @@ class Route
         }
     }
 
-    public function retrieveParametersFromUri($uri)
+
+    /**
+     * @throws Exception
+     */
+    public function retrieveParametersFromUri($uri): array
     {
         preg_match_all($this->matchRegex, $uri, $matches);
 
@@ -90,7 +114,7 @@ class Route
         if (isset($matches[1])) {
             foreach ($matches[1] as $key => $value) {
                 if (!$this->parameters[$key]->isNullable() && empty($value)) {
-                    throw new \Exception(sprintf('Missing parameter for %s parameter', $this->parameters[$key]->getName()));
+                    throw new Exception(sprintf('Missing parameter for %s parameter', $this->parameters[$key]->getName()));
                 }
 
                 $this->parameters[$key]->setValue($value);
@@ -101,10 +125,16 @@ class Route
         return $parametersValue;
     }
 
+
+    /**
+     * @param $route
+     * @return bool
+     */
     public function matchUri($route): bool
     {
         return (bool)preg_match($this->matchRegex, $route);
     }
+
 
     /**
      * @return string
@@ -114,6 +144,7 @@ class Route
         return $this->method;
     }
 
+
     /**
      * @return string
      */
@@ -121,6 +152,7 @@ class Route
     {
         return $this->uri;
     }
+
 
     /**
      * @return array
