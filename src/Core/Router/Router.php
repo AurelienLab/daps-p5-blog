@@ -57,15 +57,21 @@ class Router
             if ($route->matchUri($requestedUri)) {
                 $class = $route->getFunction()['class'];
                 $controller = new $class();
+                if (!class_exists($class)) {
+                    throw new \Exception(sprintf('Unable to find class %s.', $class), 500);
+                }
 
                 $method = $route->getFunction()['method'];
+                if (!method_exists($class, $method)) {
+                    throw new \Exception(sprintf('Unable to find method %s in %s.', $method, $class), 500);
+                }
 
                 $args = $route->retrieveParametersFromUri($requestedUri);
 
                 try {
                     $response = call_user_func_array(array($controller, $method), $args);
                 } catch (\Exception $e) {
-                    //TODO: Renvoyer vers un controller d'exception
+                    throw new \Exception(sprintf('Error while trying to call %s in %s: %s', $method, $class, $e->getMessage()), $e->getCode());
                 }
 
                 print($response);
@@ -73,9 +79,8 @@ class Router
                 return;
             }
         }
-        //redirection vers un controller error(404)
 
-        throw new \Exception(sprintf('Undefined route for %s : %s', $request->getMethod(), $requestedUri));
+        throw new \Exception(sprintf('Undefined route for %s : %s', $request->getMethod(), $requestedUri), 404);
     }
 
     private function removeLastSlash($uri): string
