@@ -17,3 +17,5 @@ $dotenv->safeLoad();
 
 //Initialize Router
 App\Core\Router\Router::getInstance(ROOT . '/src/Routes')->handle();
+
+App\Core\Utils\Utils::loadHelpers(ROOT . '/src/Helpers');
