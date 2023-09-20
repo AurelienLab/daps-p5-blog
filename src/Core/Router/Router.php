@@ -11,13 +11,13 @@ class Router
     private array $routeCollection;
     private static $_instance;
 
-    public function __construct(private string $routesFolder)
+    public function __construct(private readonly string $routesFolder)
     {
         $directory = scandir($routesFolder);
         $this->routingFiles = array_diff($directory, array('..', '.'));
     }
 
-    public static function getInstance(string $routeFolder = '')
+    public static function getInstance(string $routeFolder = ''): Router
     {
         if (is_null(self::$_instance)) {
             if (!empty($routeFolder)) {
@@ -31,14 +31,14 @@ class Router
         return self::$_instance;
     }
 
-    private function collectRoutes()
+    private function collectRoutes(): void
     {
         foreach ($this->routingFiles as $file) {
             require_once($this->routesFolder . '/' . $file);
         }
     }
 
-    public function add(Route $route)
+    public function add(Route $route): void
     {
         $this->routeCollection[$route->getMethod()][] = $route;
     }
@@ -46,7 +46,7 @@ class Router
     /**
      * @throws \Exception
      */
-    public function handle()
+    public function handle(): void
     {
         $request = Request::createFromGlobals();
         $requestedUri = $this->removeLastSlash($request->getPathInfo());
@@ -66,7 +66,7 @@ class Router
         throw new \Exception(sprintf('Undefined route for %s', $requestedUri));
     }
 
-    private function removeLastSlash($uri)
+    private function removeLastSlash($uri): string
     {
         $newUri = $uri;
         if ($newUri != '/' && str_ends_with($newUri, '/')) {

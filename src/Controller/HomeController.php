@@ -7,8 +7,10 @@ use App\Core\Abstracts\AbstractController;
 
 class HomeController extends AbstractController
 {
-    public function index()
+    public function index(): string
     {
-        return $this->render('homepage/index.html.twig');
+        return $this->render('homepage/index.html.twig', [
+            'test' => env('TEST')
+        ]);
     }
 }
