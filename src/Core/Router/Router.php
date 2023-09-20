@@ -53,17 +53,29 @@ class Router
         $collection = $this->routeCollection[$request->getMethod()];
         foreach ($collection as $route) {
             /** @var Route $route */
-            if ($requestedUri === $route->getUri()) {
+
+            if ($route->matchUri($requestedUri)) {
                 $class = $route->getFunction()['class'];
                 $controller = new $class();
 
                 $method = $route->getFunction()['method'];
-                echo $controller->$method();
+
+                $args = $route->retrieveParametersFromUri($requestedUri);
+
+                try {
+                    $response = call_user_func_array(array($controller, $method), $args);
+                } catch (\Exception $e) {
+                    //TODO: Renvoyer vers un controller d'exception
+                }
+
+                print($response);
+
                 return;
             }
         }
+        //redirection vers un controller error(404)
 
-        throw new \Exception(sprintf('Undefined route for %s', $requestedUri));
+        throw new \Exception(sprintf('Undefined route for %s : %s', $request->getMethod(), $requestedUri));
     }
 
     private function removeLastSlash($uri): string
