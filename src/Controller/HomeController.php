@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Core\Abstracts\AbstractController;
 use App\Core\Config\Config;
 use App\Core\Database\Database;

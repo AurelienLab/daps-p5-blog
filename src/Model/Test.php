@@ -55,5 +55,4 @@ class Test
         $this->url = $url;
         return $this;
     }
-
 }

@@ -30,7 +30,6 @@ try {
 } catch (Exception $e) {
     if (config('app.env') != 'dev') {
         (new \App\Controller\ErrorController())->error($e->getCode(), $e->getMessage());
-
     } else {
         throw $e;
     }

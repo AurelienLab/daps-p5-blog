@@ -45,7 +45,7 @@ class Router
     private function collectRoutes(): void
     {
         foreach ($this->routingFiles as $file) {
-            $filePath = $this->routesFolder . '/' . $file;
+            $filePath = $this->routesFolder.'/'.$file;
             require_once $filePath;
         }
     }

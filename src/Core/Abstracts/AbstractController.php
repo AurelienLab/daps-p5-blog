@@ -14,11 +14,10 @@ abstract class AbstractController
 
     public function __construct()
     {
-        //Initialize twig
-        $loader = new FilesystemLoader(ROOT . '/templates');
+        // Initialize twig
+        $loader = new FilesystemLoader(ROOT.'/templates');
 
         $this->twig = new Environment($loader);
-
     }
 
     /**

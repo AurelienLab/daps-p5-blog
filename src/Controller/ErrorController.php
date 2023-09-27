@@ -17,5 +17,4 @@ class ErrorController extends AbstractController
             'message' => $message
         ]);
     }
-
 }

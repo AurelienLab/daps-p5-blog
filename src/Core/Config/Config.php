@@ -23,7 +23,6 @@ class Config
     {
         $directory = scandir($configFolder);
         $this->configFiles = array_diff($directory, array('..', '.'));
-
     }
 
     /**
@@ -42,7 +41,6 @@ class Config
         }
 
         return self::$_instance;
-
     }
 
     /**
@@ -53,7 +51,7 @@ class Config
     {
         foreach ($this->configFiles as $file) {
             $fileName = basename($file, '.php');
-            $filePath = $this->configFolder . '/' . $file;
+            $filePath = $this->configFolder.'/'.$file;
             $fileConfig = require $filePath;
 
             if (!is_array($fileConfig)) {
@@ -62,12 +60,12 @@ class Config
 
             $this->config[$fileName] = $fileConfig;
         }
-
     }
 
 
     /**
      * @param string $directory
+     *
      * @return void
      * @throws \Exception
      */
@@ -91,5 +89,4 @@ class Config
         }
         return $cursor;
     }
-
 }

@@ -31,7 +31,6 @@ class Route
     {
         $this->parseParameters();
         Router::getInstance()->add($this);
-
     }
 
 
@@ -53,7 +52,6 @@ class Route
         ];
 
         $route->addToRouter();
-
     }
 
 
@@ -75,7 +73,6 @@ class Route
         ];
 
         $route->addToRouter();
-
     }
 
 
@@ -90,7 +87,7 @@ class Route
         preg_match_all($regex, $this->uri, $matches);
 
         // Initialize the match regex
-        $this->matchRegex = '#^' . $this->uri . '$#s';
+        $this->matchRegex = '#^'.$this->uri.'$#s';
 
         $this->parameters = [];
         foreach ($matches[1] as $key => $param) {
@@ -101,9 +98,8 @@ class Route
             $this->parameters[] = (new RouteParameter($param, $isNullable));
 
             // In the route match regex, replace the parameter by a regex catchable group
-            $this->matchRegex = preg_replace('#\{' . $param . '\??}#', '([a-zA-Z0-9]+)', $this->matchRegex);
+            $this->matchRegex = preg_replace('#\{'.$param.'\??}#', '([a-zA-Z0-9]+)', $this->matchRegex);
         }
-
     }
 
 
@@ -126,18 +122,17 @@ class Route
             }
         }
         return $parametersValue;
-
     }
 
 
     /**
      * @param $route
+     *
      * @return bool
      */
     public function matchUri($route): bool
     {
         return (bool)preg_match($this->matchRegex, $route);
-
     }
 
 
@@ -147,7 +142,6 @@ class Route
     public function getMethod(): string
     {
         return $this->method;
-
     }
 
 
@@ -158,5 +152,4 @@ class Route
     {
         return $this->function;
     }
-
 }
