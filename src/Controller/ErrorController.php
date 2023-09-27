@@ -12,9 +12,12 @@ class ErrorController extends AbstractController
     {
         http_response_code($code);
 
-        $this->display('_error/default.html.twig', [
-            'code' => $code,
-            'message' => $message
-        ]);
+        $this->display(
+            '_error/default.html.twig',
+            [
+                'code' => $code,
+                'message' => $message
+            ]
+        );
     }
 }

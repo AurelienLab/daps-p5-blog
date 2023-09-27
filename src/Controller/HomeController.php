@@ -11,6 +11,8 @@ use App\Repository\TestRepository;
 
 class HomeController extends AbstractController
 {
+
+
     public function index(): string
     {
         $entity = new Test();
@@ -18,13 +20,17 @@ class HomeController extends AbstractController
 
         TestRepository::save($entity);
 
-        return $this->render('homepage/index.html.twig', [
-            'test' => ''
-        ]);
-    }
+        return $this->render(
+            'homepage/index.html.twig',
+            [
+                'test' => ''
+            ]
+        );
+    } // end index()
 
-    public function test($id): string
+    
+    public function test($identifier): string
     {
-        return 'Hi '.$id;
+        return 'Hi '.$identifier;
     }
 }

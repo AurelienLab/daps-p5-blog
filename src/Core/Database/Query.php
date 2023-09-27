@@ -4,6 +4,7 @@ namespace App\Core\Database;
 
 class Query
 {
+
     /**
      * @var string
      */
@@ -19,15 +20,25 @@ class Query
      */
     private string $model;
 
+    /**
+     * @var array
+     */
     private $parameters = [];
+
+    /**
+     * @param $model
+     *
+     * @throws \Exception
+     */
+
 
     public function __construct($model)
     {
-        if (empty($model)) {
+        if (empty($model) === true) {
             throw new \Exception('Model class must by defined in respository class');
         }
 
-        if (empty($model::TABLE)) {
+        if (empty($model::TABLE) === true) {
             throw new \Exception('Model table must by defined in %s', $model);
         }
 
@@ -36,27 +47,40 @@ class Query
         $this->model = $model;
     }
 
+
+    /**
+     * Initiate a Select statement
+     *
+     * @param array|string $fields
+     *
+     * @return $this
+     */
     public function select(array|string $fields = ''): self
     {
         $this->statement .= 'SELECT ';
 
-        if (empty($fields)) {
-            $this->statement .= '* ';
-        } else {
-            if (is_array($fields)) {
-                $fieldsStr = implode(', ', $fields);
-            } else {
-                $fieldsStr = $fields;
-            }
+        $fieldsStr = $fields;
 
-            $this->statement .= $fieldsStr.' ';
+        if (empty($fields) === true) {
+            $this->statement .= '* ';
+        }
+        if (is_array($fields) === true) {
+            $fieldsStr = implode(', ', $fields);
         }
 
-        $this->statement .= ' FROM '.$this->table;
+        $this->statement .= $fieldsStr.' FROM '.$this->table;
 
         return $this;
     }
 
+
+    /**
+     * Generate an INSERT statement from object instance data
+     *
+     * @param $data
+     *
+     * @return void
+     */
     public function insert($data)
     {
         $this->statement = 'INSERT INTO '.$this->table;
@@ -75,21 +99,39 @@ class Query
         $this->statement .= $columns.$values;
     }
 
+
+    /**
+     * Describe table statement (get columns information)
+     *
+     * @return void
+     */
     public function describe()
     {
         $this->statement = 'DESCRIBE '.$this->table;
     }
 
+
+    /**
+     * @return string
+     */
     public function getStatement(): string
     {
         return $this->statement;
     }
 
+
+    /**
+     * @return string
+     */
     public function getModel(): string
     {
         return $this->model;
     }
 
+    
+    /**
+     * @return array
+     */
     public function getParameters(): array
     {
         return $this->parameters;

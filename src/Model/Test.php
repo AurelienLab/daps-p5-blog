@@ -4,19 +4,19 @@ namespace App\Model;
 
 class Test
 {
+
     const TABLE = 'table_test';
 
-    // private $id;
-    private $test;
-    private $url;
+    /**
+     * @var string
+     */
+    private string $test;
 
     /**
-     * @return mixed
+     * @var string
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private string $url;
+
 
     /**
      * @return mixed
@@ -46,11 +46,11 @@ class Test
     }
 
     /**
-     * @param mixed $url
+     * @param string $url
      *
      * @return Test
      */
-    public function setUrl($url)
+    public function setUrl(string $url)
     {
         $this->url = $url;
         return $this;

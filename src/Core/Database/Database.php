@@ -5,8 +5,12 @@ namespace App\Core\Database;
 use App\Core\Config\Config;
 use PDO;
 
+/**
+ *
+ */
 class Database
 {
+    
     /**
      * @var string
      */
@@ -32,10 +36,16 @@ class Database
      */
     private $dbPort;
 
-    private $connexion;
+    /**
+     * @var PDO
+     */
+    private PDO $connexion;
 
     private static $_instance;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->dbName = config('db.db_name');
@@ -49,6 +59,7 @@ class Database
         $this->connexion = new PDO($connexionString, $this->dbUser, $this->dbPassword);
     }
 
+
     /**
      * @return mixed
      * @throws \Exception
@@ -61,17 +72,29 @@ class Database
         return self::$_instance->connexion;
     }
 
+
+    /**
+     * Execute the statement generated with a Query object, and map the fetched
+     * data to the model passed in Query object constructor
+     *
+     * @param Query $query
+     * @param $raw
+     * @param $fetchFlag
+     *
+     * @return array|false
+     * @throws \Exception
+     */
     public static function query(Query $query, $raw = false, $fetchFlag = PDO::FETCH_ASSOC)
     {
-        $db = self::getPDOInstance();
+        $database = self::getPDOInstance();
         $statement = $query->getStatement().';';
         $parameters = $query->getParameters();
 
-        $sth = $db->prepare($statement);
+        $sth = $database->prepare($statement);
 
         $sth->execute($parameters);
 
-        if ($raw) {
+        if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
 
@@ -82,7 +105,14 @@ class Database
         return $result;
     }
 
+
     /**
+     * Use data from DB to generate a new instance of the model passed in Query
+     *
+     * @param $data
+     * @param $model
+     *
+     * @return mixed
      * @throws \Exception
      */
     private static function mapToModel($data, $model)
@@ -90,15 +120,16 @@ class Database
         $entity = new $model();
 
         foreach ($data as $key => $value) {
-            // TODO: propriétés en snake case
-            if (property_exists($entity, $key)) {
+            // TODO: propriétés en snake case ?
+            if (property_exists($entity, $key) === true) {
                 $setter = 'set'.str_replace('_', '', ucwords($key, '_'));
 
-                if (method_exists($entity, $setter)) {
+                if (method_exists($entity, $setter) === true) {
                     $entity->$setter($value);
-                } else {
-                    throw new \Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
+                    continue;
                 }
+
+                throw new \Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
             }
         }
 

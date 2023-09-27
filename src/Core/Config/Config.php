@@ -4,6 +4,7 @@ namespace App\Core\Config;
 
 class Config
 {
+
     /**
      * @var array|false
      */
@@ -19,10 +20,13 @@ class Config
      */
     private $config;
 
+    /**
+     * @param string $configFolder
+     */
     public function __construct(private readonly string $configFolder)
     {
         $directory = scandir($configFolder);
-        $this->configFiles = array_diff($directory, array('..', '.'));
+        $this->configFiles = array_diff($directory, ['..', '.']);
     }
 
     /**
@@ -31,13 +35,14 @@ class Config
      */
     private static function getInstance($directory = '')
     {
-        if (null === self::$_instance) {
-            if (!empty($directory)) {
+        if (self::$_instance === null) {
+            if (empty($directory) === false) {
                 self::$_instance = new Config($directory);
                 self::$_instance->collectConfig();
-            } else {
-                throw new \Exception('Unable to create a new Config instance without folder path');
+                return self::$_instance;
             }
+
+            throw new \Exception('Unable to create a new Config instance without folder path');
         }
 
         return self::$_instance;
@@ -54,7 +59,7 @@ class Config
             $filePath = $this->configFolder.'/'.$file;
             $fileConfig = require $filePath;
 
-            if (!is_array($fileConfig)) {
+            if (is_array($fileConfig) === false) {
                 throw new \Exception(sprintf('Config file %s in %s is not an array', $file, $this->configFolder));
             }
 
@@ -74,6 +79,14 @@ class Config
         self::getInstance($directory);
     }
 
+    /**
+     * Get a config value by its dot notation key
+     *
+     * @param $value
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function get($value): mixed
     {
         $config = self::getInstance()->config;

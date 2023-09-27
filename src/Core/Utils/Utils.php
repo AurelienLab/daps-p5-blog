@@ -4,6 +4,8 @@ namespace App\Core\Utils;
 
 class Utils
 {
+
+
     public static function loadHelpers($directory)
     {
         // Get file list and remove current & parent pointers
@@ -15,5 +17,5 @@ class Utils
             $filePath = $directory.'/'.$file;
             require_once $filePath;
         }
-    }
+    } // end loadHelpers()
 }

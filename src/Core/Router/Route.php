@@ -35,6 +35,12 @@ class Route
 
 
     /**
+     * Add a route with a GET method
+     *
+     * @param string $path
+     * @param array $function
+     *
+     * @return void
      * @throws Exception
      */
     public static function get(string $path, array $function): void
@@ -113,8 +119,13 @@ class Route
         $parametersValue = [];
         if (isset($matches[1])) {
             foreach ($matches[1] as $key => $value) {
-                if (!$this->parameters[$key]->isNullable() && empty($value)) {
-                    throw new Exception(sprintf('Missing parameter for %s parameter', $this->parameters[$key]->getName()));
+                if ($this->parameters[$key]->isNullable() === false && empty($value) === true) {
+                    throw new Exception(
+                        sprintf(
+                            'Missing parameter for %s parameter',
+                            $this->parameters[$key]->getName()
+                        )
+                    );
                 }
 
                 $this->parameters[$key]->setValue($value);
@@ -132,7 +143,7 @@ class Route
      */
     public function matchUri($route): bool
     {
-        return (bool)preg_match($this->matchRegex, $route);
+        return (bool) preg_match($this->matchRegex, $route);
     }
 
 

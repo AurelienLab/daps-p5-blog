@@ -7,5 +7,6 @@ use App\Model\Test;
 
 class TestRepository extends AbstractRepository
 {
+
     const MODEL = Test::class;
 }

@@ -1,9 +1,9 @@
 <?php
 
 // Project root path
-const ROOT = __DIR__ . '/..';
+const ROOT = __DIR__.'/..';
 
-$autoloadPath = ROOT . '/vendor/autoload.php';
+$autoloadPath = ROOT.'/vendor/autoload.php';
 require_once $autoloadPath;
 
 // Initialize dotenv
@@ -12,20 +12,20 @@ $dotenv->safeLoad();
 
 // Initialize Error Handler
 Spatie\Ignition\Ignition::make()
-    ->shouldDisplayException(env('APP_ENV') == 'dev')
+    ->shouldDisplayException(env('APP_ENV') !== 'dev')
     ->register();
 
 // Load config
-$configPath = ROOT . '/config';
+$configPath = ROOT.'/config';
 App\Core\Config\Config::load($configPath);
 
 // Initialize Helpers (custom functions)
-$helpersPath = ROOT . '/src/Helpers';
+$helpersPath = ROOT.'/src/Helpers';
 App\Core\Utils\Utils::loadHelpers($helpersPath);
 
 try {
     // Initialize Router
-    $routerPath = ROOT . '/src/Routes';
+    $routerPath = ROOT.'/src/Routes';
     App\Core\Router\Router::getInstance($routerPath)->handle();
 } catch (Exception $e) {
     if (config('app.env') != 'dev') {

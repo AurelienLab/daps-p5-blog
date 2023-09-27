@@ -9,9 +9,13 @@ use ReflectionClass;
 
 abstract class AbstractRepository
 {
+
     const MODEL = '';
 
+    
     /**
+     * Get all records for entity managed by current repository
+     *
      * @return false|array
      */
     public static function getAll(): false|array
@@ -23,6 +27,14 @@ abstract class AbstractRepository
     }
 
 
+    /**
+     * Update or Create entity in database
+     *
+     * @param $entity
+     *
+     * @return void
+     * @throws \Exception
+     */
     public static function save($entity)
     {
         $query = new Query(static::MODEL);
@@ -43,7 +55,7 @@ abstract class AbstractRepository
         }
 
         dd($entityArray);
-        
+
         $query->insert($entity);
     }
 }
