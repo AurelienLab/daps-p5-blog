@@ -7,8 +7,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Router
 {
+    /**
+     * @var array
+     */
     private array $routingFiles;
+
+    /**
+     * @var array
+     */
     private array $routeCollection;
+
+    /**
+     * @var null|Router
+     */
     private static $_instance;
 
     public function __construct(private readonly string $routesFolder)
@@ -19,7 +30,7 @@ class Router
 
     public static function getInstance(string $routeFolder = ''): Router
     {
-        if (is_null(self::$_instance)) {
+        if (null === self::$_instance) {
             if (!empty($routeFolder)) {
                 self::$_instance = new Router($routeFolder);
                 self::$_instance->collectRoutes();
@@ -34,7 +45,8 @@ class Router
     private function collectRoutes(): void
     {
         foreach ($this->routingFiles as $file) {
-            require_once($this->routesFolder . '/' . $file);
+            $filePath = $this->routesFolder . '/' . $file;
+            require_once $filePath;
         }
     }
 

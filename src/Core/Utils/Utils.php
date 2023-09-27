@@ -12,7 +12,8 @@ class Utils
 
         //Load files
         foreach ($files as $file) {
-            require_once($directory . '/' . $file);
+            $filePath = $directory . '/' . $file;
+            require_once $filePath;
         }
     }
 }

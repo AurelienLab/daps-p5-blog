@@ -1,30 +1,33 @@
 <?php
 
-//Project root path
-define('ROOT', realpath(__DIR__ . '/..'));
+// Project root path
+const ROOT = __DIR__ . '/..';
 
-require_once(ROOT . '/vendor/autoload.php');
+$autoloadPath = ROOT . '/vendor/autoload.php';
+require_once $autoloadPath;
 
-//Initialize dotenv
+// Initialize dotenv
 $dotenv = Dotenv\Dotenv::createImmutable(ROOT);
 $dotenv->safeLoad();
 
-//Initialize Error Handler
+// Initialize Error Handler
 Spatie\Ignition\Ignition::make()
-    ->shouldDisplayException($_ENV['APP_ENV'] == 'dev')
+    ->shouldDisplayException(env('APP_ENV') == 'dev')
     ->register();
 
+// Load config
+$configPath = ROOT . '/config';
+App\Core\Config\Config::load($configPath);
 
-//Load config
-App\Core\Config\Config::load(ROOT . '/config');
-
-//Initialize Helpers (custom functions)
-App\Core\Utils\Utils::loadHelpers(ROOT . '/src/Helpers');
+// Initialize Helpers (custom functions)
+$helpersPath = ROOT . '/src/Helpers';
+App\Core\Utils\Utils::loadHelpers($helpersPath);
 
 try {
-    //Initialize Router
-    App\Core\Router\Router::getInstance(ROOT . '/src/Routes')->handle();
-} catch (\Exception $e) {
+    // Initialize Router
+    $routerPath = ROOT . '/src/Routes';
+    App\Core\Router\Router::getInstance($routerPath)->handle();
+} catch (Exception $e) {
     if (config('app.env') != 'dev') {
         (new \App\Controller\ErrorController())->error($e->getCode(), $e->getMessage());
 
@@ -32,6 +35,3 @@ try {
         throw $e;
     }
 }
-
-
-

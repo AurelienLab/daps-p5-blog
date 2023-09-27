@@ -14,4 +14,9 @@ class HomeController extends AbstractController
             'test' => ''
         ]);
     }
+
+    public function test($id): string
+    {
+        return 'Hi ' . $id;
+    }
 }

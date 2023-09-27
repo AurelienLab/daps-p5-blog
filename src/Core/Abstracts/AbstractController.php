@@ -31,4 +31,14 @@ abstract class AbstractController
 
         return $this->twig->render($template, $data);
     }
+
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    protected function display($template, $data = []): void
+    {
+        $this->twig->display($template, $data);
+    }
 }

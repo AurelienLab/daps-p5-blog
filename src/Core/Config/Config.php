@@ -4,14 +4,26 @@ namespace App\Core\Config;
 
 class Config
 {
+    /**
+     * @var array|false
+     */
     private array $configFiles;
+
+    /**
+     * @var Config|null
+     */
     private static $_instance;
+
+    /**
+     * @var array
+     */
     private $config;
 
     public function __construct(private readonly string $configFolder)
     {
         $directory = scandir($configFolder);
         $this->configFiles = array_diff($directory, array('..', '.'));
+
     }
 
     /**
@@ -20,7 +32,7 @@ class Config
      */
     private static function getInstance($directory = '')
     {
-        if (is_null(self::$_instance)) {
+        if (null === self::$_instance) {
             if (!empty($directory)) {
                 self::$_instance = new Config($directory);
                 self::$_instance->collectConfig();
@@ -30,16 +42,19 @@ class Config
         }
 
         return self::$_instance;
+
     }
 
     /**
+     * @return void
      * @throws \Exception
      */
     private function collectConfig(): void
     {
         foreach ($this->configFiles as $file) {
             $fileName = basename($file, '.php');
-            $fileConfig = require($this->configFolder . '/' . $file);
+            $filePath = $this->configFolder . '/' . $file;
+            $fileConfig = require $filePath;
 
             if (!is_array($fileConfig)) {
                 throw new \Exception(sprintf('Config file %s in %s is not an array', $file, $this->configFolder));
@@ -47,8 +62,15 @@ class Config
 
             $this->config[$fileName] = $fileConfig;
         }
+
     }
 
+
+    /**
+     * @param string $directory
+     * @return void
+     * @throws \Exception
+     */
     public static function load($directory): void
     {
         self::getInstance($directory);
@@ -69,4 +91,5 @@ class Config
         }
         return $cursor;
     }
+
 }

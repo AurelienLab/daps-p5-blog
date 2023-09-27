@@ -5,13 +5,22 @@ namespace App\Core\Router;
 class RouteParameter
 {
 
+    /**
+     * @var string
+     */
     private $value;
 
+
+    /**
+     * @param string $name
+     * @param bool $isNullable
+     */
     public function __construct(
         private readonly string $name,
         private readonly bool   $isNullable
     )
     {
+
     }
 
     /**
@@ -20,6 +29,7 @@ class RouteParameter
     public function getName(): string
     {
         return $this->name;
+
     }
 
     /**
@@ -28,6 +38,7 @@ class RouteParameter
     public function isNullable(): bool
     {
         return $this->isNullable;
+
     }
 
     /**
@@ -36,6 +47,7 @@ class RouteParameter
     public function getValue()
     {
         return $this->value;
+
     }
 
     /**
@@ -44,7 +56,7 @@ class RouteParameter
     public function setValue($value): void
     {
         $this->value = $value;
-    }
 
+    }
 
 }

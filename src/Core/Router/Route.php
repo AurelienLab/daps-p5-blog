@@ -31,6 +31,7 @@ class Route
     {
         $this->parseParameters();
         Router::getInstance()->add($this);
+
     }
 
 
@@ -52,6 +53,7 @@ class Route
         ];
 
         $route->addToRouter();
+
     }
 
 
@@ -73,6 +75,7 @@ class Route
         ];
 
         $route->addToRouter();
+
     }
 
 
@@ -83,23 +86,24 @@ class Route
     {
         $regex = '#{([a-zA-Z0-9]+)(\?)?}#';
 
-        //Get list of parameters
+        // Get list of parameters
         preg_match_all($regex, $this->uri, $matches);
 
-        //Initialize the match regex
+        // Initialize the match regex
         $this->matchRegex = '#^' . $this->uri . '$#s';
 
         $this->parameters = [];
         foreach ($matches[1] as $key => $param) {
-            //Add '?' to make a parameter optional ex: '/post/{user?}
+            // Add '?' to make a parameter optional ex: '/post/{user?}
             $isNullable = $matches[2][$key] == '?';
 
-            //Add parameter to list
+            // Add parameter to list
             $this->parameters[] = (new RouteParameter($param, $isNullable));
 
-            //In the route match regex, replace the parameter by a regex catchable group
+            // In the route match regex, replace the parameter by a regex catchable group
             $this->matchRegex = preg_replace('#\{' . $param . '\??}#', '([a-zA-Z0-9]+)', $this->matchRegex);
         }
+
     }
 
 
@@ -121,8 +125,8 @@ class Route
                 $parametersValue[$this->parameters[$key]->getName()] = $value;
             }
         }
-
         return $parametersValue;
+
     }
 
 
@@ -133,6 +137,7 @@ class Route
     public function matchUri($route): bool
     {
         return (bool)preg_match($this->matchRegex, $route);
+
     }
 
 
@@ -142,15 +147,7 @@ class Route
     public function getMethod(): string
     {
         return $this->method;
-    }
 
-
-    /**
-     * @return string
-     */
-    public function getUri(): string
-    {
-        return $this->uri;
     }
 
 
@@ -161,4 +158,5 @@ class Route
     {
         return $this->function;
     }
+
 }
