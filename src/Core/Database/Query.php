@@ -26,6 +26,16 @@ class Query
     private $parameters = [];
 
     /**
+     * @var string|null
+     */
+    private ?string $where = null;
+
+    /**
+     * @var int
+     */
+    private int $whereCount = 0;
+
+    /**
      * @param $model
      *
      * @throws \Exception
@@ -62,7 +72,7 @@ class Query
         $fieldsStr = $fields;
 
         if (empty($fields) === true) {
-            $this->statement .= '* ';
+            $this->statement .= '*';
         }
         if (is_array($fields) === true) {
             $fieldsStr = implode(', ', $fields);
@@ -73,6 +83,23 @@ class Query
         return $this;
     }
 
+
+    public function where(string $column, string $comparator, $value): self
+    {
+        $whereStatement = ' AND ';
+        if ($this->whereCount === 0) {
+            $whereStatement = ' WHERE ';
+        }
+        $parameterName = ':'.$column.'_'.$this->whereCount;
+
+        $whereStatement .= implode(' ', [$column, $comparator, $parameterName]);
+
+        $this->where .= $whereStatement;
+        $this->parameters[$parameterName] = $value;
+
+        $this->whereCount++;
+        return $this;
+    }
 
     /**
      * Generate an INSERT statement from object instance data
@@ -173,5 +200,13 @@ class Query
     public function getParameters(): array
     {
         return $this->parameters;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWhere(): ?string
+    {
+        return $this->where;
     }
 }

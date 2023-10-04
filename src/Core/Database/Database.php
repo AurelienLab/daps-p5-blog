@@ -91,13 +91,30 @@ class Database
     public static function query(Query $query, $raw = false, $fetchFlag = PDO::FETCH_ASSOC)
     {
         $database = self::getPDOInstance();
-        $statement = $query->getStatement().';';
-        $parameters = $query->getParameters();
+        $statement = $query->getStatement();
+        if ($query->getWhere() !== null) {
+            $statement .= $query->getWhere();
+        }
+
+        $statement .= ';';
 
         $sth = $database->prepare($statement);
 
-        $sth->execute($parameters);
+        foreach ($query->getParameters() as $key => $parameter) {
+            $bindType = PDO::PARAM_STR;
+            if (is_numeric($parameter) === true) {
+                $bindType = PDO::PARAM_INT;
+            }
 
+            if (is_bool($parameter) === true) {
+                $bindType = PDO::PARAM_BOOL;
+            }
+
+            $sth->bindValue($key, $parameter, $bindType);
+        }
+
+        $sth->execute();
+        
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
@@ -149,9 +166,7 @@ class Database
     public static function mapEntityToTable($entity, string $model): stdClass
     {
         // Get table fields
-        $query = new Query($model);
-        $query->describe();
-        $tableFields = self::query($query, true);
+        $tableFields = self::getTableData($model);
 
         // Transform entity to array
         $reflectionClass = new ReflectionClass(get_class($entity));
@@ -186,5 +201,28 @@ class Database
         $result->entityArray = $entityArray;
 
         return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private static function getTableData(string $model): false|array
+    {
+        $query = new Query($model);
+        $query->describe();
+        return self::query($query, true);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getPrimaryKey(string $model)
+    {
+        $tableFields = self::getTableData($model);
+        foreach ($tableFields as $field) {
+            if ($field['Key'] === 'PRI') {
+                return $field['Field'];
+            }
+        }
     }
 }

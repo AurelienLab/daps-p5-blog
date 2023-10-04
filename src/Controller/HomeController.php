@@ -15,12 +15,8 @@ class HomeController extends AbstractController
 
     public function index(): string
     {
-        $results = TestRepository::getAll();
 
-        $entity = $results[1];
-        $entity->setTest('Vive la vie !');
-
-        dd(TestRepository::getAll());
+        dd(TestRepository::get(3));
 
         return $this->render(
             'homepage/index.html.twig',
