@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Bienvenue sur mon blog</h1>
+    <div>
+        <h2>Vous êtes bien arrivés !</h2>
+        <p>Il est {{ date|format_datetime('none', 'short', locale='fr') }}</p>
+    </div>
+{% endblock %}
