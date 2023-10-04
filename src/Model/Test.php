@@ -15,6 +15,8 @@ class Test
     private string $test;
 
 
+    private ?string $snakeColumn;
+
     /**
      * @return mixed
      */
@@ -52,5 +54,25 @@ class Test
         $this->id = $id;
         return $this;
     }
-    
+
+    /**
+     * @return string
+     */
+    public function getSnakeColumn(): ?string
+    {
+        return $this->snakeColumn;
+    }
+
+    /**
+     * @param string $snakeColumn
+     *
+     * @return Test
+     */
+    public function setSnakeColumn(?string $snakeColumn): Test
+    {
+        $this->snakeColumn = $snakeColumn;
+        return $this;
+    }
+
+
 }

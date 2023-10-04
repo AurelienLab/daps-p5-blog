@@ -3,6 +3,7 @@
 namespace App\Core\Database;
 
 use App\Core\Config\Config;
+use App\Core\Utils\Str;
 use Exception;
 use PDO;
 use ReflectionClass;
@@ -123,9 +124,8 @@ class Database
         $entity = new $model();
 
         foreach ($data as $key => $value) {
-            // TODO: propriétés en snake case ?
-            if (property_exists($entity, $key) === true) {
-                $setter = 'set'.str_replace('_', '', ucwords($key, '_'));
+            if (property_exists($entity, Str::toCamelCase($key)) === true) {
+                $setter = 'set'.Str::toPascalCase($key);
 
                 if (method_exists($entity, $setter) === true) {
                     $entity->$setter($value);

@@ -20,7 +20,6 @@ class HomeController extends AbstractController
         $entity = $results[1];
         $entity->setTest('Vive la vie !');
 
-        TestRepository::save($entity);
         dd(TestRepository::getAll());
 
         return $this->render(
