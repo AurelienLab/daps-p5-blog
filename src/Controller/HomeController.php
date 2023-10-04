@@ -15,9 +15,12 @@ class HomeController extends AbstractController
 
     public function index(): string
     {
-        $entity = new Test();
-        $entity->setTest('BAZAZA');
+        $results = TestRepository::getAll();
 
+        $entity = $results[1];
+        $entity->setTest('Vive la vie !');
+
+        TestRepository::save($entity);
         dd(TestRepository::getAll());
 
         return $this->render(

@@ -17,6 +17,7 @@ abstract class AbstractRepository
      * Get all records for entity managed by current repository
      *
      * @return false|array
+     * @throws \Exception
      */
     public static function getAll(): false|array
     {
@@ -35,25 +36,17 @@ abstract class AbstractRepository
      * @return void
      * @throws \Exception
      */
-    public static function save($entity)
+    public static function save($entity): void
     {
+        $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
-        $query->describe();
 
-        $reflectionClass = new ReflectionClass(get_class($entity));
-        $entityArray = array();
-        foreach ($reflectionClass->getProperties() as $property) {
-            $property->setAccessible(true);
-            $entityArray[$property->getName()] = $property->getValue($entity);
-            $property->setAccessible(false);
+        if (isset($dbMapping->entityArray[$dbMapping->primaryKey]) === false) {
+            $query->insert($dbMapping->entityArray);
+        } else {
+            $query->update($dbMapping->entityArray, $dbMapping->primaryKey);
         }
 
-        $tableArray = Database::query($query, true, PDO::FETCH_COLUMN);
-        foreach (array_diff(array_keys($entityArray), $tableArray) as $keyToRemove) {
-            unset($entityArray[$keyToRemove]);
-        }
-
-        $query->insert($entityArray);
         Database::query($query);
     }
 }

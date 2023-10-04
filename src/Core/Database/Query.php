@@ -81,22 +81,44 @@ class Query
      *
      * @return void
      */
-    public function insert($data)
+    public function insert($data): void
     {
+        $this->setParameters($data);
+
         $this->statement = 'INSERT INTO '.$this->table;
 
-        $paramsNames = array_map(function ($element) {
-            return ':'.$element;
-        }, array_keys($data));
-        $paramsValues = array_values($data);
-
-        $this->parameters = array_combine($paramsNames, $paramsValues);
-
         $columns = ' ('.implode(', ', array_keys($data)).') ';
-
         $values = 'VALUES('.implode(', ', array_keys($this->parameters)).')';
 
         $this->statement .= $columns.$values;
+    }
+
+    /**
+     * Generate an UPDATE statement from object instance data
+     *
+     * @param $data
+     * @param $primaryKey
+     *
+     * @return void
+     */
+    public function update($data, $primaryKey): void
+    {
+        $this->setParameters($data);
+        unset($data[$primaryKey]);
+
+        $this->statement = 'UPDATE '.$this->table.' SET ';
+
+        $columns = array_keys($data);
+
+        for ($i = 0; $i < count($data); $i++) {
+            if ($i > 0) {
+                $this->statement .= ', ';
+            }
+
+            $this->statement .= $columns[$i].'= :'.$columns[$i];
+        }
+
+        $this->statement .= ' WHERE '.$primaryKey.' = :'.$primaryKey;
     }
 
 
@@ -128,6 +150,22 @@ class Query
         return $this->model;
     }
 
+    /**
+     * Generate parameters array with ":parameter" notation as key
+     *
+     * @param array $data
+     *
+     * @return void
+     */
+    private function setParameters(array $data): void
+    {
+        $paramsNames = array_map(function ($element) {
+            return ':'.$element;
+        }, array_keys($data));
+        $paramsValues = array_values($data);
+
+        $this->parameters = array_combine($paramsNames, $paramsValues);
+    }
 
     /**
      * @return array

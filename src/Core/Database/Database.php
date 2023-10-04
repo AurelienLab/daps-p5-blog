@@ -3,14 +3,17 @@
 namespace App\Core\Database;
 
 use App\Core\Config\Config;
+use Exception;
 use PDO;
+use ReflectionClass;
+use stdClass;
 
 /**
  *
  */
 class Database
 {
-    
+
     /**
      * @var string
      */
@@ -44,7 +47,7 @@ class Database
     private static $_instance;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
@@ -62,7 +65,7 @@ class Database
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private static function getPDOInstance(): PDO
     {
@@ -82,7 +85,7 @@ class Database
      * @param $fetchFlag
      *
      * @return array|false
-     * @throws \Exception
+     * @throws Exception
      */
     public static function query(Query $query, $raw = false, $fetchFlag = PDO::FETCH_ASSOC)
     {
@@ -113,9 +116,9 @@ class Database
      * @param $model
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    private static function mapToModel($data, $model)
+    private static function mapToModel($data, $model): mixed
     {
         $entity = new $model();
 
@@ -129,10 +132,59 @@ class Database
                     continue;
                 }
 
-                throw new \Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
+                throw new Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
             }
         }
 
         return $entity;
+    }
+
+    /**
+     * @param $entity
+     * @param string $model
+     *
+     * @return stdClass
+     * @throws Exception
+     */
+    public static function mapEntityToTable($entity, string $model): stdClass
+    {
+        // Get table fields
+        $query = new Query($model);
+        $query->describe();
+        $tableFields = self::query($query, true);
+
+        // Transform entity to array
+        $reflectionClass = new ReflectionClass(get_class($entity));
+        $entityArray = array();
+        foreach ($reflectionClass->getProperties() as $property) {
+            if ($property->isInitialized($entity)) {
+                $property->setAccessible(true);
+                $entityArray[$property->getName()] = $property->getValue($entity);
+                $property->setAccessible(false);
+            }
+        }
+
+        $primaryKey = '';
+        $tableArray = [];
+
+        // Get fields name & primary key
+        foreach ($tableFields as $field) {
+            if ($field['Key'] === 'PRI') {
+                $primaryKey = $field['Field'];
+            }
+            $tableArray[] = $field['Field'];
+        }
+
+        // Only get property available in table
+        foreach (array_diff(array_keys($entityArray), $tableArray) as $keyToRemove) {
+            unset($entityArray[$keyToRemove]);
+        }
+
+        $result = new stdClass();
+
+        $result->primaryKey = $primaryKey;
+        $result->entityArray = $entityArray;
+
+        return $result;
     }
 }

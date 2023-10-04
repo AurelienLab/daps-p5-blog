@@ -10,9 +10,10 @@ require_once $autoloadPath;
 $dotenv = Dotenv\Dotenv::createImmutable(ROOT);
 $dotenv->safeLoad();
 
+
 // Initialize Error Handler
 Spatie\Ignition\Ignition::make()
-    ->shouldDisplayException(env('APP_ENV') !== 'dev')
+    ->shouldDisplayException(env('APP_ENV') === 'dev')
     ->register();
 
 // Load config
