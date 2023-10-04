@@ -87,10 +87,10 @@ class Query
 
         $paramsNames = array_map(function ($element) {
             return ':'.$element;
-        }, $data);
+        }, array_keys($data));
         $paramsValues = array_values($data);
 
-        $this->parameters = array_map(null, $paramsNames, $paramsValues);
+        $this->parameters = array_combine($paramsNames, $paramsValues);
 
         $columns = ' ('.implode(', ', array_keys($data)).') ';
 
@@ -128,7 +128,7 @@ class Query
         return $this->model;
     }
 
-    
+
     /**
      * @return array
      */

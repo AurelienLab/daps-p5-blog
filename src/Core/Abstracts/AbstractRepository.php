@@ -12,7 +12,7 @@ abstract class AbstractRepository
 
     const MODEL = '';
 
-    
+
     /**
      * Get all records for entity managed by current repository
      *
@@ -49,13 +49,11 @@ abstract class AbstractRepository
         }
 
         $tableArray = Database::query($query, true, PDO::FETCH_COLUMN);
-        // dd($entityArray, array_values($tableArray));
         foreach (array_diff(array_keys($entityArray), $tableArray) as $keyToRemove) {
             unset($entityArray[$keyToRemove]);
         }
 
-        dd($entityArray);
-
-        $query->insert($entity);
+        $query->insert($entityArray);
+        Database::query($query);
     }
 }

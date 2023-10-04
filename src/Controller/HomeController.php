@@ -18,7 +18,7 @@ class HomeController extends AbstractController
         $entity = new Test();
         $entity->setTest('BAZAZA');
 
-        TestRepository::save($entity);
+        dd(TestRepository::getAll());
 
         return $this->render(
             'homepage/index.html.twig',
@@ -28,7 +28,7 @@ class HomeController extends AbstractController
         );
     } // end index()
 
-    
+
     public function test($identifier): string
     {
         return 'Hi '.$identifier;

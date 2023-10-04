@@ -12,11 +12,6 @@ class Test
      */
     private string $test;
 
-    /**
-     * @var string
-     */
-    private string $url;
-
 
     /**
      * @return mixed
@@ -34,25 +29,6 @@ class Test
     public function setTest($test)
     {
         $this->test = $test;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return Test
-     */
-    public function setUrl(string $url)
-    {
-        $this->url = $url;
         return $this;
     }
 }
