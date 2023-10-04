@@ -3,7 +3,6 @@
 namespace App\Core\Router;
 
 use Exception;
-use Spatie\FlareClient\Http\Exceptions\NotFound;
 use Symfony\Component\HttpFoundation\Request;
 
 class Router
@@ -61,6 +60,7 @@ class Router
         return self::$_instance;
     }
 
+
     /**
      * Parse all route files to execute Routes addition
      *
@@ -74,6 +74,7 @@ class Router
         }
     }
 
+
     /**
      * Add a route to the collection corresponding to its method
      *
@@ -85,6 +86,7 @@ class Router
     {
         $this->routeCollection[$route->getMethod()][] = $route;
     }
+
 
     /**
      * Compare current query to find a matching route
@@ -101,7 +103,7 @@ class Router
         foreach ($collection as $route) {
             /* @var Route $route */
 
-            if ($route->matchUri($requestedUri) === true) :
+            if ($route->matchUri($requestedUri) === true) {
                 $class = $route->getFunction()['class'];
                 $controller = new $class();
                 if (class_exists($class) === false) {
@@ -132,11 +134,12 @@ class Router
                 print($response);
 
                 return;
-            endif;
+            } // end if
         }
 
         throw new Exception(sprintf('Undefined route for %s : %s', $request->getMethod(), $requestedUri), 404);
     }
+
 
     /**
      * Remove trailing slash of given URI

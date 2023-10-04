@@ -26,7 +26,7 @@ class Config
     /**
      * Loads config files and get config values
      *
-     * @param string $configFolder
+     * @param string $configFolder path to the folder containing config files
      */
     public function __construct(private readonly string $configFolder)
     {
@@ -38,7 +38,7 @@ class Config
     /**
      * Return singleton instance of class
      *
-     * @param string $directory
+     * @param string $directory path to the folder containing config files
      *
      * @return Config|null
      * @throws Exception
@@ -84,7 +84,7 @@ class Config
     /**
      * Create a new instance from directory or load existing instance
      *
-     * @param string $directory
+     * @param string $directory path to the folder containing config files
      *
      * @return void
      * @throws Exception
