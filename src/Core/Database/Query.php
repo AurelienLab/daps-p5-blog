@@ -2,6 +2,8 @@
 
 namespace App\Core\Database;
 
+use Exception;
+
 class Query
 {
 
@@ -36,20 +38,19 @@ class Query
     private int $whereCount = 0;
 
     /**
-     * @param $model
+     * @param string $model Model on which we'll do a query
      *
-     * @throws \Exception
+     * @throws Exception
      */
 
-
-    public function __construct($model)
+    public function __construct(string $model)
     {
         if (empty($model) === true) {
-            throw new \Exception('Model class must by defined in respository class');
+            throw new Exception('Model class must by defined in respository class');
         }
 
         if (empty($model::TABLE) === true) {
-            throw new \Exception('Model table must by defined in %s', $model);
+            throw new Exception(sprintf('Model table must by defined in %s', $model));
         }
 
         $this->statement = '';
@@ -61,19 +62,16 @@ class Query
     /**
      * Initiate a Select statement
      *
-     * @param array|string $fields
+     * @param array|string $fields Database fields to fetch. Can be an array of string or a string (default = '*')
      *
      * @return $this
      */
-    public function select(array|string $fields = ''): self
+    public function select(array|string $fields = '*'): self
     {
         $this->statement .= 'SELECT ';
 
         $fieldsStr = $fields;
 
-        if (empty($fields) === true) {
-            $this->statement .= '*';
-        }
         if (is_array($fields) === true) {
             $fieldsStr = implode(', ', $fields);
         }
@@ -84,7 +82,14 @@ class Query
     }
 
 
-    public function where(string $column, string $comparator, $value): self
+    /**
+     * @param string $column Database column
+     * @param string $comparator basic SQL comparator (=, <, >, >= ...)
+     * @param mixed $value Value to match
+     *
+     * @return $this
+     */
+    public function where(string $column, string $comparator, mixed $value): self
     {
         $whereStatement = ' AND ';
         if ($this->whereCount === 0) {
@@ -104,11 +109,11 @@ class Query
     /**
      * Generate an INSERT statement from object instance data
      *
-     * @param $data
+     * @param array $data Entity in array format
      *
      * @return void
      */
-    public function insert($data): void
+    public function insert(array $data): void
     {
         $this->setParameters($data);
 
@@ -123,12 +128,12 @@ class Query
     /**
      * Generate an UPDATE statement from object instance data
      *
-     * @param $data
-     * @param $primaryKey
+     * @param array $data entity in array format
+     * @param string $primaryKey name of the primary key
      *
      * @return void
      */
-    public function update($data, $primaryKey): void
+    public function update(array $data, string $primaryKey): void
     {
         $this->setParameters($data);
         unset($data[$primaryKey]);
@@ -154,7 +159,7 @@ class Query
      *
      * @return void
      */
-    public function describe()
+    public function describe(): void
     {
         $this->statement = 'DESCRIBE '.$this->table;
     }
@@ -180,7 +185,7 @@ class Query
     /**
      * Generate parameters array with ":parameter" notation as key
      *
-     * @param array $data
+     * @param array $data Transform array of parameters to PDO compliant parameters array
      *
      * @return void
      */

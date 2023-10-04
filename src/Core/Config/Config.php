@@ -2,6 +2,8 @@
 
 namespace App\Core\Config;
 
+use Exception;
+
 class Config
 {
 
@@ -20,7 +22,10 @@ class Config
      */
     private $config;
 
+
     /**
+     * Loads config files and get config values
+     *
      * @param string $configFolder
      */
     public function __construct(private readonly string $configFolder)
@@ -29,11 +34,16 @@ class Config
         $this->configFiles = array_diff($directory, ['..', '.']);
     }
 
+
     /**
-     * @return mixed
-     * @throws \Exception
+     * Return singleton instance of class
+     *
+     * @param string $directory
+     *
+     * @return Config|null
+     * @throws Exception
      */
-    private static function getInstance($directory = '')
+    private static function getInstance(string $directory = ''): ?Config
     {
         if (self::$_instance === null) {
             if (empty($directory) === false) {
@@ -42,25 +52,28 @@ class Config
                 return self::$_instance;
             }
 
-            throw new \Exception('Unable to create a new Config instance without folder path');
+            throw new Exception('Unable to create a new Config instance without folder path');
         }
 
         return self::$_instance;
     }
 
+
     /**
+     * Load all config files and collect them in $this->config
+     *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function collectConfig(): void
     {
         foreach ($this->configFiles as $file) {
             $fileName = basename($file, '.php');
             $filePath = $this->configFolder.'/'.$file;
-            $fileConfig = require $filePath;
+            $fileConfig = include $filePath;
 
             if (is_array($fileConfig) === false) {
-                throw new \Exception(sprintf('Config file %s in %s is not an array', $file, $this->configFolder));
+                throw new Exception(sprintf('Config file %s in %s is not an array', $file, $this->configFolder));
             }
 
             $this->config[$fileName] = $fileConfig;
@@ -69,33 +82,36 @@ class Config
 
 
     /**
+     * Create a new instance from directory or load existing instance
+     *
      * @param string $directory
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public static function load($directory): void
     {
         self::getInstance($directory);
     }
 
+
     /**
      * Get a config value by its dot notation key
      *
-     * @param $value
+     * @param string $value Name of the value to retrieve from config
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function get($value): mixed
+    public static function get(string $value): mixed
     {
         $config = self::getInstance()->config;
 
         $breadcrumb = explode('.', $value);
         $cursor = $config;
         foreach ($breadcrumb as $needle) {
-            if (is_array($cursor) && !isset($cursor[$needle])) {
-                throw new \Exception(sprintf('Unable to find key %s in config.', $value));
+            if (is_array($cursor) === true && isset($cursor[$needle]) === false) {
+                throw new Exception(sprintf('Unable to find key %s in config.', $value));
             }
 
             $cursor = $cursor[$needle];

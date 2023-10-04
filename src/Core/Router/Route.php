@@ -37,8 +37,8 @@ class Route
     /**
      * Add a route with a GET method
      *
-     * @param string $path
-     * @param array $function
+     * @param string $path Route path
+     * @param array $function Controller class & method
      *
      * @return void
      * @throws Exception
@@ -62,6 +62,11 @@ class Route
 
 
     /**
+     * Add a route with a POST method
+     *
+     * @param string $path Route path
+     * @param array $function Controller class & method
+     *
      * @throws Exception
      */
     public static function post(string $path, array $function): void
@@ -83,41 +88,48 @@ class Route
 
 
     /**
+     * Convert parameters given in route declaration to RouteParameter object
+     *
      * @return void
      */
     private function parseParameters(): void
     {
         $regex = '#{([a-zA-Z0-9]+)(\?)?}#';
 
-        // Get list of parameters
+        // Get list of parameters.
         preg_match_all($regex, $this->uri, $matches);
 
-        // Initialize the match regex
+        // Initialize the match regex.
         $this->matchRegex = '#^'.$this->uri.'$#s';
 
         $this->parameters = [];
         foreach ($matches[1] as $key => $param) {
-            // Add '?' to make a parameter optional ex: '/post/{user?}
+            // Add '?' to make a parameter optional ex: '/post/{user?}.
             $isNullable = $matches[2][$key] == '?';
 
-            // Add parameter to list
+            // Add parameter to list.
             $this->parameters[] = (new RouteParameter($param, $isNullable));
 
-            // In the route match regex, replace the parameter by a regex catchable group
+            // In the route match regex, replace the parameter by a regex catchable group.
             $this->matchRegex = preg_replace('#\{'.$param.'\??}#', '([a-zA-Z0-9]+)', $this->matchRegex);
         }
     }
 
 
     /**
+     * Retrieve parameters values from request URI
+     *
+     * @param string $uri URI from request
+     *
+     * @return array
      * @throws Exception
      */
-    public function retrieveParametersFromUri($uri): array
+    public function retrieveParametersFromUri(string $uri): array
     {
         preg_match_all($this->matchRegex, $uri, $matches);
 
         $parametersValue = [];
-        if (isset($matches[1])) {
+        if (isset($matches[1]) === true) {
             foreach ($matches[1] as $key => $value) {
                 if ($this->parameters[$key]->isNullable() === false && empty($value) === true) {
                     throw new Exception(
@@ -132,16 +144,17 @@ class Route
                 $parametersValue[$this->parameters[$key]->getName()] = $value;
             }
         }
+
         return $parametersValue;
     }
 
 
     /**
-     * @param $route
+     * @param string $route URI value to test against route path
      *
      * @return bool
      */
-    public function matchUri($route): bool
+    public function matchUri(string $route): bool
     {
         return (bool) preg_match($this->matchRegex, $route);
     }

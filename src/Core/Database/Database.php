@@ -2,7 +2,6 @@
 
 namespace App\Core\Database;
 
-use App\Core\Config\Config;
 use App\Core\Utils\Str;
 use Exception;
 use PDO;
@@ -18,27 +17,27 @@ class Database
     /**
      * @var string
      */
-    private $dbName;
+    private string $dbName;
 
     /**
      * @var string
      */
-    private $dbUser;
+    private string $dbUser;
 
     /**
      * @var string
      */
-    private $dbPassword;
+    private string $dbPassword;
 
     /**
      * @var string
      */
-    private $dbHost;
+    private string $dbHost;
 
     /**
-     * @var string
+     * @var int
      */
-    private $dbPort;
+    private int $dbPort;
 
     /**
      * @var PDO
@@ -46,6 +45,7 @@ class Database
     private PDO $connexion;
 
     private static $_instance;
+
 
     /**
      * @throws Exception
@@ -70,9 +70,10 @@ class Database
      */
     private static function getPDOInstance(): PDO
     {
-        if (null === self::$_instance) {
+        if (self::$_instance === null) {
             self::$_instance = new Database();
         }
+
         return self::$_instance->connexion;
     }
 
@@ -81,14 +82,14 @@ class Database
      * Execute the statement generated with a Query object, and map the fetched
      * data to the model passed in Query object constructor
      *
-     * @param Query $query
-     * @param $raw
-     * @param $fetchFlag
+     * @param Query $query generated Query object
+     * @param bool $raw Map to model (false) or not (true)
+     * @param int $fetchFlag Fetch const from PDO
      *
      * @return array|false
      * @throws Exception
      */
-    public static function query(Query $query, $raw = false, $fetchFlag = PDO::FETCH_ASSOC)
+    public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): false|array
     {
         $database = self::getPDOInstance();
         $statement = $query->getStatement();
@@ -114,7 +115,6 @@ class Database
         }
 
         $sth->execute();
-        
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
@@ -130,13 +130,13 @@ class Database
     /**
      * Use data from DB to generate a new instance of the model passed in Query
      *
-     * @param $data
-     * @param $model
+     * @param array $data Entity in array format
+     * @param string $model Class of the target entity model
      *
      * @return mixed
      * @throws Exception
      */
-    private static function mapToModel($data, $model): mixed
+    private static function mapToModel(array $data, string $model): mixed
     {
         $entity = new $model();
 
@@ -156,23 +156,24 @@ class Database
         return $entity;
     }
 
+
     /**
-     * @param $entity
-     * @param string $model
+     * @param stdClass $entity Entity to convert
+     * @param string $model Original model
      *
      * @return stdClass
      * @throws Exception
      */
-    public static function mapEntityToTable($entity, string $model): stdClass
+    public static function mapEntityToTable(stdClass $entity, string $model): stdClass
     {
-        // Get table fields
+        // Get table fields.
         $tableFields = self::getTableData($model);
 
-        // Transform entity to array
+        // Transform entity to array.
         $reflectionClass = new ReflectionClass(get_class($entity));
         $entityArray = array();
         foreach ($reflectionClass->getProperties() as $property) {
-            if ($property->isInitialized($entity)) {
+            if ($property->isInitialized($entity) === true) {
                 $property->setAccessible(true);
                 $entityArray[$property->getName()] = $property->getValue($entity);
                 $property->setAccessible(false);
@@ -182,7 +183,7 @@ class Database
         $primaryKey = '';
         $tableArray = [];
 
-        // Get fields name & primary key
+        // Get fields name & primary key.
         foreach ($tableFields as $field) {
             if ($field['Key'] === 'PRI') {
                 $primaryKey = $field['Field'];
@@ -190,7 +191,7 @@ class Database
             $tableArray[] = $field['Field'];
         }
 
-        // Only get property available in table
+        // Only get property available in table.
         foreach (array_diff(array_keys($entityArray), $tableArray) as $keyToRemove) {
             unset($entityArray[$keyToRemove]);
         }
@@ -204,6 +205,11 @@ class Database
     }
 
     /**
+     * Get information about the table associated to $model
+     *
+     * @param string $model Model to get table information from
+     *
+     * @return false|array
      * @throws Exception
      */
     private static function getTableData(string $model): false|array
@@ -213,10 +219,16 @@ class Database
         return self::query($query, true);
     }
 
+
     /**
+     * Return the primary key name of the table associated with $model
+     *
+     * @param string $model Model to get table primary key from
+     *
+     * @return string|null
      * @throws Exception
      */
-    public static function getPrimaryKey(string $model)
+    public static function getPrimaryKey(string $model): ?string
     {
         $tableFields = self::getTableData($model);
         foreach ($tableFields as $field) {
@@ -224,5 +236,7 @@ class Database
                 return $field['Field'];
             }
         }
+
+        return null;
     }
 }

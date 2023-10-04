@@ -12,14 +12,16 @@ class RouteParameter
 
 
     /**
-     * @param string $name
-     * @param bool $isNullable
+     * @param string $name Name of the param (will be passed to $name in the controller method
+     * @param bool $isNullable Is the route param required ?
      */
     public function __construct(
         private readonly string $name,
         private readonly bool   $isNullable
-    ) {
+    )
+    {
     }
+
 
     /**
      * @return string
@@ -29,6 +31,7 @@ class RouteParameter
         return $this->name;
     }
 
+
     /**
      * @return bool
      */
@@ -36,6 +39,7 @@ class RouteParameter
     {
         return $this->isNullable;
     }
+
 
     /**
      * @return mixed
@@ -45,10 +49,13 @@ class RouteParameter
         return $this->value;
     }
 
+    
     /**
-     * @param mixed $value
+     * @param mixed $value Value retrieved from uri
+     *
+     * @return void
      */
-    public function setValue($value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }

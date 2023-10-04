@@ -5,6 +5,7 @@ namespace App\Core\Abstracts;
 use App\Core\Database\Database;
 use App\Core\Database\Query;
 use Exception;
+use stdClass;
 
 abstract class AbstractRepository
 {
@@ -26,15 +27,16 @@ abstract class AbstractRepository
         return Database::query($query);
     }
 
+
     /**
      * Get an entity by its primary key value
      *
-     * @param $identifier
+     * @param mixed $identifier value of primary key of requested entity
      *
      * @return mixed
      * @throws Exception
      */
-    public static function get($identifier): mixed
+    public static function get(mixed $identifier): mixed
     {
         $primaryKey = Database::getPrimaryKey(static::MODEL);
 
@@ -57,15 +59,16 @@ abstract class AbstractRepository
         return $result[0];
     }
 
+
     /**
      * Update or Create entity in database
      *
-     * @param $entity
+     * @param stdClass $entity Entity to save
      *
      * @return void
      * @throws Exception
      */
-    public static function save($entity): void
+    public static function save(stdClass $entity): void
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);

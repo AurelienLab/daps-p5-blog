@@ -29,7 +29,7 @@ try {
     $routerPath = ROOT.'/src/Routes';
     App\Core\Router\Router::getInstance($routerPath)->handle();
 } catch (Exception $e) {
-    if (config('app.env') != 'dev') {
+    if (config('app.env') !== 'dev') {
         (new \App\Controller\ErrorController())->error($e->getCode(), $e->getMessage());
     } else {
         throw $e;
