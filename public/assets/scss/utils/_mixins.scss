@@ -1,0 +1,22 @@
+// Name your breakpoints in a way that creates a ubiquitous language
+// across team members. It will improve communication between
+// stakeholders, designers, developers, and testers.
+$breakpoints: (
+        mobile: 320px,
+        tablet: 740px,
+        desktop: 980px,
+        wide: 1300px,
+);
+
+// If you want to display the currently active breakpoint in the top
+// right corner of your site during development, add the breakpoints
+// to this list, ordered by width. For examples: (mobile, tablet, desktop).
+$show-breakpoints: ();
+
+@import 'mq';
+
+@mixin remove-btn-style {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}

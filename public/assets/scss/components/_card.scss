@@ -1,0 +1,66 @@
+.card-overlay {
+  z-index: 1;
+  color: white;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.75) 53.82%);
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding-top: 100px;
+
+  a {
+    display: flex;
+    width: 100%;
+    justify-content: right;
+    align-items: center;
+    gap: 8px;
+    padding-right: 8px;
+
+    &:hover {
+      svg {
+        transform: translateX(5px);
+      }
+    }
+
+    svg {
+      width: 25px;
+      transition: transform 250ms ease-in-out;
+    }
+  }
+
+  &__heading {
+    @include mq($from: tablet) {
+      font-size: 1.2rem;
+      span {
+        font-size: 1rem;
+      }
+    }
+
+    span {
+      font-size: 0.7rem;
+      color: #C9C9C9;
+    }
+  }
+}
+
+
+.card {
+  &__extra-data {
+    display: flex;
+    justify-content: space-between;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      font-size: 0.9rem;
+      align-items: center;
+      gap: 5px;
+    }
+
+    svg {
+      color: #347E8E;
+      width: 25px;
+    }
+  }
+}
