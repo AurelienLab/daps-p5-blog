@@ -95,6 +95,9 @@ body {
   width: 100%;
   background: transparent;
 }
+.header.open + .burger {
+  display: flex;
+}
 .header__container {
   margin: auto;
   max-width: 1200px;
@@ -177,6 +180,55 @@ body {
   color: black;
   border-radius: 50%;
   background: #EBEBEB;
+}
+
+.burger {
+  display: none;
+  z-index: 49;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: 90px;
+  padding-bottom: 90px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.burger__menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  gap: 50px;
+  width: 90%;
+}
+.burger__menu__list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  font-size: 2rem;
+  width: 100%;
+}
+.burger__menu__list li {
+  text-align: center;
+  width: 100%;
+  border-radius: 45px;
+  padding: 15px 0px;
+}
+.burger__menu__list li.active {
+  background: #0569FF;
+  color: white;
+}
+.burger__menu .header__menu__user {
+  display: flex;
+  font-size: 1.7em;
+  color: #3C48B5;
 }
 
 .hero {
