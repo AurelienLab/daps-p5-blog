@@ -330,6 +330,39 @@ body {
   background: #000;
 }
 
+.footer {
+  margin-top: 3rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #292E56;
+}
+@media (min-width: 46.25em) {
+  .footer {
+    margin-top: 5rem;
+    padding: 3rem 2rem;
+  }
+}
+.footer__container {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+.footer__container a {
+  display: block;
+  width: 50px;
+}
+@media (min-width: 46.25em) {
+  .footer__container a {
+    width: 65px;
+  }
+}
+.footer__container a svg {
+  width: 100%;
+}
+
 .last-post {
   display: flex;
   flex-direction: column;
@@ -463,6 +496,12 @@ body {
   padding: 34px 25px;
   border-radius: 17px;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.13) 21.76%, rgba(0, 0, 0, 0) 38.69%), radial-gradient(59.06% 80.95% at 49.96% 50%, rgba(93, 107, 235, 0.8) 0%, rgba(60, 72, 181, 0.8) 100%);
+}
+@media (min-width: 46.25em) {
+  .contact {
+    margin-top: 4rem;
+    margin-bottom: 8rem;
+  }
 }
 .contact__background {
   position: absolute;
