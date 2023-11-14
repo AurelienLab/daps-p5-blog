@@ -88,7 +88,7 @@ body {
 }
 
 .header {
-  z-index: 2;
+  z-index: 50;
   position: sticky;
   top: 0;
   height: 90px;
@@ -393,7 +393,6 @@ body {
 .last-post__article__illustration {
   position: relative;
   background: #292d49;
-  border: 1px solid #71A8DB;
   overflow: hidden;
   height: 250px;
 }
@@ -425,7 +424,7 @@ body {
 }
 .last-post__article__content p {
   margin: 11px 0;
-  line-height: 1rem;
+  line-height: 1.2em;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 6; /* number of lines to show */
@@ -459,7 +458,7 @@ body {
 }
 .about-me__picture {
   background: linear-gradient(141deg, rgba(0, 0, 0, 0) 39.58%, rgba(0, 0, 0, 0.5) 100%), #808CFF;
-  border-radius: 38px;
+  border-radius: 12px;
   width: fit-content;
   padding-top: 20px;
   padding-left: 10px;
@@ -494,7 +493,7 @@ body {
   width: 95%;
   box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
   padding: 34px 25px;
-  border-radius: 17px;
+  border-radius: 12px;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.13) 21.76%, rgba(0, 0, 0, 0) 38.69%), radial-gradient(59.06% 80.95% at 49.96% 50%, rgba(93, 107, 235, 0.8) 0%, rgba(60, 72, 181, 0.8) 100%);
 }
 @media (min-width: 46.25em) {
@@ -504,6 +503,7 @@ body {
   }
 }
 .contact__background {
+  z-index: 0;
   position: absolute;
   width: 90%;
   max-width: 650px;
@@ -516,6 +516,8 @@ body {
   color: #FFFFFF;
 }
 .contact__container {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -526,7 +528,7 @@ body {
   font-size: 1em;
   margin: auto;
   color: #FFF;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 2px solid #323C97;
   background: rgba(60, 72, 181, 0.59);
   backdrop-filter: blur(6px);

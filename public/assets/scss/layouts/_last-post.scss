@@ -33,7 +33,6 @@
       }
       position: relative;
       background: #292d49;
-      border: 1px solid #71A8DB;
       overflow: hidden;
       height: 250px;
 
@@ -60,7 +59,7 @@
       p {
         //font-size: 1rem;
         margin: 11px 0;
-        line-height: 1rem;
+        line-height: 1.2em;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 6; /* number of lines to show */
