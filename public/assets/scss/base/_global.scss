@@ -1,6 +1,9 @@
 body {
+  @include mq($from: tablet) {
+    font-size: 18px;
+  }
   width: 100%;
   background-color: #EFEFEF;
   font-family: $font-default;
-  font-size: 18px;
+  font-size: 14px;
 }

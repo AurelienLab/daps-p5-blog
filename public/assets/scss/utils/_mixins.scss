@@ -20,3 +20,9 @@ $show-breakpoints: ();
   border: none;
   cursor: pointer;
 }
+
+@mixin default-container {
+  margin: auto;
+  max-width: $content-max-width;
+  width: 95%;
+}

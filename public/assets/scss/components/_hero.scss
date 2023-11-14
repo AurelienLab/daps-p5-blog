@@ -1,5 +1,3 @@
-@import 'last-post';
-
 .hero {
   position: relative;
   width: 100%;
@@ -40,9 +38,7 @@
 
 
   &__container {
-    margin: auto;
-    max-width: $content-max-width;
-    width: 95%;
+    @include default-container;
     display: flex;
     flex-direction: column;
   }

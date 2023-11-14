@@ -5,7 +5,12 @@
 @import 'base/reset';
 @import 'base/global';
 
+@import 'components/button';
 @import 'components/header';
 @import 'components/hero';
 @import 'components/card';
 @import 'components/tag';
+@import 'components/heading';
+
+@import 'layouts/last-post';
+@import 'layouts/about-me';

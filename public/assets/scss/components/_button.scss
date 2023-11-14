@@ -1,0 +1,20 @@
+.btn {
+  display: flex;
+  padding: 9px 28px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 55px;
+  transition: all 150ms ease-in-out;
+
+  &--outline--primary {
+    border: 2px solid map-get($colors, primary);
+    color: map-get($colors, primary);
+
+    &:hover {
+      background: map-get($colors, primary);
+      color: #FFFFFF;
+    }
+  }
+
+
+}

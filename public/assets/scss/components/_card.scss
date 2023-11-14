@@ -31,14 +31,16 @@
 
   &__heading {
     @include mq($from: tablet) {
-      font-size: 1.2rem;
+      font-size: 1.2em;
       span {
-        font-size: 1rem;
+        font-size: 1em;
       }
     }
 
+    font-size: 1.4em;
+
     span {
-      font-size: 0.7rem;
+      font-size: 0.7em;
       color: #C9C9C9;
     }
   }
@@ -53,14 +55,15 @@
     li {
       display: flex;
       flex-direction: row;
-      font-size: 0.9rem;
+      font-size: 0.9em;
       align-items: center;
+
       gap: 5px;
     }
 
     svg {
       color: #347E8E;
-      width: 25px;
+      width: 20px;
     }
   }
 }

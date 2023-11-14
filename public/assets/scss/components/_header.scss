@@ -7,14 +7,13 @@
   background: transparent;
 
   &__container {
+    @include default-container;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     padding: 10px 17px;
     color: white;
-    max-width: $content-max-width;
-    margin: auto;
   }
 
   &__logo {
