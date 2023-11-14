@@ -1,10 +1,16 @@
 .btn {
+  @include remove-btn-style;
   display: flex;
   padding: 9px 28px;
   justify-content: center;
   align-items: center;
   border-radius: 55px;
   transition: all 150ms ease-in-out;
+  min-width: 190px;
+
+  &--bg-light {
+    background: #FFFFFF;
+  }
 
   &--outline--primary {
     border: 2px solid map-get($colors, primary);
@@ -15,6 +21,4 @@
       color: #FFFFFF;
     }
   }
-
-
 }
