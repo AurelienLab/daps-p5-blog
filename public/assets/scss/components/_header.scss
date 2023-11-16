@@ -1,15 +1,55 @@
 .header {
+  //Display on Opened burger
+  &.open {
+    @include mq($until: desktop) {
+      & + .burger {
+        z-index: 49;
+        opacity: 1;
+        transition: opacity 150ms ease-in-out, z-index 0ms 0ms, height 150ms ease-in-out;
+      }
 
-  &.open + .burger {
-    display: flex;
+      .header__container {
+        color: map-get($colors, primary);
+      }
+
+      .header__menu__toggle {
+        color: map-get($colors, primary);
+      }
+    }
+  }
+
+  //Display on scroll
+  &.scrolled {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+
+    .header__container {
+      color: map-get($colors, primary);
+    }
+
+    .header__menu__toggle {
+      color: map-get($colors, primary);
+    }
+
+    .header__menu__list {
+      li {
+        &.active, &:hover {
+          background-color: map-get($colors, primary);
+          color: #FFFFFF;
+        }
+      }
+
+    }
   }
 
   z-index: 50;
   position: sticky;
   top: 0;
-  height: $header-height;
+  height: fit-content;
   width: 100%;
   background: transparent;
+
+  transition: background-color 150ms ease-in-out;
 
   &__container {
     @include default-container;
@@ -19,6 +59,8 @@
 
     padding: 10px 17px;
     color: white;
+
+    transition: color 150ms ease-in-out;
   }
 
   &__logo {
@@ -47,7 +89,7 @@
         }
 
         li {
-          padding: 13px 18px;
+
           border-radius: 25px;
           font-size: 0.95rem;
           transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
@@ -55,6 +97,11 @@
           &:hover, &.active {
             background-color: #FFFFFF;
             color: map-get($colors, primary)
+          }
+
+          a {
+            display: block;
+            padding: 13px 18px;
           }
         }
       }
@@ -68,6 +115,8 @@
       @include remove-btn-style;
       width: 45px;
       color: white;
+
+      transition: color 150ms ease-in-out;
     }
 
     &__user {
@@ -96,14 +145,17 @@
 }
 
 .burger {
-
-  display: none;
-  z-index: 49;
+  @include mq($from: desktop) {
+    display: none;
+  }
+  display: flex;
+  z-index: -1;
+  opacity: 0;
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
+  height: 100dvh;
   padding-top: $header-height;
   padding-bottom: $header-height;
 
@@ -113,6 +165,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  transition: opacity 150ms ease-in-out, z-index 0ms 350ms;
 
   &__menu {
     display: flex;
@@ -128,18 +182,24 @@
       flex-direction: column;
       justify-content: center;
       gap: 40px;
-      font-size: 2rem;
+      font-size: 1.5rem;
       width: 100%;
 
       li {
         text-align: center;
         width: 100%;
         border-radius: 45px;
-        padding: 15px 0px;
 
         &.active {
           background: map-get($colors, primary);
           color: white;
+        }
+
+        a {
+          display: block;
+          width: 100%;
+          height: 100%;
+          padding: 15px 0px;
         }
       }
     }
@@ -149,5 +209,11 @@
       font-size: 1.7em;
       color: #3C48B5;
     }
+  }
+}
+
+body.burger-open {
+  @include mq($until: desktop) {
+    overflow: hidden;
   }
 }
