@@ -41,12 +41,21 @@
     }
 
     input,
-    textarea {
+    textarea,
+    select {
       @include mq($from: tablet) {
         font-size: 1em;
       }
+
+      transition: outline-color 100ms ease-in-out;
+
+      outline: 3px solid transparent;
+
+      &:focus {
+        outline-color: map-get($colors, primary);
+      }
+
       border: none;
-      outline: none;
       background: #FFF;
       box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.21);
       padding: 8px 10px;
@@ -56,6 +65,14 @@
 
     textarea {
       font-family: inherit;
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat 98%, linear-gradient(90deg, rgba(0, 0, 0, 0) 88%, map-get($colors, primary) 88%);
+      padding-right: 2rem;
+      cursor: pointer;
     }
   }
 }

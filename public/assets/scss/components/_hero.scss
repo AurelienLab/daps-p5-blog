@@ -63,4 +63,18 @@
       margin-bottom: -$overpass-height;
     }
   }
+
+  &--post-index {
+    $overpass-height: 100px;
+
+    .hero__container {
+      gap: 50px;
+      margin-top: 50px;
+      margin-bottom: calc($overpass-height + 4rem);
+    }
+
+    .filters {
+      margin-bottom: -$overpass-height;
+    }
+  }
 }

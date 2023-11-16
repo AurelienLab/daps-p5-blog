@@ -1,0 +1,21 @@
+.filters {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: $primary-shadow;
+  padding: 2em 2rem;
+
+
+  .form__row {
+    align-items: flex-end;
+    justify-content: space-evenly;
+    gap: 1.6rem;
+  }
+
+  .form__field {
+    max-width: 300px;
+  }
+
+  label {
+    color: map-get($colors, primary)
+  }
+}

@@ -16,7 +16,7 @@
     border: 2px solid map-get($colors, primary);
     color: map-get($colors, primary);
 
-    &:hover {
+    &:hover, &:focus {
       background: map-get($colors, primary);
       color: #FFFFFF;
     }

@@ -1,0 +1,14 @@
+.post-list {
+  @include default-container;
+  @include mq($from: desktop) {
+    grid-gap: 3rem;
+  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 1.5rem;
+  justify-content: center;
+
+  .card {
+    margin: auto;
+  }
+}

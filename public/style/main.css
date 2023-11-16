@@ -86,7 +86,7 @@ body {
   border: 2px solid #0569FF;
   color: #0569FF;
 }
-.btn--outline--primary:hover {
+.btn--outline--primary:hover, .btn--outline--primary:focus {
   background: #0569FF;
   color: #FFFFFF;
 }
@@ -336,6 +336,105 @@ body {
 .hero--homepage .last-post {
   margin-bottom: -120px;
 }
+.hero--post-index .hero__container {
+  gap: 50px;
+  margin-top: 50px;
+  margin-bottom: calc(100px + 4rem);
+}
+.hero--post-index .filters {
+  margin-bottom: -100px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  height: 100%;
+  width: 100%;
+  max-width: 450px;
+  min-width: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+.card__illustration {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/2;
+  padding: 0.7em 1em;
+}
+.card__illustration img {
+  z-index: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card__illustration .tag-list {
+  z-index: 1;
+}
+.card__content {
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 1em 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+@media (min-width: 46.25em) {
+  .card__content {
+    padding: 28px 38px;
+    gap: 18px;
+  }
+}
+.card__content__body {
+  line-height: 1.2em;
+}
+.card__content__body p {
+  margin: 11px 0;
+  line-height: 1.2em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* number of lines to show */
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+}
+.card__heading {
+  font-size: 1.2em;
+}
+@media (min-width: 46.25em) {
+  .card__heading {
+    font-size: 1.5em;
+  }
+}
+.card__category {
+  color: #0569FF;
+}
+@media (min-width: 46.25em) {
+  .card__category {
+    font-size: 1em;
+  }
+}
+.card__extra-data {
+  display: flex;
+  justify-content: space-between;
+}
+.card__extra-data li {
+  display: flex;
+  flex-direction: row;
+  font-size: 0.9em;
+  align-items: center;
+  gap: 5px;
+}
+.card__extra-data svg {
+  color: #347E8E;
+  width: 20px;
+}
 
 .card-overlay {
   z-index: 1;
@@ -377,22 +476,6 @@ body {
 .card-overlay__heading span {
   font-size: 0.7em;
   color: #C9C9C9;
-}
-
-.card__extra-data {
-  display: flex;
-  justify-content: space-between;
-}
-.card__extra-data li {
-  display: flex;
-  flex-direction: row;
-  font-size: 0.9em;
-  align-items: center;
-  gap: 5px;
-}
-.card__extra-data svg {
-  color: #347E8E;
-  width: 20px;
 }
 
 .tag-list {
@@ -697,9 +780,11 @@ body {
   line-height: 1.1em;
 }
 .form__field input,
-.form__field textarea {
+.form__field textarea,
+.form__field select {
+  transition: outline-color 100ms ease-in-out;
+  outline: 3px solid transparent;
   border: none;
-  outline: none;
   background: #FFF;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.21);
   padding: 8px 10px;
@@ -708,12 +793,61 @@ body {
 }
 @media (min-width: 46.25em) {
   .form__field input,
-  .form__field textarea {
+  .form__field textarea,
+  .form__field select {
     font-size: 1em;
   }
 }
+.form__field input:focus,
+.form__field textarea:focus,
+.form__field select:focus {
+  outline-color: #0569FF;
+}
 .form__field textarea {
   font-family: inherit;
+}
+.form__field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat 98%, linear-gradient(90deg, rgba(0, 0, 0, 0) 88%, #0569FF 88%);
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.filters {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  padding: 2em 2rem;
+}
+.filters .form__row {
+  align-items: flex-end;
+  justify-content: space-evenly;
+  gap: 1.6rem;
+}
+.filters .form__field {
+  max-width: 300px;
+}
+.filters label {
+  color: #0569FF;
+}
+
+.post-list {
+  margin: auto;
+  max-width: 1200px;
+  width: 95%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 1.5rem;
+  justify-content: center;
+}
+@media (min-width: 61.25em) {
+  .post-list {
+    grid-gap: 3rem;
+  }
+}
+.post-list .card {
+  margin: auto;
 }
 
 /*# sourceMappingURL=main.css.map */

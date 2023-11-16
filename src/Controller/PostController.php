@@ -9,6 +9,7 @@ class PostController extends AbstractController
 
     public function index()
     {
+
         return $this->render('post/index.html.twig');
     }
 
