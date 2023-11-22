@@ -1,0 +1,36 @@
+<header class="header">
+    <div class="header__container">
+        <div class="header__logo">
+            <a href="/">Aurélien Lorence</a>
+
+        </div>
+
+        <nav class="header__menu">
+            <ul class="header__menu__list">
+                {% include 'partials/header/_header-menu-links.html.twig' %}
+            </ul>
+
+            <button class="header__menu__toggle js-toggle-menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
+        </nav>
+
+        {% include 'partials/header/_header-account.html.twig' %}
+    </div>
+</header>
+
+<div class="burger">
+
+    <div class="burger__menu">
+        <div></div>
+        <ul class="burger__menu__list">
+            {% include 'partials/header/_header-menu-links.html.twig' %}
+        </ul>
+        {% include 'partials/header/_header-account.html.twig' %}
+    </div>
+
+</div>

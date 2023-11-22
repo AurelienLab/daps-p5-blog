@@ -1,0 +1,146 @@
+.post-show {
+  &__content {
+    @include mq($from: tablet) {
+      padding: 3rem;
+    }
+    position: relative;
+    z-index: 10;
+    @include default-container;
+    padding: 1.5em;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: $primary-shadow;
+
+    margin-top: -4em;
+
+    &__header {
+      @include mq($from: tablet) {
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+      }
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    &__body {
+      @include mq($from: tablet) {
+        gap: 2rem;
+      }
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+
+  &__author {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: $font-logo;
+    font-size: 1.3em;
+  }
+
+  &__extra-data {
+    @include mq($from: desktop) {
+      flex-direction: row;
+      gap: 3rem;
+    }
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      font-size: 0.9em;
+      align-items: center;
+
+      gap: 5px;
+    }
+
+    svg {
+      color: #347E8E;
+      width: 20px;
+    }
+  }
+
+  &__comments {
+    @include default-container;
+    @include mq($from: tablet) {
+      gap: 2rem;
+      padding: 65px 90px;
+    }
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    padding: 16px 1.5em;
+    box-shadow: $primary-shadow;
+    border-radius: 12px;
+
+    gap: 1em;
+
+    &__header {
+      @include mq($from: tablet) {
+        justify-content: flex-start;
+      }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1em;
+      justify-content: center;
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    &__footer {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+
+      form {
+        .profile-pic {
+          @include mq($from: tablet) {
+            display: revert;
+          }
+          display: none;
+          align-self: flex-start;
+          margin-top: 2em;
+        }
+
+        .comment__submit {
+          @include mq($from: tablet) {
+            justify-content: flex-end;
+            .btn {
+              max-width: 190px;
+            }
+          }
+        }
+
+        label {
+          color: map-get($colors, primary);
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

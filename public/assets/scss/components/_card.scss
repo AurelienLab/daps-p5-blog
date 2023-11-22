@@ -1,0 +1,151 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: $primary-shadow;
+
+  //flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  max-width: 450px;
+  min-width: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFFFFF;
+
+  &__illustration {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3/2;
+
+    padding: 0.7em 1em;
+
+    img {
+      z-index: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tag-list {
+      z-index: 1;
+    }
+  }
+
+
+  &__content {
+    @include mq($from: tablet) {
+      padding: 28px 38px;
+      gap: 18px;
+    }
+    flex-grow: 1;
+    justify-content: space-between;
+    padding: 1em 1.3em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    &__header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    &__body {
+      p {
+        margin: 11px 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 6; /* number of lines to show */
+        line-clamp: 6;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
+
+  &__heading {
+    @include mq($from: tablet) {
+      font-size: 1.5em;
+    }
+    font-size: 1.2em;
+  }
+
+  &__category {
+    @include mq($from: tablet) {
+      font-size: 1em;
+    }
+    color: map-get($colors, primary);
+  }
+
+  &__extra-data {
+    display: flex;
+    justify-content: space-between;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      font-size: 0.9em;
+      align-items: center;
+
+      gap: 5px;
+    }
+
+    svg {
+      color: #347E8E;
+      width: 20px;
+    }
+  }
+}
+
+
+.card-overlay {
+  z-index: 1;
+  color: white;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.75) 53.82%);
+  width: 100%;
+  padding-top: 100px;
+
+  a {
+    display: flex;
+    width: 100%;
+    justify-content: right;
+    align-items: center;
+    gap: 8px;
+    padding-right: 8px;
+
+    &:hover {
+      svg {
+        transform: translateX(5px);
+      }
+    }
+
+    svg {
+      width: 25px;
+      transition: transform 250ms ease-in-out;
+    }
+  }
+
+  &__heading {
+    @include mq($from: tablet) {
+      font-size: 1.2em;
+      span {
+        font-size: 1em;
+      }
+    }
+
+    font-size: 1.4em;
+
+    span {
+      font-size: 0.7em;
+      color: #C9C9C9;
+    }
+  }
+}

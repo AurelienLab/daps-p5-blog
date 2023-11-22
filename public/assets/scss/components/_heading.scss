@@ -1,0 +1,28 @@
+.heading {
+  font-size: 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &:after {
+    content: '';
+    width: 65px;
+    height: 3px;
+  }
+
+  &--light {
+    color: white;
+
+    &:after {
+      background: white;
+    }
+  }
+
+  &--dark {
+    color: #000;
+
+    &:after {
+      background: #000;
+    }
+  }
+}

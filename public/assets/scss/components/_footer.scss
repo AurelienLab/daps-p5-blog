@@ -1,0 +1,31 @@
+.footer {
+  @include mq($from: tablet) {
+    margin-top: 5rem;
+    padding: 3rem 2rem;
+  }
+  margin-top: 3rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #292E56;
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    a {
+      @include mq($from: tablet) {
+        width: 65px;
+      }
+      display: block;
+      width: 50px;
+
+      svg {
+        width: 100%;
+      }
+    }
+  }
+}
