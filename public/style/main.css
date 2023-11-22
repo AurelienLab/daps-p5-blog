@@ -284,7 +284,7 @@ p a:hover {
   display: block;
   width: 100%;
   height: 100%;
-  padding: 15px 0px;
+  padding: 15px 0;
 }
 .burger__menu .header__menu__user {
   display: flex;
@@ -407,7 +407,7 @@ p a:hover {
 .card {
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
   height: 100%;
   width: 100%;
   max-width: 450px;
@@ -684,7 +684,7 @@ p a:hover {
 }
 .last-post__article > div {
   border-radius: 12px;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
 }
 .last-post__article__illustration {
   position: relative;
@@ -761,7 +761,7 @@ p a:hover {
   margin: auto;
   line-height: 0;
   font-size: 0;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
   grid-area: picture;
 }
 .about-me__picture img {
@@ -787,7 +787,7 @@ p a:hover {
   margin: auto;
   max-width: 1200px;
   width: 95%;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
   padding: 34px 25px;
   border-radius: 12px;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.13) 21.76%, rgba(0, 0, 0, 0) 38.69%), radial-gradient(59.06% 80.95% at 49.96% 50%, rgba(93, 107, 235, 0.8) 0%, rgba(60, 72, 181, 0.8) 100%);
@@ -895,7 +895,7 @@ p a:hover {
   outline: 3px solid transparent;
   border: none;
   background: #FFF;
-  box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.21);
+  box-shadow: 0 4px 10px 1px rgba(0, 0, 0, 0.21);
   padding: 8px 10px;
   min-width: 200px;
   font-size: 1.2em;
@@ -926,7 +926,7 @@ p a:hover {
 .filters {
   background-color: #FFFFFF;
   border-radius: 12px;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
   padding: 2em 2rem;
 }
 .filters .form__row {
@@ -968,7 +968,7 @@ p a:hover {
   padding: 1.5em;
   background: #FFFFFF;
   border-radius: 12px;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
   margin-top: -4em;
 }
 @media (min-width: 46.25em) {
@@ -1042,7 +1042,7 @@ p a:hover {
   flex-direction: column;
   background: #FFFFFF;
   padding: 16px 1.5em;
-  box-shadow: 4px 8px 18px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
   border-radius: 12px;
   gap: 1em;
 }
