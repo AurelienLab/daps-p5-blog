@@ -73,4 +73,74 @@
       width: 20px;
     }
   }
+
+  &__comments {
+    @include default-container;
+    @include mq($from: tablet) {
+      gap: 2rem;
+      padding: 65px 90px;
+    }
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    padding: 16px 1.5em;
+    box-shadow: $primary-shadow;
+    border-radius: 12px;
+
+    gap: 1em;
+
+    &__header {
+      @include mq($from: tablet) {
+        justify-content: flex-start;
+      }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1em;
+      justify-content: center;
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    &__footer {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+
+      form {
+        .profile-pic {
+          @include mq($from: tablet) {
+            display: revert;
+          }
+          display: none;
+          align-self: flex-start;
+          margin-top: 2em;
+        }
+
+        .comment__submit {
+          @include mq($from: tablet) {
+            justify-content: flex-end;
+            .btn {
+              max-width: 190px;
+            }
+          }
+        }
+
+        label {
+          color: map-get($colors, primary);
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
 }

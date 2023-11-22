@@ -1,0 +1,39 @@
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  padding-top: 16px;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    gap: 22px;
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  &__author {
+    font-family: $font-logo;
+    font-size: 1.2em;
+  }
+
+  &__date {
+    font-size: 0.85em;
+    color: #6E6E6E;
+  }
+
+  &:not(:last-of-type) {
+    &:after {
+      display: block;
+      content: '';
+      background: #9a9a9a;
+      height: 1px;
+      width: 80%;
+      margin: 1em auto;
+    }
+  }
+}

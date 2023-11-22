@@ -12,3 +12,20 @@ body {
   font-family: $font-default;
   font-size: 14px;
 }
+
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+p a {
+  color: map-get($colors, primary);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
