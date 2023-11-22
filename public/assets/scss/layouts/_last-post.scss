@@ -35,8 +35,11 @@
       background: #292d49;
       overflow: hidden;
       height: 250px;
+      display: flex;
+      align-items: flex-end;
 
       img {
+        position: absolute;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -58,7 +61,6 @@
 
       p {
         margin: 11px 0;
-        line-height: 1.2em;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 6; /* number of lines to show */

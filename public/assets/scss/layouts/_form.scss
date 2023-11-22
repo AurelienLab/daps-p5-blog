@@ -43,6 +43,7 @@
     input,
     textarea,
     select {
+      font-family: $font-default;
       @include mq($from: tablet) {
         font-size: 1em;
       }

@@ -53,6 +53,7 @@ a {
 
 html {
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -65,6 +66,10 @@ body {
   body {
     font-size: 18px;
   }
+}
+
+p {
+  line-height: 1.4;
 }
 
 .bold {
@@ -82,10 +87,20 @@ p a:hover {
   text-decoration: underline;
 }
 
+a.extended:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
 .btn {
   background: transparent;
   border: none;
   cursor: pointer;
+  font-family: "Jost", sans-serif;
   display: flex;
   padding: 9px 28px;
   justify-content: center;
@@ -199,6 +214,7 @@ p a:hover {
   background: transparent;
   border: none;
   cursor: pointer;
+  font-family: "Jost", sans-serif;
   width: 45px;
   color: white;
   transition: color 150ms ease-in-out;
@@ -405,6 +421,7 @@ p a:hover {
   }
 }
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
@@ -451,12 +468,13 @@ p a:hover {
     gap: 18px;
   }
 }
-.card__content__body {
-  line-height: 1.2em;
+.card__content__header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .card__content__body p {
   margin: 11px 0;
-  line-height: 1.2em;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 6; /* number of lines to show */
@@ -500,10 +518,7 @@ p a:hover {
   color: white;
   padding: 12px 14px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.75) 53.82%);
-  position: absolute;
   width: 100%;
-  left: 0;
-  bottom: 0;
   padding-top: 100px;
 }
 .card-overlay a {
@@ -546,10 +561,16 @@ p a:hover {
 
 .tag {
   font-size: 0.8em;
-  padding: 3px 13px;
+  line-height: 1.4;
+  padding: 3px 15px;
   background: #347E8E;
   border-radius: 25px;
   color: #FFFFFF;
+}
+@media (min-width: 46.25em) {
+  .tag {
+    padding: 5px 25px;
+  }
 }
 
 .heading {
@@ -691,6 +712,8 @@ p a:hover {
   background: #292d49;
   overflow: hidden;
   height: 250px;
+  display: flex;
+  align-items: flex-end;
 }
 @media (min-width: 46.25em) {
   .last-post__article__illustration {
@@ -699,6 +722,7 @@ p a:hover {
   }
 }
 .last-post__article__illustration img {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -720,7 +744,6 @@ p a:hover {
 }
 .last-post__article__content p {
   margin: 11px 0;
-  line-height: 1.2em;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 6; /* number of lines to show */
@@ -775,7 +798,6 @@ p a:hover {
 }
 .about-me__content {
   grid-area: content;
-  line-height: 1.3em;
 }
 .about-me .btn {
   grid-area: button;
@@ -891,6 +913,7 @@ p a:hover {
 .form__field input,
 .form__field textarea,
 .form__field select {
+  font-family: "Jost", sans-serif;
   transition: outline-color 100ms ease-in-out;
   outline: 3px solid transparent;
   border: none;

@@ -19,6 +19,7 @@ $show-breakpoints: ();
   background: transparent;
   border: none;
   cursor: pointer;
+  font-family: $font-default;
 }
 
 @mixin default-container {
