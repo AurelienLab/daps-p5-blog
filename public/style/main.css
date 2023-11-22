@@ -154,7 +154,7 @@ p a:hover {
   transition: color 150ms ease-in-out;
 }
 .header__logo {
-  font-family: "Lalezar", "Arial Black";
+  font-family: "Lalezar", "Arial Black", sans-serif;
 }
 @media (min-width: 61.25em) {
   .header__logo {
@@ -385,7 +385,7 @@ p a:hover {
 }
 .hero--post .hero__title {
   text-align: left;
-  font-family: "Lalezar", "Arial Black";
+  font-family: "Lalezar", "Arial Black", sans-serif;
   font-size: 1.8rem;
   line-height: 1.1;
 }
@@ -626,7 +626,7 @@ p a:hover {
   justify-content: space-evenly;
 }
 .comment__author {
-  font-family: "Lalezar", "Arial Black";
+  font-family: "Lalezar", "Arial Black", sans-serif;
   font-size: 1.2em;
 }
 .comment__date {
@@ -1007,7 +1007,7 @@ p a:hover {
   flex-direction: row;
   align-items: center;
   gap: 0.7rem;
-  font-family: "Lalezar", "Arial Black";
+  font-family: "Lalezar", "Arial Black", sans-serif;
   font-size: 1.3em;
 }
 .post-show__extra-data {
