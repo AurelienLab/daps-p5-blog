@@ -1,0 +1,60 @@
+.about-me {
+  @include default-container;
+
+  @include mq($from: tablet) {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    grid-template-areas:
+          "picture heading"
+          "picture content"
+          "picture button";
+
+    .btn {
+      align-self: flex-end;
+      justify-self: flex-end;
+    }
+  }
+
+  padding-bottom: 3rem;
+  display: grid;
+  grid-column-gap: 3rem;
+  grid-row-gap: 38px;
+  grid-template-areas:
+          "heading heading"
+          "picture picture"
+          "content content"
+          "button button";
+
+  .heading {
+    grid-area: heading;
+  }
+
+  &__picture {
+    background: linear-gradient(141deg, rgba(0, 0, 0, 0.00) 39.58%, rgba(0, 0, 0, 0.50) 100%), #808CFF;
+    border-radius: 12px;
+    width: fit-content;
+    padding-top: 20px;
+    padding-left: 10px;
+    margin: auto;
+    line-height: 0;
+    font-size: 0;
+    box-shadow: $primary-shadow;
+    grid-area: picture;
+
+    img {
+      @include mq($from: tablet) {
+        width: 310px;
+      }
+      width: 135px;
+      transform: translateX(20px);
+    }
+  }
+
+  &__content {
+    grid-area: content;
+  }
+
+  .btn {
+    grid-area: button;
+  }
+}

@@ -1,0 +1,18 @@
+.tag-list {
+  display: flex;
+  gap: 6px;
+  padding: 7px 0;
+  flex-wrap: wrap;
+}
+
+.tag {
+  @include mq($from: tablet) {
+    padding: 5px 25px;
+  }
+  font-size: 0.8em;
+  line-height: 1.4;
+  padding: 3px 15px;
+  background: #347E8E;
+  border-radius: 25px;
+  color: #FFFFFF;
+}
