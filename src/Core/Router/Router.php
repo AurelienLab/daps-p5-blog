@@ -2,8 +2,10 @@
 
 namespace App\Core\Router;
 
+use App\Core\Utils\Str;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Router
 {
@@ -98,41 +100,15 @@ class Router
     public function handle(): void
     {
         $request = Request::createFromGlobals();
-        $requestedUri = $this->removeLastSlash($request->getPathInfo());
+        $requestedUri = Str::removeTrailingSlash($request->getPathInfo());
+        // dd($requestedUri);
         $collection = $this->routeCollection[$request->getMethod()];
         foreach ($collection as $route) {
             /* @var Route $route */
 
             if ($route->matchUri($requestedUri) === true) {
-                $class = $route->getFunction()['class'];
-                $controller = new $class();
-                if (class_exists($class) === false) {
-                    throw new Exception(sprintf('Unable to find class %s.', $class), 500);
-                }
-
-                $method = $route->getFunction()['method'];
-                if (method_exists($class, $method) === false) {
-                    throw new Exception(sprintf('Unable to find method %s in %s.', $method, $class), 500);
-                }
-
-                $args = $route->retrieveParametersFromUri($requestedUri);
-
-                try {
-                    $response = call_user_func_array([$controller, $method], $args);
-                } catch (Exception $e) {
-                    throw new Exception(
-                        sprintf(
-                            'Error while trying to call %s in %s: %s',
-                            $method,
-                            $class,
-                            $e->getMessage()
-                        ),
-                        $e->getCode()
-                    );
-                }
-
-                print($response);
-
+                $this->runMiddleware($route, $request);
+                $this->runController($route, $requestedUri);
                 return;
             } // end if
         }
@@ -142,19 +118,94 @@ class Router
 
 
     /**
-     * Remove trailing slash of given URI
+     * Execute Middleware
      *
-     * @param string $uri URI to clear
+     * @param Route $route
+     * @param Request $request
      *
-     * @return string
+     * @return void
+     * @throws Exception
      */
-    private function removeLastSlash(string $uri): string
+    private function runMiddleware(Route $route, Request $request): void
     {
-        $newUri = $uri;
-        if ($newUri !== '/' && str_ends_with($newUri, '/') === true) {
-            $newUri = substr_replace($newUri, '', -1);
+        if (empty($route->getMiddleware())) {
+            return;
         }
 
-        return $newUri;
+        foreach ($route->getMiddleware() as $middleware) {
+            if (class_exists($middleware) === false) {
+                throw new Exception(sprintf('Unable to find middleware %s.', $middleware), 500);
+            }
+
+            $method = 'handle';
+            if (method_exists($middleware, $method) === false) {
+                throw new Exception(sprintf('Unable to find handle() method in %s.', $middleware), 500);
+            }
+
+            try {
+                $middlewareObject = new $middleware();
+                $middlewareObject->handle($request);
+            } catch (Exception $e) {
+                throw new Exception(
+                    sprintf(
+                        'Error while trying to call handle() in %s: %s',
+                        $middleware,
+                        $e->getMessage()
+                    ),
+                    $e->getCode()
+                );
+            }
+        }
+    }
+
+
+    /**
+     * Execute controller
+     *
+     * @param Route $route
+     * @param string $requestedUri
+     *
+     * @return void
+     * @throws Exception
+     */
+    private function runController(Route $route, string $requestedUri): void
+    {
+        $class = $route->getFunction()['class'];
+        $controller = new $class();
+        if (class_exists($class) === false) {
+            throw new Exception(sprintf('Unable to find class %s.', $class), 500);
+        }
+
+        $method = $route->getFunction()['method'];
+        if (method_exists($class, $method) === false) {
+            throw new Exception(sprintf('Unable to find method %s in %s.', $method, $class), 500);
+        }
+
+        $args = $route->retrieveParametersFromUri($requestedUri);
+
+        try {
+            /** @var Response $response */
+            $response = call_user_func_array([$controller, $method], $args);
+
+            if (($response instanceof Response) === false) {
+                throw new Exception(sprintf(
+                    'Object of type %s expected %s given.',
+                    Response::class,
+                    gettype($response)
+                ));
+            }
+        } catch (Exception $e) {
+            throw new Exception(
+                sprintf(
+                    'Error while trying to call %s::%s. %s',
+                    $class,
+                    $method,
+                    $e->getMessage()
+                ),
+                $e->getCode()
+            );
+        }
+
+        $response->send();
     }
 }

@@ -43,4 +43,14 @@ class Str
     {
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
     }
+
+    public static function removeTrailingSlash(string $string): string
+    {
+        $newString = $string;
+        if (str_ends_with($newString, '/') === true) {
+            $newString = substr_replace($newString, '', -1);
+        }
+
+        return $newString;
+    }
 }
