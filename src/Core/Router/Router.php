@@ -2,6 +2,7 @@
 
 namespace App\Core\Router;
 
+use App\Core\Utils\Str;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,7 +100,8 @@ class Router
     public function handle(): void
     {
         $request = Request::createFromGlobals();
-        $requestedUri = $this->removeLastSlash($request->getPathInfo());
+        $requestedUri = Str::removeTrailingSlash($request->getPathInfo());
+        // dd($requestedUri);
         $collection = $this->routeCollection[$request->getMethod()];
         foreach ($collection as $route) {
             /* @var Route $route */
@@ -205,22 +207,5 @@ class Router
         }
 
         $response->send();
-    }
-
-    /**
-     * Remove trailing slash of given URI
-     *
-     * @param string $uri URI to clear
-     *
-     * @return string
-     */
-    private function removeLastSlash(string $uri): string
-    {
-        $newUri = $uri;
-        if ($newUri !== '/' && str_ends_with($newUri, '/') === true) {
-            $newUri = substr_replace($newUri, '', -1);
-        }
-
-        return $newUri;
     }
 }
