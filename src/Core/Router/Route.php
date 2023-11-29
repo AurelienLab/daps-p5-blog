@@ -13,8 +13,18 @@ class Route
     /** @var string */
     private string $uri;
 
+    /**
+     * @var string
+     */
+    private string $name;
+
     /** @var array */
     private array $function;
+
+    /**
+     * @var array|null
+     */
+    private array|null $middleware = null;
 
     /** @var array */
     private array $parameters;
@@ -43,7 +53,7 @@ class Route
      * @return void
      * @throws Exception
      */
-    public static function get(string $path, array $function): void
+    public static function get(string $path, array $function): self
     {
         $route = new Route();
 
@@ -58,6 +68,8 @@ class Route
         ];
 
         $route->addToRouter();
+
+        return $route;
     }
 
 
@@ -69,7 +81,7 @@ class Route
      *
      * @throws Exception
      */
-    public static function post(string $path, array $function): void
+    public static function post(string $path, array $function): self
     {
         $route = new Route();
 
@@ -84,8 +96,61 @@ class Route
         ];
 
         $route->addToRouter();
+
+        return $route;
     }
 
+    /**
+     * Set a name to retrieve path in views
+     *
+     * @param string $name
+     *
+     * @return Route
+     */
+    public function name(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get Route name
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Add middleware to execute before controller
+     *
+     * @param string|array $middleware
+     *
+     * @return $this
+     */
+    public function middleware(string|array $middleware): self
+    {
+        if (!is_array($middleware)) {
+            $middleware = [$middleware];
+        }
+        
+        $this->middleware = $middleware;
+
+        return $this;
+    }
+
+    /**
+     * Get middleware(s) of the route
+     *
+     * @return string|array|null
+     */
+    public function getMiddleware(): array|null
+    {
+        return $this->middleware;
+    }
 
     /**
      * Convert parameters given in route declaration to RouteParameter object
