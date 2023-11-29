@@ -4,6 +4,7 @@ namespace App\Core\Router;
 
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Router
 {
@@ -181,20 +182,29 @@ class Router
         $args = $route->retrieveParametersFromUri($requestedUri);
 
         try {
+            /** @var Response $response */
             $response = call_user_func_array([$controller, $method], $args);
+
+            if (($response instanceof Response) === false) {
+                throw new Exception(sprintf(
+                    'Object of type %s expected %s given.',
+                    Response::class,
+                    gettype($response)
+                ));
+            }
         } catch (Exception $e) {
             throw new Exception(
                 sprintf(
-                    'Error while trying to call %s in %s: %s',
-                    $method,
+                    'Error while trying to call %s::%s. %s',
                     $class,
+                    $method,
                     $e->getMessage()
                 ),
                 $e->getCode()
             );
         }
 
-        print($response);
+        $response->send();
     }
 
     /**

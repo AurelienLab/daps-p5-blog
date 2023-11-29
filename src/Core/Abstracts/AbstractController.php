@@ -2,6 +2,7 @@
 
 namespace App\Core\Abstracts;
 
+use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -34,14 +35,17 @@ abstract class AbstractController
      * @param string $template path of twig template
      * @param array $data array of data to pass to twig template
      *
-     * @return string
+     * @return Response
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    protected function render(string $template, array $data = []): string
+    protected function render(string $template, array $data = []): Response
     {
-        return $this->twig->render($template, $data);
+        $response = new Response();
+        $response->setContent($this->twig->render($template, $data));
+
+        return $response;
     }
 
 
