@@ -2,6 +2,7 @@
 
 namespace App\Core\Router;
 
+use App\Core\Utils\Str;
 use Exception;
 
 class Route
@@ -10,11 +11,26 @@ class Route
     /** @var string */
     private string $method;
 
+    /**
+     * @var string
+     */
+    private string $prefix;
+
     /** @var string */
     private string $uri;
 
+    /**
+     * @var string|null
+     */
+    private ?string $name = null;
+
     /** @var array */
     private array $function;
+
+    /**
+     * @var array|null
+     */
+    private array $middleware = [];
 
     /** @var array */
     private array $parameters;
@@ -22,6 +38,7 @@ class Route
     /** @var string */
     private string $matchRegex;
 
+    private array $group;
 
     /**
      * @return void
@@ -43,21 +60,22 @@ class Route
      * @return void
      * @throws Exception
      */
-    public static function get(string $path, array $function): void
+    public function get(string $path, array $function): self
     {
-        $route = new Route();
 
         $class = $function[0];
         $classMethod = $function[1];
 
-        $route->method = 'GET';
-        $route->uri = $path;
-        $route->function = [
+        $this->method = 'GET';
+        $this->uri = $path;
+        $this->function = [
             'class' => $class,
             'method' => $classMethod
         ];
 
-        $route->addToRouter();
+        $this->addToRouter();
+
+        return $this;
     }
 
 
@@ -69,23 +87,127 @@ class Route
      *
      * @throws Exception
      */
-    public static function post(string $path, array $function): void
+    public function post(string $path, array $function): self
     {
-        $route = new Route();
-
         $class = $function[0];
         $classMethod = $function[1];
 
-        $route->method = 'POST';
-        $route->uri = $path;
-        $route->function = [
+        $this->method = 'POST';
+        $this->uri = !empty($this->prefix) ? $this->prefix.$path : $path;
+        $this->function = [
             'class' => $class,
             'method' => $classMethod
         ];
 
-        $route->addToRouter();
+        $this->addToRouter();
+
+        return $this;
     }
 
+    /**
+     * Set a name to retrieve path in views
+     *
+     * @param string $name
+     *
+     * @return Route
+     */
+    public function name(string $name): self
+    {
+        $this->name = $name;
+
+        if (!empty($this->group)) {
+            foreach ($this->group as $route) {
+                $route->name($this->name.$route->getName());
+            }
+        }
+
+        return $this;
+    }
+
+    public function prefix(string $prefix): self
+    {
+        $this->prefix = $prefix;
+
+        if (!empty($this->group)) {
+            foreach ($this->group as $route) {
+                $route->prefix($this->prefix);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Route name
+     *
+     * @return string
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Add middleware to execute before controller
+     *
+     * @param string|array $middleware
+     *
+     * @return $this
+     */
+    public function middleware(string|array $middleware): self
+    {
+        if (!is_array($middleware)) {
+            $middleware = [$middleware];
+        }
+
+        $this->middleware = array_merge($this->middleware, $middleware);
+
+        if (!empty($this->group)) {
+            foreach ($this->group as $route) {
+                $route->middleware($this->middleware);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get middleware(s) of the route
+     *
+     * @return string|array|null
+     */
+    public function getMiddleware(): array|null
+    {
+        return $this->middleware;
+    }
+
+    /**
+     * Define multiple routes and apply the same config to them
+     *
+     * @param array $group
+     *
+     * @return void
+     */
+    public function group(array $group)
+    {
+
+        $this->group = $group;
+        foreach ($this->group as $route) {
+            /** @var Route $route */
+            if (!empty($this->name)) {
+                $route->name($this->name.$route->getName());
+            }
+
+            if (!empty($this->middleware)) {
+                $route->middleware($this->middleware);
+            }
+
+            if (!empty($this->prefix)) {
+                $route->prefix($this->prefix);
+                $route->parseParameters();
+            }
+        }
+    }
 
     /**
      * Convert parameters given in route declaration to RouteParameter object
@@ -96,11 +218,13 @@ class Route
     {
         $regex = '#{([a-zA-Z0-9]+)(\?)?}#';
 
+        $fullUri = !empty($this->prefix) ? $this->prefix.$this->uri : $this->uri;
+        $fullUri = Str::removeTrailingSlash($fullUri);
         // Get list of parameters.
-        preg_match_all($regex, $this->uri, $matches);
+        preg_match_all($regex, $fullUri, $matches);
 
         // Initialize the match regex.
-        $this->matchRegex = '#^'.$this->uri.'$#s';
+        $this->matchRegex = '#^'.$fullUri.'$#s';
 
         $this->parameters = [];
         foreach ($matches[1] as $key => $param) {
@@ -175,5 +299,30 @@ class Route
     public function getFunction(): array
     {
         return $this->function;
+    }
+
+    /**
+     * @return RouteParameter[]
+     */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Returns Route uri with parameters values inside
+     *
+     * @return string
+     */
+    public function constructUriWithParameters(): string
+    {
+        $uri = !empty($this->prefix) ? $this->prefix.$this->uri : $this->uri;
+        foreach ($this->parameters as $parameter) {
+            $pattern = '%{'.$parameter->getName().'\??}%';
+            $value = !empty($parameter->getValue()) ? $parameter->getValue() : '';
+            $uri = preg_replace($pattern, $value, $uri);
+        }
+
+        return Str::removeTrailingSlash(str_replace('//', '/', $uri));
     }
 }
