@@ -1,0 +1,27 @@
+<!doctype html>
+<html class="h-full bg-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="/assets/admin/style/style.css" rel="stylesheet">
+</head>
+
+<body class="h-full">
+<div x-data="{ isSidebarOpen: false }">
+    <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+    {% include 'Admin/_sidebar.html.twig' %}
+
+    <div class="lg:pl-72">
+        {% include 'Admin/_header.html.twig' %}
+
+        <main class="py-10">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <!-- Your content -->
+                {{ dump(config('admin.menu')) }}
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
