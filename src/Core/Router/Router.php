@@ -74,6 +74,12 @@ class Router
             $filePath = $this->routesFolder.'/'.$file;
             include_once $filePath;
         }
+
+        foreach ($this->routeCollection as $method) {
+            foreach ($method as $route) {
+                $route->parseParameters();
+            }
+        }
     }
 
 

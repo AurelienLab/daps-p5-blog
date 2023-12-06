@@ -14,10 +14,10 @@ class Route
     /**
      * @var string
      */
-    private string $prefix;
+    private string $prefix = '';
 
     /** @var string */
-    private string $uri;
+    private string $uri = '';
 
     /**
      * @var string|null
@@ -38,7 +38,15 @@ class Route
     /** @var string */
     private string $matchRegex;
 
+    /**
+     * @var Route[]
+     */
     private array $group;
+
+    /**
+     * @var Route|null
+     */
+    private ?Route $parent;
 
     /**
      * @return void
@@ -46,7 +54,6 @@ class Route
      */
     private function addToRouter(): void
     {
-        $this->parseParameters();
         Router::getInstance()->add($this);
     }
 
@@ -93,7 +100,7 @@ class Route
         $classMethod = $function[1];
 
         $this->method = 'POST';
-        $this->uri = !empty($this->prefix) ? $this->prefix.$path : $path;
+        $this->uri = !empty($this->getPrefix()) ? $this->getPrefix().$path : $path;
         $this->function = [
             'class' => $class,
             'method' => $classMethod
@@ -115,12 +122,6 @@ class Route
     {
         $this->name = $name;
 
-        if (!empty($this->group)) {
-            foreach ($this->group as $route) {
-                $route->name($this->name.$route->getName());
-            }
-        }
-
         return $this;
     }
 
@@ -128,14 +129,19 @@ class Route
     {
         $this->prefix = $prefix;
 
-        if (!empty($this->group)) {
-            foreach ($this->group as $route) {
-                $route->prefix($this->prefix);
-            }
-        }
-
         return $this;
     }
+
+    public function getPrefix(): string
+    {
+        $prefix = '';
+        if (!empty($this->parent)) {
+            $prefix = $this->parent->getPrefix();
+        }
+
+        return $prefix.$this->prefix;
+    }
+
 
     /**
      * Get Route name
@@ -144,7 +150,11 @@ class Route
      */
     public function getName(): ?string
     {
-        return $this->name;
+        $name = '';
+        if (!empty($this->parent)) {
+            $name = $this->parent->getName();
+        }
+        return $name.$this->name;
     }
 
     /**
@@ -161,12 +171,6 @@ class Route
         }
 
         $this->middleware = array_merge($this->middleware, $middleware);
-
-        if (!empty($this->group)) {
-            foreach ($this->group as $route) {
-                $route->middleware($this->middleware);
-            }
-        }
 
         return $this;
     }
@@ -188,25 +192,15 @@ class Route
      *
      * @return void
      */
-    public function group(array $group)
+    public function group(array $group): self
     {
-
         $this->group = $group;
         foreach ($this->group as $route) {
             /** @var Route $route */
-            if (!empty($this->name)) {
-                $route->name($this->name.$route->getName());
-            }
-
-            if (!empty($this->middleware)) {
-                $route->middleware($this->middleware);
-            }
-
-            if (!empty($this->prefix)) {
-                $route->prefix($this->prefix);
-                $route->parseParameters();
-            }
+            $route->parent = $this;
         }
+
+        return $this;
     }
 
     /**
@@ -214,12 +208,13 @@ class Route
      *
      * @return void
      */
-    private function parseParameters(): void
+    public function parseParameters(): void
     {
         $regex = '#{([a-zA-Z0-9]+)(\?)?}#';
 
-        $fullUri = !empty($this->prefix) ? $this->prefix.$this->uri : $this->uri;
+        $fullUri = $this->getPrefix().$this->uri;
         $fullUri = Str::removeTrailingSlash($fullUri);
+
         // Get list of parameters.
         preg_match_all($regex, $fullUri, $matches);
 
@@ -316,7 +311,7 @@ class Route
      */
     public function constructUriWithParameters(): string
     {
-        $uri = !empty($this->prefix) ? $this->prefix.$this->uri : $this->uri;
+        $uri = !empty($this->getPrefix()) ? $this->getPrefix().$this->uri : $this->uri;
         foreach ($this->parameters as $parameter) {
             $pattern = '%{'.$parameter->getName().'\??}%';
             $value = !empty($parameter->getValue()) ? $parameter->getValue() : '';
