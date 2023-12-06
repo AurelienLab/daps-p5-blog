@@ -30,6 +30,7 @@ abstract class AbstractController
         $this->twig->addExtension(new HeroiconsExtension());
         $this->twig->addFunction(new \Twig\TwigFunction('config', 'config'));
         $this->twig->addFunction(new \Twig\TwigFunction('dump', 'twigDump'));
+        $this->twig->addFunction(new \Twig\TwigFunction('route', 'route'));
     }
 
 

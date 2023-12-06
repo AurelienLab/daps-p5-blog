@@ -17,8 +17,8 @@
 
         <main class="py-10">
             <div class="px-4 sm:px-6 lg:px-8">
-                <!-- Your content -->
-                {{ dump(config('admin.menu')) }}
+                {% block content %}
+                {% endblock %}
             </div>
         </main>
     </div>
