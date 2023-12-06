@@ -20,9 +20,9 @@ class Route
     private string $uri;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private string $name;
+    private ?string $name = null;
 
     /** @var array */
     private array $function;
@@ -142,7 +142,7 @@ class Route
      *
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
