@@ -93,7 +93,7 @@ class Route
         $classMethod = $function[1];
 
         $this->method = 'POST';
-        $this->uri = $path;
+        $this->uri = !empty($this->prefix) ? $this->prefix.$path : $path;
         $this->function = [
             'class' => $class,
             'method' => $classMethod
@@ -316,7 +316,7 @@ class Route
      */
     public function constructUriWithParameters(): string
     {
-        $uri = $this->uri;
+        $uri = !empty($this->prefix) ? $this->prefix.$this->uri : $this->uri;
         foreach ($this->parameters as $parameter) {
             $pattern = '%{'.$parameter->getName().'\??}%';
             $value = !empty($parameter->getValue()) ? $parameter->getValue() : '';
