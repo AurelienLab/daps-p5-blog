@@ -300,4 +300,29 @@ class Route
     {
         return $this->function;
     }
+
+    /**
+     * @return RouteParameter[]
+     */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Returns Route uri with parameters values inside
+     *
+     * @return string
+     */
+    public function constructUriWithParameters(): string
+    {
+        $uri = $this->uri;
+        foreach ($this->parameters as $parameter) {
+            $pattern = '%{'.$parameter->getName().'\??}%';
+            $value = !empty($parameter->getValue()) ? $parameter->getValue() : '';
+            $uri = preg_replace($pattern, $value, $uri);
+        }
+
+        return Str::removeTrailingSlash(str_replace('//', '/', $uri));
+    }
 }
