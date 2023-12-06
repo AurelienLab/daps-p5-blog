@@ -16,7 +16,7 @@ class Router
     private array $routingFiles;
 
     /**
-     * @var array
+     * @var Route[]
      */
     private array $routeCollection;
 
@@ -207,5 +207,68 @@ class Router
         }
 
         $response->send();
+    }
+
+    /**
+     * Get the first route that matches given name
+     *
+     * @param string $name
+     *
+     * @return Route
+     * @throws Exception
+     */
+    private function findRouteByName(string $name): Route
+    {
+        foreach ($this->routeCollection as $method) {
+            foreach ($method as $route) {
+                if ($route->getName() == $name) {
+                    return $route;
+                }
+            }
+        }
+
+        throw new Exception(sprintf('Unable to find route named "%s"', $name));
+    }
+
+    /**
+     * Return matching route name as URI constructed with passed arguments
+     *
+     * @param string $name
+     * @param array $args
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getUriByName(string $name, array $args): string
+    {
+        $route = $this->findRouteByName($name);
+
+        // Check if required parameters are present
+        foreach ($route->getParameters() as $parameter) {
+            if (!$parameter->isNullable() && !isset($args[$parameter->getName()])) {
+                throw new Exception(
+                    sprintf(
+                        'Missing parameter "%s" for route named "%s"',
+                        $parameter->getName(),
+                        $route->getName()
+                    )
+                );
+            }
+
+            if (isset($args[$parameter->getName()])) {
+                $parameter->setValue($args[$parameter->getName()]);
+                unset($args[$parameter->getName()]);
+            }
+        }
+
+        //Generate route from parameters values
+        $result = $route->constructUriWithParameters();
+
+        //If we still have args, append them as query params
+        if (!empty($args)) {
+            $result .= '?'.http_build_query($args);
+        }
+
+        return $result;
     }
 }
