@@ -2,6 +2,7 @@
 
 namespace App\Core\Abstracts;
 
+use MarcW\Heroicons\Twig\HeroiconsExtension;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -26,6 +27,10 @@ abstract class AbstractController
 
         $this->twig = new Environment($loader);
         $this->twig->addExtension(new IntlExtension());
+        $this->twig->addExtension(new HeroiconsExtension());
+        $this->twig->addFunction(new \Twig\TwigFunction('config', 'config'));
+        $this->twig->addFunction(new \Twig\TwigFunction('dump', 'twigDump'));
+        $this->twig->addFunction(new \Twig\TwigFunction('route', 'route'));
     }
 
 

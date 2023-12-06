@@ -20,9 +20,9 @@ class Route
     private string $uri;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private string $name;
+    private ?string $name = null;
 
     /** @var array */
     private array $function;
@@ -93,7 +93,7 @@ class Route
         $classMethod = $function[1];
 
         $this->method = 'POST';
-        $this->uri = $path;
+        $this->uri = !empty($this->prefix) ? $this->prefix.$path : $path;
         $this->function = [
             'class' => $class,
             'method' => $classMethod
@@ -142,7 +142,7 @@ class Route
      *
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -316,7 +316,7 @@ class Route
      */
     public function constructUriWithParameters(): string
     {
-        $uri = $this->uri;
+        $uri = !empty($this->prefix) ? $this->prefix.$this->uri : $this->uri;
         foreach ($this->parameters as $parameter) {
             $pattern = '%{'.$parameter->getName().'\??}%';
             $value = !empty($parameter->getValue()) ? $parameter->getValue() : '';
