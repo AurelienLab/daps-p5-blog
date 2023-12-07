@@ -2,7 +2,9 @@
 
 namespace App\Core\Abstracts;
 
+use App\Core\Router\Router;
 use MarcW\Heroicons\Twig\HeroiconsExtension;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -18,6 +20,8 @@ abstract class AbstractController
      * @var Environment
      */
     private $twig;
+
+    private $formErrors = [];
 
 
     public function __construct()
@@ -48,9 +52,25 @@ abstract class AbstractController
     protected function render(string $template, array $data = []): Response
     {
         $response = new Response();
+
+        $data = array_merge($data, [
+            '_form_errors' => $this->formErrors
+        ]);
+
         $response->setContent($this->twig->render($template, $data));
 
         return $response;
+    }
+
+    /**
+     * Redirect to given route
+     *
+     * @throws \Exception
+     */
+    protected function redirect(string $routeName, array $args = []): RedirectResponse
+    {
+        $uri = Router::getInstance()->getUriByName($routeName, $args);
+        return new RedirectResponse($uri);
     }
 
 
@@ -68,5 +88,15 @@ abstract class AbstractController
     protected function display(string $template, array $data = []): void
     {
         $this->twig->display($template, $data);
+    }
+
+    protected function addFormError(string $fieldName, string $errorMessage): void
+    {
+        $this->formErrors[$fieldName] = $errorMessage;
+    }
+
+    protected function hasFormErrors(): bool
+    {
+        return count($this->formErrors) > 0;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Core\Abstracts;
 
 use App\Core\Database\Database;
 use App\Core\Database\Query;
+use App\Core\Exception\NotFoundException;
 use Exception;
 use stdClass;
 
@@ -59,16 +60,27 @@ abstract class AbstractRepository
         return $result[0];
     }
 
+    public static function getOrError(mixed $identifier): mixed
+    {
+        $result = self::get($identifier);
+
+        if (!$result) {
+            throw new NotFoundException();
+        }
+
+        return $result;
+    }
+
 
     /**
      * Update or Create entity in database
      *
-     * @param stdClass $entity Entity to save
+     * @param Object $entity Entity to save
      *
      * @return void
      * @throws Exception
      */
-    public static function save(stdClass $entity): void
+    public static function save(object $entity): void
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
