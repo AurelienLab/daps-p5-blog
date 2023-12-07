@@ -4,6 +4,7 @@ namespace App\Core\Abstracts;
 
 use App\Core\Database\Database;
 use App\Core\Database\Query;
+use App\Core\Exception\NotFoundException;
 use Exception;
 use stdClass;
 
@@ -59,16 +60,35 @@ abstract class AbstractRepository
         return $result[0];
     }
 
+    /**
+     * Same as get() but throw a NotFoundException if no result
+     *
+     * @param mixed $identifier
+     *
+     * @return mixed
+     * @throws NotFoundException
+     */
+    public static function getOrError(mixed $identifier): mixed
+    {
+        $result = self::get($identifier);
+
+        if (!$result) {
+            throw new NotFoundException();
+        }
+
+        return $result;
+    }
+
 
     /**
      * Update or Create entity in database
      *
-     * @param stdClass $entity Entity to save
+     * @param Object $entity Entity to save
      *
      * @return void
      * @throws Exception
      */
-    public static function save(stdClass $entity): void
+    public static function save(object $entity): void
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
@@ -78,6 +98,25 @@ abstract class AbstractRepository
         } else {
             $query->update($dbMapping->entityArray, $dbMapping->primaryKey);
         }
+
+        Database::query($query);
+    }
+
+    /**
+     * Remove an entity from the database
+     *
+     * @param object $entity
+     *
+     * @return void
+     * @throws Exception
+     */
+    public static function remove(object $entity): void
+    {
+        $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
+        $query = new Query(static::MODEL);
+
+        $query->delete($dbMapping->primaryKey, $dbMapping->entityArray[$dbMapping->primaryKey]);
+
 
         Database::query($query);
     }

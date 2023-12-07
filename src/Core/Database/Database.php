@@ -164,7 +164,7 @@ class Database
      * @return stdClass
      * @throws Exception
      */
-    public static function mapEntityToTable(stdClass $entity, string $model): stdClass
+    public static function mapEntityToTable(object $entity, string $model): stdClass
     {
         // Get table fields.
         $tableFields = self::getTableData($model);

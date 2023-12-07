@@ -153,6 +153,22 @@ class Query
         $this->statement .= ' WHERE '.$primaryKey.' = :'.$primaryKey;
     }
 
+    /**
+     * Generate a DELETE statement to delete one entity
+     *
+     * @param string $primaryKey
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function delete(string $primaryKey, mixed $value)
+    {
+        $this->setParameters([$primaryKey => $value]);
+
+        $this->statement = 'DELETE FROM '.$this->table;
+        $this->statement .= ' WHERE '.$primaryKey.' = :'.$primaryKey;
+    }
+
 
     /**
      * Describe table statement (get columns information)
