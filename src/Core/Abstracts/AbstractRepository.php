@@ -60,6 +60,14 @@ abstract class AbstractRepository
         return $result[0];
     }
 
+    /**
+     * Same as get() but throw a NotFoundException if no result
+     *
+     * @param mixed $identifier
+     *
+     * @return mixed
+     * @throws NotFoundException
+     */
     public static function getOrError(mixed $identifier): mixed
     {
         $result = self::get($identifier);
@@ -94,6 +102,14 @@ abstract class AbstractRepository
         Database::query($query);
     }
 
+    /**
+     * Remove an entity from the database
+     *
+     * @param object $entity
+     *
+     * @return void
+     * @throws Exception
+     */
     public static function remove(object $entity): void
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);

@@ -14,6 +14,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class CategoryController extends AbstractController
 {
 
+    /**
+     * Categories list
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index(): Response
     {
         $categories = PostCategoryRepository::getAll();
@@ -23,11 +31,27 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    /**
+     * Display form to add a new category
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function add(): Response
     {
         return $this->render('Admin/category/add.html.twig');
     }
 
+    /**
+     * Handle add form post
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function create(): Response
     {
         $request = Request::createFromGlobals();
@@ -40,6 +64,17 @@ class CategoryController extends AbstractController
         return $this->render('Admin/category/add.html.twig');
     }
 
+    /**
+     * Display edit category form
+     *
+     * @param int $id
+     *
+     * @return Response
+     * @throws NotFoundException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function edit(int $id): Response
     {
         $category = PostCategoryRepository::getOrError($id);
@@ -52,6 +87,17 @@ class CategoryController extends AbstractController
         );
     }
 
+    /**
+     * Handle edit category form post
+     *
+     * @param int $id
+     *
+     * @return Response
+     * @throws NotFoundException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function update(int $id): Response
     {
         $request = Request::createFromGlobals();
@@ -69,6 +115,14 @@ class CategoryController extends AbstractController
         );
     }
 
+    /**
+     * Delete category
+     *
+     * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws NotFoundException
+     */
     public function remove(int $id)
     {
         $category = PostCategoryRepository::getOrError($id);
@@ -78,6 +132,15 @@ class CategoryController extends AbstractController
         return $this->redirect('admin.category.index');
     }
 
+    /**
+     * Validate & save data from a form post
+     *
+     * @param PostCategory $postCategory
+     * @param Request $request
+     *
+     * @return bool
+     * @throws \Exception
+     */
     private function save(PostCategory $postCategory, Request $request)
     {
         $data = $request->request;

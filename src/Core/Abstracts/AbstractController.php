@@ -90,11 +90,24 @@ abstract class AbstractController
         $this->twig->display($template, $data);
     }
 
+    /**
+     * Add an error to form error bag
+     *
+     * @param string $fieldName
+     * @param string $errorMessage
+     *
+     * @return void
+     */
     protected function addFormError(string $fieldName, string $errorMessage): void
     {
         $this->formErrors[$fieldName] = $errorMessage;
     }
 
+    /**
+     * Is there any error in form error bag ?
+     *
+     * @return bool
+     */
     protected function hasFormErrors(): bool
     {
         return count($this->formErrors) > 0;

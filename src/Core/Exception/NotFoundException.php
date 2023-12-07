@@ -2,6 +2,9 @@
 
 namespace App\Core\Exception;
 
+/**
+ * Easily throw a 404 error
+ */
 class NotFoundException extends \Exception
 {
 
