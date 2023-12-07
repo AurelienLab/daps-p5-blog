@@ -50,10 +50,10 @@
                                       {{ heroicon('pencil', 'h-4 w-4 shrink-0 text-gray-500 group-hover:text-white') }}
                                   </a>
 
-                                  <a href="#"
-                                     class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">
+                                  <button type="button" @click="$dispatch('remove_{{ category.id }}')"
+                                          class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">
                                       {{ heroicon('trash', 'h-4 w-4 shrink-0 text-gray-500 group-hover:text-white') }}
-                                  </a>
+                                  </button>
                                 </span>
                                 </td>
                             </tr>
@@ -67,4 +67,22 @@
         </div>
     </div>
 
+
+    {% for item in categories %}
+        {% include 'Admin/_components/modal.html.twig' with {
+            icon: {
+                color: 'red',
+                name: 'exclamation'
+            },
+            title: 'Supprimer la catégorie "' ~ item.name ~'" ?',
+            text: 'Êtes-vous sûr de vouloir supprimer cette catégorie ?',
+            toggleEvent: 'remove_' ~ item.id,
+            cancelButton: true,
+            okButton: {
+                href: route('admin.category.remove', { id: item.id}),
+                name: 'Supprimer',
+                color: 'red'
+            }
+        } %}
+    {% endfor %}
 {% endblock %}

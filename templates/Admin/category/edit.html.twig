@@ -2,8 +2,8 @@
 
 {% block content %}
     <h2 class="text-base font-semibold leading-7 text-gray-900">Editer la catégorie {{ category.name }}</h2>
-    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Remplissez ici les informations pour ajouter
-        une catégorie d'article qui sera ensuite disponible dans la selection lors de l'ajout / edition.</p>
+    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Tous les articles associés à cette catégorie obtiendront
+        les modifications</p>
 
     <form method="POST" action="{{ route('admin.category.edit.post', { id: category.id }) }}">
         {% include 'Admin/category/_form.html.twig' %}

@@ -93,4 +93,15 @@ abstract class AbstractRepository
 
         Database::query($query);
     }
+
+    public static function remove(object $entity): void
+    {
+        $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
+        $query = new Query(static::MODEL);
+
+        $query->delete($dbMapping->primaryKey, $dbMapping->entityArray[$dbMapping->primaryKey]);
+
+
+        Database::query($query);
+    }
 }

@@ -69,6 +69,15 @@ class CategoryController extends AbstractController
         );
     }
 
+    public function remove(int $id)
+    {
+        $category = PostCategoryRepository::getOrError($id);
+
+        PostCategoryRepository::remove($category);
+
+        return $this->redirect('admin.category.index');
+    }
+
     private function save(PostCategory $postCategory, Request $request)
     {
         $data = $request->request;
