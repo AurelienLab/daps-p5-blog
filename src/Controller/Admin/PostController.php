@@ -7,6 +7,7 @@ use App\Core\Exception\NotFoundException;
 use App\Model\Post;
 use App\Repository\PostCategoryRepository;
 use App\Repository\PostRepository;
+use Behat\Transliterator\Transliterator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,7 @@ class PostController extends AbstractController
 {
 
     /**
-     * Categories list
+     * posts list
      *
      * @return Response
      * @throws \Twig\Error\LoaderError
@@ -24,10 +25,10 @@ class PostController extends AbstractController
      */
     public function index(): Response
     {
-        $categories = PostRepository::getAll();
+        $posts = PostRepository::getAll();
 
         return $this->render('Admin/post/index.html.twig', [
-            'categories' => $categories
+            'posts' => $posts
         ]);
     }
 
@@ -68,7 +69,11 @@ class PostController extends AbstractController
             return $this->redirect('admin.post.index');
         }
 
-        return $this->render('Admin/post/add.html.twig');
+        $categories = PostCategoryRepository::getAll();
+        return $this->render('Admin/post/add.html.twig', [
+            'post' => $post,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -85,11 +90,12 @@ class PostController extends AbstractController
     public function edit(int $id): Response
     {
         $post = PostRepository::getOrError($id);
-
+        $categories = PostCategoryRepository::getAll();
         return $this->render(
             'Admin/post/edit.html.twig',
             [
-                'post' => $post
+                'post' => $post,
+                'categories' => $categories
             ]
         );
     }
@@ -114,12 +120,11 @@ class PostController extends AbstractController
             return $this->redirect('admin.post.index');
         }
 
-        return $this->render(
-            'Admin/post/edit.html.twig',
-            [
-                'post' => $post
-            ]
-        );
+        $categories = PostCategoryRepository::getAll();
+        return $this->render('Admin/post/add.html.twig', [
+            'post' => $post,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -151,8 +156,76 @@ class PostController extends AbstractController
     private function save(Post $post, Request $request)
     {
         $data = $request->request;
+        $file = $request->files;
+
+        // Check title validity
+        if (empty(trim($data->get('title')))) {
+            $this->addFormError('title', 'Vous devez entrer un titre');
+        }
+
+        //Generate Slug
+        $slug = $data->get('slug');
+        if ($slug === null || empty(trim($slug))) {
+            $slug = $data->get('title');
+        }
+
+        // Check category validity
+        if (!is_numeric($data->get('category_id'))) {
+            $this->addFormError('category_id', 'Vous devez sélectionner une catégorie');
+        }
+
+        // Check excerpt validity
+        if (empty(trim($data->get('chapo')))
+            || strlen(trim($data->get('chapo'))) < 50) {
+            $this->addFormError('chapo', 'Le chapô doit faire au moins 50 caractères');
+        }
+
+        // Check read time validity
+        if (!is_numeric($data->get('read_time'))) {
+            $this->addFormError('read_time', 'Vous devez entrer un temps de lecture');
+        }
+
+        // Check content json validity
+        $decodedContent = json_decode($data->get('content'), true);
+        if ($decodedContent === null) {
+            $this->addFormError('content', 'Une erreur est survenue lors de la récupération du contenu');
+        }
+        if (empty($decodedContent['blocks'])) {
+            $this->addFormError('content', 'Vous devez entrer un contenu');
+        }
+
+        $published_at = null;
+
+        try {
+            $published_at = new \DateTime($data->get('published_at'));
+        } catch (\Exception) {
+            $this->addFormError('published_at', 'Impossible d\'interpréter la date');
+        }
+
+        $post
+            ->setTitle(trim($data->get('title')))
+            ->setSlug(Transliterator::urlize($slug))
+            ->setCategoryId(intval($data->get('category_id')))
+            ->setChapo($data->get('chapo'))
+            ->setReadTime($data->get('read_time'))
+            ->setContent($data->get('content'))
+            ->setPublishedAt($published_at)
+            ->setFeaturedImage('toto.jpg')
+            ->setStatus(Post::STATE_PUBLISHED)
+            ->setUserId(1)
+            ->setValidatedAt(new \DateTime())
+            ->setValidatorUserId(1);
+
+        //TODO: Check file
+
+        if ($this->hasFormErrors()) {
+            return false;
+        }
+
+        //TODO: Upload file
 
 
+        PostRepository::save($post);
         return true;
     }
 }

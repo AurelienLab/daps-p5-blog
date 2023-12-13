@@ -3,6 +3,7 @@
 namespace App\Core\Database;
 
 use App\Core\Utils\Str;
+use App\Model\Trait\TimestampableTrait;
 use Exception;
 use PDO;
 use ReflectionClass;
@@ -140,11 +141,20 @@ class Database
     {
         $entity = new $model();
 
+        $reflectionClass = new ReflectionClass($model);
+
         foreach ($data as $key => $value) {
-            if (property_exists($entity, Str::toCamelCase($key)) === true) {
+            if ($reflectionClass->hasProperty(Str::toCamelCase($key)) === true) {
                 $setter = 'set'.Str::toPascalCase($key);
 
-                if (method_exists($entity, $setter) === true) {
+                if ($reflectionClass->hasMethod($setter) === true) {
+                    $type = $reflectionClass->getMethod($setter)->getParameters()[0]->getType();
+
+                    if (!$type->isBuiltin()) {
+                        $name = $type->getName();
+                        $value = new $name($value);
+                    }
+
                     $entity->$setter($value);
                     continue;
                 }
@@ -169,13 +179,30 @@ class Database
         // Get table fields.
         $tableFields = self::getTableData($model);
 
+
         // Transform entity to array.
         $reflectionClass = new ReflectionClass(get_class($entity));
+
+        //Set timestamps if applicable
+        foreach ($reflectionClass->getTraits() as $trait => $reflexionTrait) {
+            if ($trait == TimestampableTrait::class) {
+                if (is_null($entity->getCreatedAt())) {
+                    $entity->setCreatedAt(new \DateTime());
+                }
+
+                $entity->setUpdatedAt(new \DateTime());
+            }
+        }
+
         $entityArray = array();
         foreach ($reflectionClass->getProperties() as $property) {
             if ($property->isInitialized($entity) === true) {
                 $property->setAccessible(true);
-                $entityArray[$property->getName()] = $property->getValue($entity);
+                if ($property->getValue($entity) instanceof \DateTimeInterface) {
+                    $entityArray[$property->getName()] = $property->getValue($entity)->format('Y-m-d H:i:s');
+                } else {
+                    $entityArray[$property->getName()] = $property->getValue($entity);
+                }
                 $property->setAccessible(false);
             }
         }

@@ -200,15 +200,29 @@ class Router
                     gettype($response)
                 ));
             }
+        } catch (\PDOException $e) {
+            throw new Exception(
+                sprintf(
+                    'Error while trying to call %s::%s. %s in %s::%s',
+                    $class,
+                    $method,
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                ),
+                500
+            );
         } catch (Exception $e) {
             throw new Exception(
                 sprintf(
-                    'Error while trying to call %s::%s. %s',
+                    'Error while trying to call %s::%s. %s in %s::%s',
                     $class,
                     $method,
-                    $e->getMessage()
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
                 ),
-                $e->getCode()
+                $e->getCode(),
             );
         }
 
