@@ -1,5 +1,3 @@
-{{ dump(_form_errors) }}
-
 <div class="space-y-12">
     <div class="border-b border-gray-900/10 pb-12">
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -11,6 +9,7 @@
                         <input type="text" name="title" id="title" value="{{ post.title }}"
                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('title') }}</p>
                 </div>
             </div>
 
@@ -21,6 +20,7 @@
                         <input type="text" name="slug" id="slug" value="{{ post.slug }}"
                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('slug') }}</p>
                     <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-400">Texte affiché dans la barre
                         d'adresse.<br> Laissez vide pour le générer automatiquement à partir du titre</p>
 
@@ -41,6 +41,7 @@
 
                         </select>
                     </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('category_id') }}</p>
                 </div>
             </div>
 
@@ -48,9 +49,10 @@
                 <label for="chapo" class="block text-sm font-medium leading-6 text-gray-900">Introduction /
                     Chapô</label>
                 <div class="mt-2">
-                    <textarea id="chapo" name="chapo" rows="3"
+                    <textarea id="chapo" name="chapo" rows="3" required="required"
                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ post.chapo }}</textarea>
                 </div>
+                <p class="mt-1 text-red-400 text-sm">{{ error('chapo') }}</p>
                 <p class="mt-3 text-sm leading-6 text-gray-400">Texte qui sera affiché en introduction dans les pages de
                     listing et sur la homepage</p>
             </div>
@@ -59,13 +61,15 @@
                 <label for="read_time" class="block text-sm font-medium leading-6 text-gray-900">Temps de lecture
                     (min)</label>
                 <div class="mt-2">
-                    <input type="number" name="read_time" id="read_time" value="{{ post.readTime }}"
+                    <input type="number" name="read_time" id="read_time" value="{{ post.readTime }}" required="required"
                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
+                <p class="mt-1 text-red-400 text-sm">{{ error('read_time') }}</p>
             </div>
 
             <div class="col-span-full">
                 <label for="contentEditor" class="block text-sm font-medium leading-6 text-gray-900">Contenu</label>
+                <p class="mt-1 text-red-400 text-sm">{{ error('content') }}</p>
                 <div class="mt-2">
                     <div id="contentEditor" data-value="{{ post.content }}"
                          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 cursor-text"></div>
@@ -91,6 +95,7 @@
                              class="mt-4 mx-auto max-h-40 {% if post.featuredImage is not defined %}hidden{% endif %}"
                              id="preview">
                     </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('featured_image') }}</p>
                     <input id="dropzone-file" name="featured_image" type="file" class="hidden"/>
                 </label>
             </div>
@@ -104,6 +109,7 @@
                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     >
                 </div>
+                <p class="mt-1 text-red-400 text-sm">{{ error('published_at') }}</p>
             </div>
         </div>
     </div>

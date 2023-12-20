@@ -244,7 +244,7 @@ class PostController extends AbstractController
         if ($this->hasFormErrors()) {
             return false;
         }
-        
+
 
         PostRepository::save($post);
         return true;

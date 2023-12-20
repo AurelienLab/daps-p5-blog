@@ -144,9 +144,9 @@ class Post
         return $this;
     }
 
-    public function getFeaturedImage(): string
+    public function getFeaturedImage(): ?string
     {
-        return $this->featuredImage;
+        return $this->featuredImage ?? null;
     }
 
     public function setFeaturedImage(string $featuredImage): Post
