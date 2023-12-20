@@ -11,3 +11,9 @@ function twigDump($vars): void
 {
     dump($vars);
 }
+
+function dateTimeAgo(DateTimeInterface $dateTime): string
+{
+    $carbon = new \Carbon\Carbon($dateTime);
+    return $carbon->locale('fr')->diffForHumans();
+}

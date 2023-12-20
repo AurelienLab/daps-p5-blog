@@ -13,6 +13,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 abstract class AbstractController
@@ -40,6 +41,7 @@ abstract class AbstractController
         $this->twig->addFunction(new TwigFunction('dump', 'twigDump'));
         $this->twig->addFunction(new TwigFunction('route', 'route'));
         $this->twig->addFunction(new TwigFunction('error', [$this->formErrors, 'getError']));
+        $this->twig->addFilter(new TwigFilter('diff', 'dateTimeAgo'));
     }
 
 
@@ -57,10 +59,6 @@ abstract class AbstractController
     protected function render(string $template, array $data = []): Response
     {
         $response = new Response();
-
-        $data = array_merge($data, [
-            '_form_errors' => $this->formErrors
-        ]);
 
         $response->setContent($this->twig->render($template, $data));
 
