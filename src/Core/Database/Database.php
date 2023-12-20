@@ -197,11 +197,12 @@ class Database
         $entityArray = array();
         foreach ($reflectionClass->getProperties() as $property) {
             if ($property->isInitialized($entity) === true) {
+                $propertyName = Str::toSnakeCase($property->getName());
                 $property->setAccessible(true);
                 if ($property->getValue($entity) instanceof \DateTimeInterface) {
-                    $entityArray[$property->getName()] = $property->getValue($entity)->format('Y-m-d H:i:s');
+                    $entityArray[$propertyName] = $property->getValue($entity)->format('Y-m-d H:i:s');
                 } else {
-                    $entityArray[$property->getName()] = $property->getValue($entity);
+                    $entityArray[$propertyName] = $property->getValue($entity);
                 }
                 $property->setAccessible(false);
             }

@@ -194,10 +194,10 @@ class PostController extends AbstractController
             $this->addFormError('content', 'Vous devez entrer un contenu');
         }
 
-        $published_at = null;
+        $publishedAt = null;
 
         try {
-            $published_at = new \DateTime($data->get('published_at'));
+            $publishedAt = new \DateTime($data->get('published_at'));
         } catch (\Exception) {
             $this->addFormError('published_at', 'Impossible d\'interpréter la date');
         }
@@ -209,7 +209,7 @@ class PostController extends AbstractController
             ->setChapo($data->get('chapo'))
             ->setReadTime($data->get('read_time'))
             ->setContent($data->get('content'))
-            ->setPublishedAt($published_at)
+            ->setPublishedAt($publishedAt)
             ->setFeaturedImage('toto.jpg')
             ->setStatus(Post::STATE_PUBLISHED)
             ->setUserId(1)
