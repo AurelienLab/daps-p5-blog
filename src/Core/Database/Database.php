@@ -94,11 +94,6 @@ class Database
     {
         $database = self::getPDOInstance();
         $statement = $query->getStatement();
-        if ($query->getWhere() !== null) {
-            $statement .= $query->getWhere();
-        }
-
-        $statement .= ';';
 
         $sth = $database->prepare($statement);
 
@@ -150,7 +145,7 @@ class Database
                 if ($reflectionClass->hasMethod($setter) === true) {
                     $type = $reflectionClass->getMethod($setter)->getParameters()[0]->getType();
 
-                    if (!$type->isBuiltin()) {
+                    if (!$type->isBuiltin() && $value !== null) {
                         $name = $type->getName();
                         $value = new $name($value);
                     }

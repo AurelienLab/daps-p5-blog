@@ -2,12 +2,14 @@
 
 namespace App\Model;
 
+use App\Model\Trait\SoftDeleteTrait;
 use App\Model\Trait\TimestampableTrait;
 
 class Post
 {
 
-    use TimestampableTrait;
+    use TimestampableTrait,
+        SoftDeleteTrait;
 
     const TABLE = 'posts';
 

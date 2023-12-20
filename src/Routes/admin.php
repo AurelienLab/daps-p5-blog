@@ -26,5 +26,7 @@ Route::prefix('/admin')->name('admin.')->group([
 
         Route::get('/{id}/editer', [Admin\PostController::class, 'edit'])->name('edit'),
         Route::post('/{id}/editer', [Admin\PostController::class, 'update'])->name('edit.post'),
+
+        Route::get('/{id}/remove', [Admin\PostController::class, 'remove'])->name('remove')
     ])
 ]);

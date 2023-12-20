@@ -2,6 +2,7 @@
 
 namespace App\Core\Database;
 
+use App\Model\Trait\SoftDeleteTrait;
 use Exception;
 
 class Query
@@ -10,7 +11,12 @@ class Query
     /**
      * @var string
      */
-    private string $statement;
+    private string $verb;
+
+    /**
+     * @var string|null
+     */
+    private array $where = [];
 
     /**
      * @var string
@@ -28,14 +34,9 @@ class Query
     private $parameters = [];
 
     /**
-     * @var string|null
+     * @var bool
      */
-    private ?string $where = null;
-
-    /**
-     * @var int
-     */
-    private int $whereCount = 0;
+    private ?bool $withTrashed = null;
 
     /**
      * @param string $model Model on which we'll do a query
@@ -53,7 +54,7 @@ class Query
             throw new Exception(sprintf('Model table must by defined in %s', $model));
         }
 
-        $this->statement = '';
+        $this->verb = '';
         $this->table = $model::TABLE;
         $this->model = $model;
     }
@@ -68,7 +69,10 @@ class Query
      */
     public function select(array|string $fields = '*'): self
     {
-        $this->statement .= 'SELECT ';
+        if ($this->isModelSoftDeletable() === true && $this->withTrashed == null) {
+            $this->withTrashed = false;
+        }
+        $this->verb = 'SELECT ';
 
         $fieldsStr = $fields;
 
@@ -76,7 +80,7 @@ class Query
             $fieldsStr = implode(', ', $fields);
         }
 
-        $this->statement .= $fieldsStr.' FROM '.$this->table;
+        $this->verb .= $fieldsStr.' FROM '.$this->table;
 
         return $this;
     }
@@ -91,18 +95,17 @@ class Query
      */
     public function where(string $column, string $comparator, mixed $value): self
     {
-        $whereStatement = ' AND ';
-        if ($this->whereCount === 0) {
-            $whereStatement = ' WHERE ';
-        }
-        $parameterName = ':'.$column.'_'.$this->whereCount;
+        $parameterName = ':'.$column.'_'.count($this->where);
 
-        $whereStatement .= implode(' ', [$column, $comparator, $parameterName]);
+        $this->where[] = [
+            'column' => $column,
+            'comparator' => $comparator,
+            'parameterName' => $parameterName
+        ];
 
-        $this->where .= $whereStatement;
         $this->parameters[$parameterName] = $value;
 
-        $this->whereCount++;
+        // $whereStatement .= implode(' ', [$column, $comparator, $parameterName]);
         return $this;
     }
 
@@ -117,12 +120,12 @@ class Query
     {
         $this->setParameters($data);
 
-        $this->statement = 'INSERT INTO '.$this->table;
+        $this->verb = 'INSERT INTO '.$this->table;
 
         $columns = ' ('.implode(', ', array_keys($data)).') ';
         $values = 'VALUES('.implode(', ', array_keys($this->parameters)).')';
 
-        $this->statement .= $columns.$values;
+        $this->verb .= $columns.$values;
     }
 
     /**
@@ -133,24 +136,30 @@ class Query
      *
      * @return void
      */
-    public function update(array $data, string $primaryKey): void
+    public function updateOne(array $data, string $primaryKey): void
     {
         $this->setParameters($data);
         unset($data[$primaryKey]);
 
-        $this->statement = 'UPDATE '.$this->table.' SET ';
+        $this->verb = 'UPDATE '.$this->table.' SET ';
 
         $columns = array_keys($data);
 
         for ($i = 0; $i < count($data); $i++) {
             if ($i > 0) {
-                $this->statement .= ', ';
+                $this->verb .= ', ';
             }
 
-            $this->statement .= $columns[$i].'= :'.$columns[$i];
+            $this->verb .= $columns[$i].'= :'.$columns[$i];
         }
 
-        $this->statement .= ' WHERE '.$primaryKey.' = :'.$primaryKey;
+        $this->where = [
+            [
+                'column' => $primaryKey,
+                'comparator' => '=',
+                'parameterName' => ':'.$primaryKey
+            ]
+        ];
     }
 
     /**
@@ -161,14 +170,31 @@ class Query
      *
      * @return void
      */
-    public function delete(string $primaryKey, mixed $value)
+    public function deleteOne(string $primaryKey, mixed $value)
     {
         $this->setParameters([$primaryKey => $value]);
 
-        $this->statement = 'DELETE FROM '.$this->table;
-        $this->statement .= ' WHERE '.$primaryKey.' = :'.$primaryKey;
+        $this->verb = 'DELETE FROM '.$this->table;
+
+        $this->where = [
+            [
+                'column' => $primaryKey,
+                'comparator' => '=',
+                'parameterName' => ':'.$primaryKey
+            ]
+        ];
     }
 
+    /**
+     * Get all data included deleted
+     *
+     * @return $this
+     */
+    public function withTrashed(): self
+    {
+        $this->withTrashed = true;
+        return $this;
+    }
 
     /**
      * Describe table statement (get columns information)
@@ -177,7 +203,7 @@ class Query
      */
     public function describe(): void
     {
-        $this->statement = 'DESCRIBE '.$this->table;
+        $this->verb = 'DESCRIBE '.$this->table;
     }
 
 
@@ -186,7 +212,31 @@ class Query
      */
     public function getStatement(): string
     {
-        return $this->statement;
+        $statement = $this->verb;
+
+        if (!empty($this->where) || $this->withTrashed === false) {
+            $statement .= ' WHERE ';
+            $wheres = $this->generateWheres();
+
+            $statement .= implode(' AND ', $wheres);
+        }
+
+        $statement .= ';';
+        return $statement;
+    }
+
+    private function generateWheres(): array
+    {
+        $result = [];
+        foreach ($this->where as $where) {
+            $result[] = $where['column'].' '.$where['comparator'].' '.$where['parameterName'];
+        }
+
+        if ($this->withTrashed === false) {
+            $result[] = 'deleted_at IS NULL';
+        }
+
+        return $result;
     }
 
 
@@ -223,11 +273,15 @@ class Query
         return $this->parameters;
     }
 
-    /**
-     * @return string
-     */
-    public function getWhere(): ?string
+    private function isModelSoftDeletable(): bool
     {
-        return $this->where;
+        $reflection = new \ReflectionClass($this->model);
+        foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
+            if ($trait == SoftDeleteTrait::class) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

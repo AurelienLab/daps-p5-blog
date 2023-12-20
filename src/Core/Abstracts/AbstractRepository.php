@@ -5,6 +5,7 @@ namespace App\Core\Abstracts;
 use App\Core\Database\Database;
 use App\Core\Database\Query;
 use App\Core\Exception\NotFoundException;
+use App\Model\Trait\SoftDeleteTrait;
 use Exception;
 use stdClass;
 
@@ -96,7 +97,7 @@ abstract class AbstractRepository
         if (isset($dbMapping->entityArray[$dbMapping->primaryKey]) === false) {
             $query->insert($dbMapping->entityArray);
         } else {
-            $query->update($dbMapping->entityArray, $dbMapping->primaryKey);
+            $query->updateOne($dbMapping->entityArray, $dbMapping->primaryKey);
         }
 
         Database::query($query);
@@ -110,12 +111,28 @@ abstract class AbstractRepository
      * @return void
      * @throws Exception
      */
-    public static function remove(object $entity): void
+    public static function remove(object $entity, $hard = false): void
     {
+        $softDelete = false;
+        if ($hard == false) {
+            $reflection = new \ReflectionClass($entity);
+            foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
+                if ($trait == SoftDeleteTrait::class) {
+                    $entity->setDeletedAt(new \DateTime());
+                    $softDelete = true;
+                }
+            }
+        }
+
+
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
 
-        $query->delete($dbMapping->primaryKey, $dbMapping->entityArray[$dbMapping->primaryKey]);
+        if ($softDelete === true) {
+            $query->updateOne($dbMapping->entityArray, $dbMapping->primaryKey);
+        } else {
+            $query->deleteOne($dbMapping->primaryKey, $dbMapping->entityArray[$dbMapping->primaryKey]);
+        }
 
 
         Database::query($query);
