@@ -13,7 +13,7 @@
     <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Tous les articles associés à cette catégorie obtiendront
         les modifications</p>
 
-    <form method="POST" action="{{ route('admin.post.edit.post', { id: post.id }) }}">
+    <form method="POST" action="{{ route('admin.post.edit.post', { id: post.id }) }}" enctype="multipart/form-data">
         {% include 'Admin/post/_form.html.twig' %}
     </form>
 {% endblock %}

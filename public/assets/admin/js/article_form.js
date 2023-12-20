@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
         },
-        data: JSON.parse(contentEditorElement.dataset.value)
+        data: contentEditorElement.dataset.value !== '' ? JSON.parse(contentEditorElement.dataset.value) : null
     });
 
 

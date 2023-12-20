@@ -4,10 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Core\Abstracts\AbstractController;
 use App\Core\Exception\NotFoundException;
+use App\Core\Utils\Str;
 use App\Model\Post;
 use App\Repository\PostCategoryRepository;
 use App\Repository\PostRepository;
 use Behat\Transliterator\Transliterator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -156,7 +158,9 @@ class PostController extends AbstractController
     private function save(Post $post, Request $request)
     {
         $data = $request->request;
-        $file = $request->files;
+
+        /** @var UploadedFile $featuredImage */
+        $featuredImage = $request->files->get('featured_image');
 
         // Check title validity
         if (empty(trim($data->get('title')))) {
@@ -180,6 +184,7 @@ class PostController extends AbstractController
             $this->addFormError('chapo', 'Le chapô doit faire au moins 50 caractères');
         }
 
+
         // Check read time validity
         if (!is_numeric($data->get('read_time'))) {
             $this->addFormError('read_time', 'Vous devez entrer un temps de lecture');
@@ -202,6 +207,25 @@ class PostController extends AbstractController
             $this->addFormError('published_at', 'Impossible d\'interpréter la date');
         }
 
+
+        $featuredImagePath = $post->getFeaturedImage() ?? '';
+
+        if ($featuredImage == null && empty($post->getFeaturedImage()) == true) {
+            $this->addFormError('featured_image', 'Aucune image détectée');
+        } elseif ($featuredImage != null) {
+            if (!str_starts_with($featuredImage->getMimeType(), 'image/')) {
+                $this->addFormError('featured_image', 'Format incompatible');
+            }
+
+            // Upload file if entity already exists or no error found in form
+            if ($this->hasFormErrors() == false || $post->getId() != null) {
+                $filename = Transliterator::urlize($slug).'-'.Str::rand(4);
+                $filename .= '.'.$featuredImage->getClientOriginalExtension();
+                $featuredImagePath = '/'.$featuredImage->move(config('uploads.post.featured_image.dir'), $filename);
+            }
+        }
+
+
         $post
             ->setTitle(trim($data->get('title')))
             ->setSlug(Transliterator::urlize($slug))
@@ -210,20 +234,17 @@ class PostController extends AbstractController
             ->setReadTime($data->get('read_time'))
             ->setContent($data->get('content'))
             ->setPublishedAt($publishedAt)
-            ->setFeaturedImage('toto.jpg')
+            ->setFeaturedImage($featuredImagePath)
             ->setStatus(Post::STATE_PUBLISHED)
             ->setUserId(1)
             ->setValidatedAt(new \DateTime())
             ->setValidatorUserId(1);
 
-        //TODO: Check file
 
         if ($this->hasFormErrors()) {
             return false;
         }
-
-        //TODO: Upload file
-
+        
 
         PostRepository::save($post);
         return true;
