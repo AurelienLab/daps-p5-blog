@@ -123,7 +123,7 @@ class PostController extends AbstractController
         }
 
         $categories = PostCategoryRepository::getAll();
-        return $this->render('Admin/post/add.html.twig', [
+        return $this->render('Admin/post/edit.html.twig', [
             'post' => $post,
             'categories' => $categories
         ]);
@@ -216,13 +216,6 @@ class PostController extends AbstractController
             if (!str_starts_with($featuredImage->getMimeType(), 'image/')) {
                 $this->addFormError('featured_image', 'Format incompatible');
             }
-
-            // Upload file if entity already exists or no error found in form
-            if ($this->hasFormErrors() == false || $post->getId() != null) {
-                $filename = Transliterator::urlize($slug).'-'.Str::rand(4);
-                $filename .= '.'.$featuredImage->getClientOriginalExtension();
-                $featuredImagePath = '/'.$featuredImage->move(config('uploads.post.featured_image.dir'), $filename);
-            }
         }
 
 
@@ -245,6 +238,12 @@ class PostController extends AbstractController
             return false;
         }
 
+        // Upload file
+        $filename = Transliterator::urlize($slug).'-'.Str::rand(4);
+        $filename .= '.'.$featuredImage->getClientOriginalExtension();
+        $featuredImagePath = '/'.$featuredImage->move(config('uploads.post.featured_image.dir'), $filename);
+
+        $post->setFeaturedImage($featuredImagePath);
 
         PostRepository::save($post);
         return true;
