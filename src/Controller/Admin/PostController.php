@@ -199,6 +199,9 @@ class PostController extends AbstractController
             $this->addFormError('content', 'Vous devez entrer un contenu');
         }
 
+        // Define post state
+        $state = !empty($data->get('status'));
+
         $publishedAt = null;
 
         try {
@@ -209,12 +212,14 @@ class PostController extends AbstractController
 
 
         $featuredImagePath = $post->getFeaturedImage() ?? '';
-
+        $uploadImage = false;
         if ($featuredImage == null && empty($post->getFeaturedImage()) == true) {
             $this->addFormError('featured_image', 'Aucune image détectée');
         } elseif ($featuredImage != null) {
             if (!str_starts_with($featuredImage->getMimeType(), 'image/')) {
                 $this->addFormError('featured_image', 'Format incompatible');
+            } else {
+                $uploadImage = true;
             }
         }
 
@@ -228,7 +233,7 @@ class PostController extends AbstractController
             ->setContent($data->get('content'))
             ->setPublishedAt($publishedAt)
             ->setFeaturedImage($featuredImagePath)
-            ->setStatus(Post::STATE_PUBLISHED)
+            ->setStatus($state)
             ->setUserId(1)
             ->setValidatedAt(new \DateTime())
             ->setValidatorUserId(1);
@@ -238,12 +243,14 @@ class PostController extends AbstractController
             return false;
         }
 
-        // Upload file
-        $filename = Transliterator::urlize($slug).'-'.Str::rand(4);
-        $filename .= '.'.$featuredImage->getClientOriginalExtension();
-        $featuredImagePath = '/'.$featuredImage->move(config('uploads.post.featured_image.dir'), $filename);
+        if ($uploadImage) {
+            // Upload file
+            $filename = Transliterator::urlize($slug).'-'.Str::rand(4);
+            $filename .= '.'.$featuredImage->getClientOriginalExtension();
+            $featuredImagePath = '/'.$featuredImage->move(config('uploads.post.featured_image.dir'), $filename);
 
-        $post->setFeaturedImage($featuredImagePath);
+            $post->setFeaturedImage($featuredImagePath);
+        }
 
         PostRepository::save($post);
         return true;
