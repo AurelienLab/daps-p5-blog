@@ -27,6 +27,7 @@
 </div>
 
 <div class="mt-6 flex items-center justify-end gap-x-6">
+    {{ csrf('category_form') }}
     <a href="{{ route('admin.category.index') }}" type="button"
        class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
     <button type="submit"

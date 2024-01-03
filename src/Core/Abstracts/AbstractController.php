@@ -7,6 +7,8 @@ use App\Core\Router\Router;
 use MarcW\Heroicons\Twig\HeroiconsExtension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -37,10 +39,23 @@ abstract class AbstractController
         $this->twig = new Environment($loader);
         $this->twig->addExtension(new IntlExtension());
         $this->twig->addExtension(new HeroiconsExtension());
+
+        // Get a config value
         $this->twig->addFunction(new TwigFunction('config', 'config'));
+
+        // Enable dump function in twig
         $this->twig->addFunction(new TwigFunction('dump', 'twigDump'));
+
+        // Get Route url from name & args
         $this->twig->addFunction(new TwigFunction('route', 'route'));
+
+        // Generate csrf token
+        $this->twig->addFunction(new TwigFunction('csrf', 'generateCsrfField'));
+
+        // Get form error
         $this->twig->addFunction(new TwigFunction('error', [$this->formErrors, 'getError']));
+
+        // Get datetime value as (XX min ago)
         $this->twig->addFilter(new TwigFilter('diff', 'dateTimeAgo'));
     }
 
@@ -114,5 +129,13 @@ abstract class AbstractController
     protected function hasFormErrors(): bool
     {
         return $this->formErrors->hasError();
+    }
+
+    protected function isCsrfValid(string $name, string $tokenValue): bool
+    {
+        $token = new CsrfToken($name, $tokenValue);
+
+        $tokenManager = new CsrfTokenManager();
+        return $tokenManager->isTokenValid($token);
     }
 }

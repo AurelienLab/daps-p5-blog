@@ -162,6 +162,11 @@ class PostController extends AbstractController
         /** @var UploadedFile $featuredImage */
         $featuredImage = $request->files->get('featured_image');
 
+        //Check CSRF Validity
+        if (!$this->isCsrfValid('post_form', $data->get('_csrf'))) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
         // Check title validity
         if (empty(trim($data->get('title')))) {
             $this->addFormError('title', 'Vous devez entrer un titre');
