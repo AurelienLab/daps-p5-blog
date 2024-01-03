@@ -18,6 +18,9 @@ class Query
      */
     private array $where = [];
 
+    /**
+     * @var array
+     */
     private array $select = [];
 
     /**
@@ -79,19 +82,8 @@ class Query
         foreach (Database::getTableFields($this->model) as $field) {
             $this->select[$this->table.'.'.$field] = $field.'_'.count($this->select);
         }
-        // if ($fields == null) {
-        //     $fields = $this->table.'.*';
-        // }
-        // if ($this->isModelSoftDeletable() === true && $this->withTrashed == null) {
-        //     $this->withTrashed = false;
-        // }
-        $this->verb = 'SELECT';
 
-        // if (is_string($fields) === true) {
-        //     foreach (explode(',', $fields) as $field) {
-        //         $this->select[] = trim($field);
-        //     }
-        // }
+        $this->verb = 'SELECT';
 
         return $this;
     }
@@ -119,6 +111,15 @@ class Query
         return $this;
     }
 
+    /**
+     * Add a left join in the statement
+     *
+     * @param string $joinedModel
+     * @param $fieldName
+     *
+     * @return void
+     * @throws Exception
+     */
     public function leftJoin(string $joinedModel, $fieldName)
     {
         $this->leftJoin[] = [
@@ -267,6 +268,11 @@ class Query
         return $statement;
     }
 
+    /**
+     * Generate a where clause string from current query object
+     *
+     * @return array
+     */
     private function generateWheres(): array
     {
         $result = [];
@@ -335,6 +341,11 @@ class Query
         return false;
     }
 
+    /**
+     * Get a list of queried joins
+     *
+     * @return array
+     */
     public function getJoins(): array
     {
         return array_merge($this->leftJoin);

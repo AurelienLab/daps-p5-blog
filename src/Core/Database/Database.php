@@ -133,11 +133,12 @@ class Database
     /**
      * Use data from DB to generate a new instance of the model passed in Query
      *
-     * @param array $data Entity in array format
+     * @param array $originalData Data from database
      * @param string $model Class of the target entity model
+     * @param Query $query The original query object
      *
      * @return mixed
-     * @throws Exception
+     * @throws \ReflectionException
      */
     private static function mapToModel(array $originalData, string $model, Query $query): mixed
     {
@@ -207,6 +208,11 @@ class Database
         return $entity;
     }
 
+    /**
+     * Get the amount of query executed by this class (for debug only)
+     *
+     * @return int
+     */
     public static function getQueryCount(): int
     {
         if (self::$_instance !== null) {
@@ -303,6 +309,14 @@ class Database
         return self::$_instance->tableData[$model];
     }
 
+    /**
+     * Get a list of field names
+     *
+     * @param string $model
+     *
+     * @return false|array
+     * @throws Exception
+     */
     public static function getTableFields(string $model): false|array
     {
         $fields = [];

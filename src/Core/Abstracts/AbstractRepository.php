@@ -19,6 +19,8 @@ abstract class AbstractRepository
     /**
      * Get all records for entity managed by current repository
      *
+     * @param array $relations
+     *
      * @return false|array
      * @throws Exception
      */
@@ -37,6 +39,7 @@ abstract class AbstractRepository
      * Get an entity by its primary key value
      *
      * @param mixed $identifier value of primary key of requested entity
+     * @param array $relations
      *
      * @return mixed
      * @throws Exception
@@ -70,6 +73,7 @@ abstract class AbstractRepository
      * Same as get() but throw a NotFoundException if no result
      *
      * @param mixed $identifier
+     * @param array $relations
      *
      * @return mixed
      * @throws NotFoundException
@@ -142,7 +146,16 @@ abstract class AbstractRepository
 
         Database::query($query);
     }
-    
+
+    /**
+     * Transforms array of relation names to left join in query
+     *
+     * @param array $relations
+     * @param Query $query
+     *
+     * @return void
+     * @throws Exception
+     */
     private static function addRelationsToQuery(array $relations, Query $query)
     {
         if (!empty($relations)) {
