@@ -106,6 +106,10 @@ class Query
             'parameterName' => $parameterName
         ];
 
+        if ($value instanceof \DateTimeInterface) {
+            $value = $value->format('Y-m-d H:i:s');
+        }
+
         $this->parameters[$parameterName] = $value;
 
         return $this;

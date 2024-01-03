@@ -3,15 +3,17 @@
 namespace App\Controller;
 
 use App\Core\Abstracts\AbstractController;
-use App\Core\Database\Query;
-use App\Model\Post;
+use App\Repository\PostRepository;
 
 class PostController extends AbstractController
 {
 
     public function index()
     {
-        return $this->render('post/index.html.twig');
+        $posts = PostRepository::getPublished(['category']);
+        return $this->render('post/index.html.twig', [
+            'posts' => $posts
+        ]);
     }
 
     public function show()

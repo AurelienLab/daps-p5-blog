@@ -156,7 +156,7 @@ abstract class AbstractRepository
      * @return void
      * @throws Exception
      */
-    private static function addRelationsToQuery(array $relations, Query $query)
+    protected static function addRelationsToQuery(array $relations, Query $query)
     {
         if (!empty($relations)) {
             $reflection = new \ReflectionClass(static::MODEL);
