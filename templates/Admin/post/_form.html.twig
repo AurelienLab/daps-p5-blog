@@ -36,7 +36,7 @@
                             <option value="">Choisir une catégorie</option>
                             {% for category in categories %}
                                 <option value="{{ category.id }}"
-                                        {% if post.categoryId == category.id %}selected="selected"{% endif %}>{{ category.name }}</option>
+                                        {% if post.category.id == category.id %}selected="selected"{% endif %}>{{ category.name }}</option>
                             {% endfor %}
 
                         </select>

@@ -14,9 +14,16 @@ class Query
     private string $verb;
 
     /**
-     * @var string|null
+     * @var array
      */
     private array $where = [];
+
+    private array $select = [];
+
+    /**
+     * @var array
+     */
+    private array $leftJoin = [];
 
     /**
      * @var string
@@ -67,20 +74,24 @@ class Query
      *
      * @return $this
      */
-    public function select(array|string $fields = '*'): self
+    public function select(): self
     {
-        if ($this->isModelSoftDeletable() === true && $this->withTrashed == null) {
-            $this->withTrashed = false;
+        foreach (Database::getTableFields($this->model) as $field) {
+            $this->select[$this->table.'.'.$field] = $field.'_'.count($this->select);
         }
-        $this->verb = 'SELECT ';
+        // if ($fields == null) {
+        //     $fields = $this->table.'.*';
+        // }
+        // if ($this->isModelSoftDeletable() === true && $this->withTrashed == null) {
+        //     $this->withTrashed = false;
+        // }
+        $this->verb = 'SELECT';
 
-        $fieldsStr = $fields;
-
-        if (is_array($fields) === true) {
-            $fieldsStr = implode(', ', $fields);
-        }
-
-        $this->verb .= $fieldsStr.' FROM '.$this->table;
+        // if (is_string($fields) === true) {
+        //     foreach (explode(',', $fields) as $field) {
+        //         $this->select[] = trim($field);
+        //     }
+        // }
 
         return $this;
     }
@@ -95,7 +106,7 @@ class Query
      */
     public function where(string $column, string $comparator, mixed $value): self
     {
-        $parameterName = ':'.$column.'_'.count($this->where);
+        $parameterName = ':'.str_replace('.', '_', $column).'_'.count($this->where);
 
         $this->where[] = [
             'column' => $column,
@@ -105,8 +116,19 @@ class Query
 
         $this->parameters[$parameterName] = $value;
 
-        // $whereStatement .= implode(' ', [$column, $comparator, $parameterName]);
         return $this;
+    }
+
+    public function leftJoin(string $joinedModel, $fieldName)
+    {
+        $this->leftJoin[] = [
+            'model' => $joinedModel,
+            'field' => $fieldName
+        ];
+
+        foreach (Database::getTableFields($joinedModel) as $field) {
+            $this->select[$joinedModel::TABLE.'.'.$field] = $field.'_'.count($this->select);
+        }
     }
 
     /**
@@ -213,6 +235,25 @@ class Query
     public function getStatement(): string
     {
         $statement = $this->verb;
+        if ($this->verb === 'SELECT') {
+            $statement .= ' '.implode(', ', array_map(
+                    function ($alias, $field) {
+                        return $field.' AS '.$alias;
+                    },
+                    $this->select,
+                    array_keys($this->select)
+                ));
+
+            $statement .= ' FROM '.$this->table;
+        }
+
+        if (!empty($this->leftJoin)) {
+            foreach ($this->leftJoin as $leftJoin) {
+                $tableName = $leftJoin['model']::TABLE;
+                $field = $leftJoin['field'];
+                $statement .= ' LEFT JOIN '.$tableName.' ON '.$tableName.'.id = '.$this->table.'.'.$field.'_id';
+            }
+        }
 
         if (!empty($this->where) || $this->withTrashed === false) {
             $statement .= ' WHERE ';
@@ -220,6 +261,7 @@ class Query
 
             $statement .= implode(' AND ', $wheres);
         }
+
 
         $statement .= ';';
         return $statement;
@@ -233,7 +275,7 @@ class Query
         }
 
         if ($this->withTrashed === false) {
-            $result[] = 'deleted_at IS NULL';
+            $result[] = $this->table.'.deleted_at IS NULL';
         }
 
         return $result;
@@ -246,6 +288,14 @@ class Query
     public function getModel(): string
     {
         return $this->model;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelect(): array
+    {
+        return $this->select;
     }
 
     /**
@@ -283,5 +333,10 @@ class Query
         }
 
         return false;
+    }
+
+    public function getJoins(): array
+    {
+        return array_merge($this->leftJoin);
     }
 }

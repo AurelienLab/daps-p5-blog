@@ -40,6 +40,10 @@ class Database
      */
     private int $dbPort;
 
+    private array $tableData = [];
+
+    private int $queryCount = 0;
+
     /**
      * @var PDO
      */
@@ -93,6 +97,7 @@ class Database
     public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): false|array
     {
         $database = self::getPDOInstance();
+        self::$_instance->queryCount++;
         $statement = $query->getStatement();
 
         $sth = $database->prepare($statement);
@@ -111,13 +116,15 @@ class Database
         }
 
         $sth->execute();
+
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
 
+
         $result = [];
         foreach ($sth->fetchAll() as $data) {
-            $result[] = self::mapToModel($data, $query->getModel());
+            $result[] = self::mapToModel($data, $query->getModel(), $query);
         }
         return $result;
     }
@@ -132,13 +139,33 @@ class Database
      * @return mixed
      * @throws Exception
      */
-    private static function mapToModel(array $data, string $model): mixed
+    private static function mapToModel(array $originalData, string $model, Query $query): mixed
     {
+        $joins = $query->getJoins();
+        $selectors = $query->getSelect();
+
+        $data = [];
+        foreach ($selectors as $field => $alias) {
+            if (isset($originalData[$alias]) === true) {
+                $data[$field] = $originalData[$alias];
+            }
+        }
+
         $entity = new $model();
 
         $reflectionClass = new ReflectionClass($model);
 
         foreach ($data as $key => $value) {
+            if (str_starts_with($key, $model::TABLE.'.') === false) {
+                continue;
+            }
+
+            $key = str_replace($model::TABLE.'.', '', $key);
+
+            if (str_ends_with($key, '_id') === true) {
+                $key = str_replace('_id', '', $key);
+            }
+
             if ($reflectionClass->hasProperty(Str::toCamelCase($key)) === true) {
                 $setter = 'set'.Str::toPascalCase($key);
 
@@ -147,18 +174,46 @@ class Database
 
                     if (!$type->isBuiltin() && $value !== null) {
                         $name = $type->getName();
-                        $value = new $name($value);
+                        $subClassReflection = new ReflectionClass($name);
+
+                        if (str_contains($subClassReflection->getNamespaceName(), 'App\Model')) {
+                            $relation = null;
+                            foreach ($joins as $join) {
+                                if ($join['model'] === $subClassReflection->getName()) {
+                                    $relation = self::mapToModel($originalData, $subClassReflection->getName(), $query);
+                                }
+                            }
+                            if ($relation === null) {
+                                $repository = 'App\Repository\\'.$subClassReflection->getShortName().'Repository';
+                                $relation = $repository::get($value);
+                            }
+
+                            $value = $relation;
+
+                        } else {
+                            $value = new $name($value);
+                        }
                     }
 
                     $entity->$setter($value);
                     continue;
                 }
+                continue;
 
                 throw new Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
             }
         }
 
         return $entity;
+    }
+
+    public static function getQueryCount(): int
+    {
+        if (self::$_instance !== null) {
+            return self::$_instance->queryCount;
+        }
+
+        return 0;
     }
 
 
@@ -196,6 +251,8 @@ class Database
                 $property->setAccessible(true);
                 if ($property->getValue($entity) instanceof \DateTimeInterface) {
                     $entityArray[$propertyName] = $property->getValue($entity)->format('Y-m-d H:i:s');
+                } elseif (str_starts_with($property->getType(), 'App\Model\\')) {
+                    $entityArray[$propertyName.'_id'] = $property->getValue($entity)->getId();
                 } else {
                     $entityArray[$propertyName] = $property->getValue($entity);
                 }
@@ -237,9 +294,23 @@ class Database
      */
     private static function getTableData(string $model): false|array
     {
-        $query = new Query($model);
-        $query->describe();
-        return self::query($query, true);
+        if (isset(self::$_instance->tableData[$model]) === false) {
+            $query = new Query($model);
+            $query->describe();
+            self::$_instance->tableData[$model] = self::query($query, true);
+        }
+
+        return self::$_instance->tableData[$model];
+    }
+
+    public static function getTableFields(string $model): false|array
+    {
+        $fields = [];
+        foreach (self::getTableData($model) as $field) {
+            $fields[] = $field['Field'];
+        }
+
+        return $fields;
     }
 
 

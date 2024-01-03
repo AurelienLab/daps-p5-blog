@@ -37,9 +37,9 @@ class Post
     private string $chapo;
 
     /**
-     * @var int
+     * @var PostCategory
      */
-    private int $categoryId;
+    private PostCategory $category;
 
     /**
      * @var string
@@ -124,14 +124,14 @@ class Post
         return $this;
     }
 
-    public function getCategoryId(): int
+    public function getCategory(): PostCategory
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
-    public function setCategoryId(int $categoryId): Post
+    public function setCategory(PostCategory $category): Post
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
         return $this;
     }
 

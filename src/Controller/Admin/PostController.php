@@ -3,9 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Core\Abstracts\AbstractController;
+use App\Core\Database\Database;
+use App\Core\Database\Query;
 use App\Core\Exception\NotFoundException;
 use App\Core\Utils\Str;
 use App\Model\Post;
+use App\Model\PostCategory;
 use App\Repository\PostCategoryRepository;
 use App\Repository\PostRepository;
 use Behat\Transliterator\Transliterator;
@@ -27,7 +30,7 @@ class PostController extends AbstractController
      */
     public function index(): Response
     {
-        $posts = PostRepository::getAll();
+        $posts = PostRepository::getAll(['category']);
 
         return $this->render('Admin/post/index.html.twig', [
             'posts' => $posts
@@ -91,8 +94,9 @@ class PostController extends AbstractController
      */
     public function edit(int $id): Response
     {
-        $post = PostRepository::getOrError($id);
+        $post = PostRepository::getOrError($id, ['category']);
         $categories = PostCategoryRepository::getAll();
+
         return $this->render(
             'Admin/post/edit.html.twig',
             [
@@ -179,8 +183,14 @@ class PostController extends AbstractController
         }
 
         // Check category validity
+        $category = null;
         if (!is_numeric($data->get('category_id'))) {
             $this->addFormError('category_id', 'Vous devez sélectionner une catégorie');
+        } else {
+            $category = PostCategoryRepository::get(intval($data->get('category_id')));
+            if ($category === null) {
+                $this->addFormError('category_id', 'Vous devez sélectionner une catégorie');
+            }
         }
 
         // Check excerpt validity
@@ -232,7 +242,7 @@ class PostController extends AbstractController
         $post
             ->setTitle(trim($data->get('title')))
             ->setSlug(Transliterator::urlize($slug))
-            ->setCategoryId(intval($data->get('category_id')))
+            ->setCategory($category)
             ->setChapo($data->get('chapo'))
             ->setReadTime($data->get('read_time'))
             ->setContent($data->get('content'))
