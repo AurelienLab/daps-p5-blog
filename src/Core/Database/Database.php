@@ -3,6 +3,7 @@
 namespace App\Core\Database;
 
 use App\Core\Utils\Str;
+use App\Model\Trait\TimestampableTrait;
 use Exception;
 use PDO;
 use ReflectionClass;
@@ -38,6 +39,10 @@ class Database
      * @var int
      */
     private int $dbPort;
+
+    private array $tableData = [];
+
+    private int $queryCount = 0;
 
     /**
      * @var PDO
@@ -86,18 +91,14 @@ class Database
      * @param bool $raw Map to model (false) or not (true)
      * @param int $fetchFlag Fetch const from PDO
      *
-     * @return array|false
+     * @return mixed
      * @throws Exception
      */
-    public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): false|array
+    public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): mixed
     {
         $database = self::getPDOInstance();
+        self::$_instance->queryCount++;
         $statement = $query->getStatement();
-        if ($query->getWhere() !== null) {
-            $statement .= $query->getWhere();
-        }
-
-        $statement .= ';';
 
         $sth = $database->prepare($statement);
 
@@ -115,14 +116,35 @@ class Database
         }
 
         $sth->execute();
+
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
 
+
         $result = [];
-        foreach ($sth->fetchAll() as $data) {
-            $result[] = self::mapToModel($data, $query->getModel());
+
+        $queryResult = $sth->fetchAll();
+
+        if ($query->getFirstOrLast() !== null) {
+            if (empty($queryResult)) {
+                return null;
+            }
+
+            if ($query->getFirstOrLast() === Query::GET_FIRST) {
+                return self::mapToModel($queryResult[0], $query->getModel(), $query);
+            }
+
+            if ($query->getFirstOrLast() === Query::GET_LAST) {
+                return self::mapToModel(end($queryResult), $query->getModel(), $query);
+            }
         }
+
+        foreach ($queryResult as $data) {
+            $result[] = self::mapToModel($data, $query->getModel(), $query);
+        }
+
+
         return $result;
     }
 
@@ -130,30 +152,93 @@ class Database
     /**
      * Use data from DB to generate a new instance of the model passed in Query
      *
-     * @param array $data Entity in array format
+     * @param array $originalData Data from database
      * @param string $model Class of the target entity model
+     * @param Query $query The original query object
      *
      * @return mixed
-     * @throws Exception
+     * @throws \ReflectionException
      */
-    private static function mapToModel(array $data, string $model): mixed
+    private static function mapToModel(array $originalData, string $model, Query $query): mixed
     {
+        $joins = $query->getJoins();
+        $selectors = $query->getSelect();
+
+        $data = [];
+        foreach ($selectors as $field => $alias) {
+            if (isset($originalData[$alias]) === true) {
+                $data[$field] = $originalData[$alias];
+            }
+        }
+
         $entity = new $model();
 
+        $reflectionClass = new ReflectionClass($model);
+
         foreach ($data as $key => $value) {
-            if (property_exists($entity, Str::toCamelCase($key)) === true) {
+            if (str_starts_with($key, $model::TABLE.'.') === false) {
+                continue;
+            }
+
+            $key = str_replace($model::TABLE.'.', '', $key);
+
+            if (str_ends_with($key, '_id') === true) {
+                $key = str_replace('_id', '', $key);
+            }
+
+            if ($reflectionClass->hasProperty(Str::toCamelCase($key)) === true) {
                 $setter = 'set'.Str::toPascalCase($key);
 
-                if (method_exists($entity, $setter) === true) {
+                if ($reflectionClass->hasMethod($setter) === true) {
+                    $type = $reflectionClass->getMethod($setter)->getParameters()[0]->getType();
+
+                    if (!$type->isBuiltin() && $value !== null) {
+                        $name = $type->getName();
+                        $subClassReflection = new ReflectionClass($name);
+
+                        if (str_contains($subClassReflection->getNamespaceName(), 'App\Model')) {
+                            $relation = null;
+                            foreach ($joins as $join) {
+                                if ($join['model'] === $subClassReflection->getName()) {
+                                    $relation = self::mapToModel($originalData, $subClassReflection->getName(), $query);
+                                }
+                            }
+                            if ($relation === null) {
+                                $repository = 'App\Repository\\'.$subClassReflection->getShortName().'Repository';
+                                $relation = $repository::get($value);
+                            }
+
+                            $value = $relation;
+
+                        } else {
+                            $value = new $name($value);
+                        }
+                    }
+
                     $entity->$setter($value);
                     continue;
                 }
+                continue;
 
                 throw new Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
             }
         }
 
         return $entity;
+    }
+
+    /**
+     * Get the amount of query executed by this class (for debug only)
+     *
+     * @return int
+     */
+    public static function getQueryCount(): int
+    {
+        if (self::$_instance !== null) {
+            return self::$_instance->queryCount;
+        }
+
+        return 0;
     }
 
 
@@ -164,18 +249,38 @@ class Database
      * @return stdClass
      * @throws Exception
      */
-    public static function mapEntityToTable(stdClass $entity, string $model): stdClass
+    public static function mapEntityToTable(object $entity, string $model): stdClass
     {
         // Get table fields.
         $tableFields = self::getTableData($model);
 
+
         // Transform entity to array.
         $reflectionClass = new ReflectionClass(get_class($entity));
+
+        //Set timestamps if applicable
+        foreach ($reflectionClass->getTraits() as $trait => $reflexionTrait) {
+            if ($trait == TimestampableTrait::class) {
+                if (is_null($entity->getCreatedAt())) {
+                    $entity->setCreatedAt(new \DateTime());
+                }
+
+                $entity->setUpdatedAt(new \DateTime());
+            }
+        }
+
         $entityArray = array();
         foreach ($reflectionClass->getProperties() as $property) {
             if ($property->isInitialized($entity) === true) {
+                $propertyName = Str::toSnakeCase($property->getName());
                 $property->setAccessible(true);
-                $entityArray[$property->getName()] = $property->getValue($entity);
+                if ($property->getValue($entity) instanceof \DateTimeInterface) {
+                    $entityArray[$propertyName] = $property->getValue($entity)->format('Y-m-d H:i:s');
+                } elseif (str_starts_with($property->getType(), 'App\Model\\')) {
+                    $entityArray[$propertyName.'_id'] = $property->getValue($entity)->getId();
+                } else {
+                    $entityArray[$propertyName] = $property->getValue($entity);
+                }
                 $property->setAccessible(false);
             }
         }
@@ -214,9 +319,31 @@ class Database
      */
     private static function getTableData(string $model): false|array
     {
-        $query = new Query($model);
-        $query->describe();
-        return self::query($query, true);
+        if (isset(self::$_instance->tableData[$model]) === false) {
+            $query = new Query($model);
+            $query->describe();
+            self::$_instance->tableData[$model] = self::query($query, true);
+        }
+
+        return self::$_instance->tableData[$model];
+    }
+
+    /**
+     * Get a list of field names
+     *
+     * @param string $model
+     *
+     * @return false|array
+     * @throws Exception
+     */
+    public static function getTableFields(string $model): false|array
+    {
+        $fields = [];
+        foreach (self::getTableData($model) as $field) {
+            $fields[] = $field['Field'];
+        }
+
+        return $fields;
     }
 
 

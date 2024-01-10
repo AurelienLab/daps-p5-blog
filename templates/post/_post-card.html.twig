@@ -1,0 +1,47 @@
+<article class="card">
+    <div class="card__illustration">
+        <img src="{{ post.featuredImage }}"/>
+        <ul class="tag-list">
+            <li class="tag">Développement</li>
+            <li class="tag">JS</li>
+            <li class="tag">Nouveauté</li>
+            <li class="tag">Framework</li>
+        </ul>
+    </div>
+    <div class="card__content">
+        <div class="card__content__header">
+            <h2 class="card__category">{{ post.category.name }}</h2>
+            <h2 class="card__heading">
+                <a href="{{ route('articles.show', { slug: post.slug }) }}" class="extended">{{ post.title }}</a>
+            </h2>
+        </div>
+        <div class="card__content__body">
+            <p>
+                {{ post.chapo|nl2br }}
+            </p>
+        </div>
+        <div class="card__content__footer">
+            <ul class="card__extra-data">
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                    </svg>
+                    <span>Le {{ post.publishedAt|format_datetime('long', 'short', locale='fr') }}</span>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                    </svg>
+
+                    <span>{{ post.readTime }} min</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</article>

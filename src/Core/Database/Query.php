@@ -2,15 +2,42 @@
 
 namespace App\Core\Database;
 
+use App\Model\Trait\SoftDeleteTrait;
 use Exception;
 
 class Query
 {
 
+    public const GET_FIRST = 1;
+
+    public const GET_LAST = 2;
+
     /**
      * @var string
      */
-    private string $statement;
+    private string $verb;
+
+    /**
+     * @var array
+     */
+    private array $where = [];
+
+    /**
+     * @var array
+     */
+    private array $select = [];
+
+    /**
+     * @var array
+     */
+    private array $leftJoin = [];
+
+    /**
+     * @var int|null
+     */
+    private ?int $firstOrLast = null;
+
+    private array $orderBy = [];
 
     /**
      * @var string
@@ -28,14 +55,9 @@ class Query
     private $parameters = [];
 
     /**
-     * @var string|null
+     * @var bool
      */
-    private ?string $where = null;
-
-    /**
-     * @var int
-     */
-    private int $whereCount = 0;
+    private ?bool $withTrashed = null;
 
     /**
      * @param string $model Model on which we'll do a query
@@ -53,7 +75,7 @@ class Query
             throw new Exception(sprintf('Model table must by defined in %s', $model));
         }
 
-        $this->statement = '';
+        $this->verb = '';
         $this->table = $model::TABLE;
         $this->model = $model;
     }
@@ -66,17 +88,13 @@ class Query
      *
      * @return $this
      */
-    public function select(array|string $fields = '*'): self
+    public function select(): self
     {
-        $this->statement .= 'SELECT ';
-
-        $fieldsStr = $fields;
-
-        if (is_array($fields) === true) {
-            $fieldsStr = implode(', ', $fields);
+        foreach (Database::getTableFields($this->model) as $field) {
+            $this->select[$this->table.'.'.$field] = $field.'_'.count($this->select);
         }
 
-        $this->statement .= $fieldsStr.' FROM '.$this->table;
+        $this->verb = 'SELECT';
 
         return $this;
     }
@@ -91,19 +109,42 @@ class Query
      */
     public function where(string $column, string $comparator, mixed $value): self
     {
-        $whereStatement = ' AND ';
-        if ($this->whereCount === 0) {
-            $whereStatement = ' WHERE ';
+        $parameterName = ':'.str_replace('.', '_', $column).'_'.count($this->where);
+
+        $this->where[] = [
+            'column' => $column,
+            'comparator' => $comparator,
+            'parameterName' => $parameterName
+        ];
+
+        if ($value instanceof \DateTimeInterface) {
+            $value = $value->format('Y-m-d H:i:s');
         }
-        $parameterName = ':'.$column.'_'.$this->whereCount;
 
-        $whereStatement .= implode(' ', [$column, $comparator, $parameterName]);
-
-        $this->where .= $whereStatement;
         $this->parameters[$parameterName] = $value;
 
-        $this->whereCount++;
         return $this;
+    }
+
+    /**
+     * Add a left join in the statement
+     *
+     * @param string $joinedModel
+     * @param $fieldName
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function leftJoin(string $joinedModel, $fieldName)
+    {
+        $this->leftJoin[] = [
+            'model' => $joinedModel,
+            'field' => $fieldName
+        ];
+
+        foreach (Database::getTableFields($joinedModel) as $field) {
+            $this->select[$joinedModel::TABLE.'.'.$field] = $field.'_'.count($this->select);
+        }
     }
 
     /**
@@ -117,12 +158,12 @@ class Query
     {
         $this->setParameters($data);
 
-        $this->statement = 'INSERT INTO '.$this->table;
+        $this->verb = 'INSERT INTO '.$this->table;
 
         $columns = ' ('.implode(', ', array_keys($data)).') ';
         $values = 'VALUES('.implode(', ', array_keys($this->parameters)).')';
 
-        $this->statement .= $columns.$values;
+        $this->verb .= $columns.$values;
     }
 
     /**
@@ -133,26 +174,105 @@ class Query
      *
      * @return void
      */
-    public function update(array $data, string $primaryKey): void
+    public function updateOne(array $data, string $primaryKey): void
     {
         $this->setParameters($data);
         unset($data[$primaryKey]);
 
-        $this->statement = 'UPDATE '.$this->table.' SET ';
+        $this->verb = 'UPDATE '.$this->table.' SET ';
 
         $columns = array_keys($data);
 
         for ($i = 0; $i < count($data); $i++) {
             if ($i > 0) {
-                $this->statement .= ', ';
+                $this->verb .= ', ';
             }
 
-            $this->statement .= $columns[$i].'= :'.$columns[$i];
+            $this->verb .= $columns[$i].'= :'.$columns[$i];
         }
 
-        $this->statement .= ' WHERE '.$primaryKey.' = :'.$primaryKey;
+        $this->where = [
+            [
+                'column' => $primaryKey,
+                'comparator' => '=',
+                'parameterName' => ':'.$primaryKey
+            ]
+        ];
     }
 
+    /**
+     * Generate a DELETE statement to delete one entity
+     *
+     * @param string $primaryKey
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function deleteOne(string $primaryKey, mixed $value)
+    {
+        $this->setParameters([$primaryKey => $value]);
+
+        $this->verb = 'DELETE FROM '.$this->table;
+
+        $this->where = [
+            [
+                'column' => $primaryKey,
+                'comparator' => '=',
+                'parameterName' => ':'.$primaryKey
+            ]
+        ];
+    }
+
+    /**
+     * Get all data included deleted
+     *
+     * @return $this
+     */
+    public function withTrashed(): self
+    {
+        $this->withTrashed = true;
+        return $this;
+    }
+
+    /**
+     * Get Only first row of query result
+     *
+     * @return $this
+     */
+    public function first(): self
+    {
+        $this->firstOrLast = self::GET_FIRST;
+        return $this;
+    }
+
+    /**
+     * Get Only last row of query result
+     *
+     * @return $this
+     */
+    public function last(): self
+    {
+        $this->firstOrLast = self::GET_LAST;
+        return $this;
+    }
+
+    public function getFirstOrLast(): ?int
+    {
+        return $this->firstOrLast;
+    }
+
+    public function orderBy(string $field, string $order = 'ASC')
+    {
+        if (in_array(strtolower($order), ['asc', 'desc']) == false) {
+            throw new Exception('$order parameter in orderBy method must be either "ASC" or "DESC"');
+        }
+
+        $this->orderBy = [
+            'field' => $field,
+            'order' => $order
+        ];
+        return $this;
+    }
 
     /**
      * Describe table statement (get columns information)
@@ -161,7 +281,7 @@ class Query
      */
     public function describe(): void
     {
-        $this->statement = 'DESCRIBE '.$this->table;
+        $this->verb = 'DESCRIBE '.$this->table;
     }
 
 
@@ -170,7 +290,60 @@ class Query
      */
     public function getStatement(): string
     {
-        return $this->statement;
+        $statement = $this->verb;
+        if ($this->verb === 'SELECT') {
+            $statement .= ' '.implode(', ', array_map(
+                    function ($alias, $field) {
+                        return $field.' AS '.$alias;
+                    },
+                    $this->select,
+                    array_keys($this->select)
+                ));
+
+            $statement .= ' FROM '.$this->table;
+        }
+
+        if (!empty($this->leftJoin)) {
+            foreach ($this->leftJoin as $leftJoin) {
+                $tableName = $leftJoin['model']::TABLE;
+                $field = $leftJoin['field'];
+                $statement .= ' LEFT JOIN '.$tableName.' ON '.$tableName.'.id = '.$this->table.'.'.$field.'_id';
+            }
+        }
+
+        if (!empty($this->where) || $this->withTrashed === false) {
+            $statement .= ' WHERE ';
+            $wheres = $this->generateWheres();
+
+            $statement .= implode(' AND ', $wheres);
+        }
+
+        if (!empty($this->orderBy)) {
+            $statement .= ' ORDER BY '.$this->table.'.'.$this->orderBy['field'].' '.$this->orderBy['order'];
+        }
+
+
+        $statement .= ';';
+        return $statement;
+    }
+
+    /**
+     * Generate a where clause string from current query object
+     *
+     * @return array
+     */
+    private function generateWheres(): array
+    {
+        $result = [];
+        foreach ($this->where as $where) {
+            $result[] = $where['column'].' '.$where['comparator'].' '.$where['parameterName'];
+        }
+
+        if ($this->withTrashed === false) {
+            $result[] = $this->table.'.deleted_at IS NULL';
+        }
+
+        return $result;
     }
 
 
@@ -180,6 +353,14 @@ class Query
     public function getModel(): string
     {
         return $this->model;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelect(): array
+    {
+        return $this->select;
     }
 
     /**
@@ -207,11 +388,25 @@ class Query
         return $this->parameters;
     }
 
-    /**
-     * @return string
-     */
-    public function getWhere(): ?string
+    private function isModelSoftDeletable(): bool
     {
-        return $this->where;
+        $reflection = new \ReflectionClass($this->model);
+        foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
+            if ($trait == SoftDeleteTrait::class) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get a list of queried joins
+     *
+     * @return array
+     */
+    public function getJoins(): array
+    {
+        return array_merge($this->leftJoin);
     }
 }

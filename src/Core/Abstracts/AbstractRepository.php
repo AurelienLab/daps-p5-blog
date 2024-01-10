@@ -4,6 +4,9 @@ namespace App\Core\Abstracts;
 
 use App\Core\Database\Database;
 use App\Core\Database\Query;
+use App\Core\Exception\NotFoundException;
+use App\Core\Utils\Str;
+use App\Model\Trait\SoftDeleteTrait;
 use Exception;
 use stdClass;
 
@@ -16,13 +19,17 @@ abstract class AbstractRepository
     /**
      * Get all records for entity managed by current repository
      *
+     * @param array $relations
+     *
      * @return false|array
      * @throws Exception
      */
-    public static function getAll(): false|array
+    public static function getAll($relations = []): false|array
     {
         $query = new Query(static::MODEL);
         $query->select();
+
+        self::addRelationsToQuery($relations, $query);
 
         return Database::query($query);
     }
@@ -32,18 +39,21 @@ abstract class AbstractRepository
      * Get an entity by its primary key value
      *
      * @param mixed $identifier value of primary key of requested entity
+     * @param array $relations
      *
      * @return mixed
      * @throws Exception
      */
-    public static function get(mixed $identifier): mixed
+    public static function get(mixed $identifier, $relations = []): mixed
     {
         $primaryKey = Database::getPrimaryKey(static::MODEL);
 
         $query = new Query(static::MODEL);
         $query
             ->select()
-            ->where($primaryKey, '=', $identifier);
+            ->where(static::MODEL::TABLE.'.'.$primaryKey, '=', $identifier);
+
+        self::addRelationsToQuery($relations, $query);
 
         $result = Database::query($query);
 
@@ -59,16 +69,36 @@ abstract class AbstractRepository
         return $result[0];
     }
 
+    /**
+     * Same as get() but throw a NotFoundException if no result
+     *
+     * @param mixed $identifier
+     * @param array $relations
+     *
+     * @return mixed
+     * @throws NotFoundException
+     */
+    public static function getOrError(mixed $identifier, $relations = []): mixed
+    {
+        $result = self::get($identifier, $relations);
+
+        if (!$result) {
+            throw new NotFoundException();
+        }
+
+        return $result;
+    }
+
 
     /**
      * Update or Create entity in database
      *
-     * @param stdClass $entity Entity to save
+     * @param Object $entity Entity to save
      *
      * @return void
      * @throws Exception
      */
-    public static function save(stdClass $entity): void
+    public static function save(object $entity): void
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
@@ -76,9 +106,69 @@ abstract class AbstractRepository
         if (isset($dbMapping->entityArray[$dbMapping->primaryKey]) === false) {
             $query->insert($dbMapping->entityArray);
         } else {
-            $query->update($dbMapping->entityArray, $dbMapping->primaryKey);
+            $query->updateOne($dbMapping->entityArray, $dbMapping->primaryKey);
         }
 
         Database::query($query);
+    }
+
+    /**
+     * Remove an entity from the database
+     *
+     * @param object $entity
+     *
+     * @return void
+     * @throws Exception
+     */
+    public static function remove(object $entity, $hard = false): void
+    {
+        $softDelete = false;
+        if ($hard == false) {
+            $reflection = new \ReflectionClass($entity);
+            foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
+                if ($trait == SoftDeleteTrait::class) {
+                    $entity->setDeletedAt(new \DateTime());
+                    $softDelete = true;
+                }
+            }
+        }
+
+
+        $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
+        $query = new Query(static::MODEL);
+
+        if ($softDelete === true) {
+            $query->updateOne($dbMapping->entityArray, $dbMapping->primaryKey);
+        } else {
+            $query->deleteOne($dbMapping->primaryKey, $dbMapping->entityArray[$dbMapping->primaryKey]);
+        }
+
+
+        Database::query($query);
+    }
+
+    /**
+     * Transforms array of relation names to left join in query
+     *
+     * @param array $relations
+     * @param Query $query
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected static function addRelationsToQuery(array $relations, Query $query)
+    {
+        if (!empty($relations)) {
+            $reflection = new \ReflectionClass(static::MODEL);
+            foreach ($relations as $relation) {
+                if ($reflection->hasProperty($relation)) {
+                    $setter = 'set'.Str::toPascalCase($relation);
+                    if ($reflection->hasMethod($setter)) {
+                        $class = $reflection->getMethod($setter)->getParameters()[0]->getType()->getName();
+                        $query->leftJoin($class, $relation);
+                    }
+                }
+            }
+        }
     }
 }

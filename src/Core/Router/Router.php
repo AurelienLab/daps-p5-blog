@@ -74,6 +74,12 @@ class Router
             $filePath = $this->routesFolder.'/'.$file;
             include_once $filePath;
         }
+
+        foreach ($this->routeCollection as $method) {
+            foreach ($method as $route) {
+                $route->parseParameters();
+            }
+        }
     }
 
 
@@ -101,7 +107,6 @@ class Router
     {
         $request = Request::createFromGlobals();
         $requestedUri = Str::removeTrailingSlash($request->getPathInfo());
-        // dd($requestedUri);
         $collection = $this->routeCollection[$request->getMethod()];
         foreach ($collection as $route) {
             /* @var Route $route */
@@ -194,15 +199,29 @@ class Router
                     gettype($response)
                 ));
             }
+        } catch (\PDOException $e) {
+            throw new Exception(
+                sprintf(
+                    'Error while trying to call %s::%s. %s in %s::%s',
+                    $class,
+                    $method,
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                ),
+                500
+            );
         } catch (Exception $e) {
             throw new Exception(
                 sprintf(
-                    'Error while trying to call %s::%s. %s',
+                    'Error while trying to call %s::%s. %s in %s::%s',
                     $class,
                     $method,
-                    $e->getMessage()
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
                 ),
-                $e->getCode()
+                $e->getCode(),
             );
         }
 

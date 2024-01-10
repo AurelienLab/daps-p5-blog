@@ -1,0 +1,21 @@
+{% extends 'Admin/base.html.twig' %}
+
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3/dist/paragraph.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+    
+    <script type="module" src="/assets/admin/js/article_form.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-base font-semibold leading-7 text-gray-900">Editer la catégorie {{ category.name }}</h2>
+    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Tous les articles associés à cette catégorie obtiendront
+        les modifications</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% include 'Admin/post/_form.html.twig' %}
+    </form>
+{% endblock %}

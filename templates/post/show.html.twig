@@ -1,4 +1,8 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/dracula.min.css"/>
+{% endblock %}
 
 {% block content %}
 
@@ -7,16 +11,16 @@
             <div class="hero__overlay">
                 {% if true %}
                     <img class="hero__image hero__image--foreground"
-                         src="https://fastly.picsum.photos/id/1078/1900/700.jpg?hmac=1KxBlGtxPLCWtlxBId89hYMlR8sOsKosAv3_euAbXIw"
-                         alt="Titre de l'article">
+                         src="{{ post.featuredImage }}"
+                         alt="{{ post.title }}">
                 {% else %}
                     <img class="hero__image" src="/assets/images/hero-pattern.svg" alt="Motif">
                 {% endif %}
             </div>
 
             <div class="hero__container">
-                <p class="hero__category">Jeux Vidéo</p>
-                <h1 class="hero__title">Titre de l'article</h1>
+                <p class="hero__category">{{ post.category.name }}</p>
+                <h1 class="hero__title">{{ post.title }}</h1>
                 <ul class="tag-list">
                     <li class="tag">Développement</li>
                     <li class="tag">JS</li>
@@ -53,7 +57,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                   d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
                         </svg>
-                        <span>Le 10 avril 2023 à 12h40</span>
+                        <span>Le {{ post.publishedAt|format_datetime('long', 'short', locale='fr') }}</span>
                     </li>
                     <li>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -63,31 +67,12 @@
                                   d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
                         </svg>
 
-                        <span>3min</span>
+                        <span>{{ post.readTime }} min</span>
                     </li>
                 </ul>
             </div>
-            <div class="post-show__content__body">
-                <p>A communi observantia non est recedendum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.
-                    Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae.<br>
-                    Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et
-                    dolore.<br>
-                    magna aliqua. Me non paenitet nullum festiviorem excogitasse ad hoc. Ambitioni dedisse scripsisse
-                    iudicaretur. Unam incolunt Belgae, aliam Aquitani, tertiam. Morbi fringilla convallis sapien, id
-                    pulvinar odio volutpat. A communi observantia non est recedendum.<br>
-                </p>
-
-                <img src="https://fastly.picsum.photos/id/831/800/600.jpg?hmac=gZEj_JtKQLuiAJ2ANiXQ2RGjoJTurwKDmBj5zM9b7xU"
-                     alt="Profil de l'auteur">
-                <p>
-                    Phasellus laoreet lorem vel dolor tempus vehicula. Idque Caesaris facere voluntate liceret: sese
-                    habere. Ab illo tempore, ab est sed immemorabili. Mercedem aut nummos unde unde extricat, amaras.
-                    Praeterea iter est quasdam res quas ex communi.<br>
-                    Ab illo tempore, ab est sed immemorabili. Cum sociis natoque penatibus et magnis dis parturient.
-                    Quam diu etiam furor iste tuus nos eludet? Ut enim ad minim veniam, quis nostrud exercitation.
-                    A communi observantia non est recedendum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.
-                    Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae.
-                </p>
+            <div class="post-show__content__body editor-rendered">
+                {{ editorjs_to_html(post.content) }}
             </div>
         </div>
 
