@@ -18,7 +18,8 @@ class PostRepository extends \App\Core\Abstracts\AbstractRepository
         $query
             ->select()
             ->where('published_at', '<', $now)
-            ->where('status', '=', Post::STATE_PUBLISHED);
+            ->where('status', '=', Post::STATE_PUBLISHED)
+            ->orderBy('published_at', 'DESC');
 
         static::addRelationsToQuery($relations, $query);
 
