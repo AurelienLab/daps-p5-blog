@@ -91,10 +91,10 @@ class Database
      * @param bool $raw Map to model (false) or not (true)
      * @param int $fetchFlag Fetch const from PDO
      *
-     * @return array|false
+     * @return mixed
      * @throws Exception
      */
-    public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): false|array
+    public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): mixed
     {
         $database = self::getPDOInstance();
         self::$_instance->queryCount++;
@@ -123,9 +123,28 @@ class Database
 
 
         $result = [];
-        foreach ($sth->fetchAll() as $data) {
+
+        $queryResult = $sth->fetchAll();
+
+        if ($query->getFirstOrLast() !== null) {
+            if (empty($queryResult)) {
+                return null;
+            }
+
+            if ($query->getFirstOrLast() === Query::GET_FIRST) {
+                return self::mapToModel($queryResult[0], $query->getModel(), $query);
+            }
+
+            if ($query->getFirstOrLast() === Query::GET_LAST) {
+                return self::mapToModel(end($queryResult), $query->getModel(), $query);
+            }
+        }
+
+        foreach ($queryResult as $data) {
             $result[] = self::mapToModel($data, $query->getModel(), $query);
         }
+
+
         return $result;
     }
 

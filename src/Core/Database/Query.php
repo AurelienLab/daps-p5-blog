@@ -8,6 +8,10 @@ use Exception;
 class Query
 {
 
+    public const GET_FIRST = 1;
+
+    public const GET_LAST = 2;
+
     /**
      * @var string
      */
@@ -27,6 +31,11 @@ class Query
      * @var array
      */
     private array $leftJoin = [];
+
+    /**
+     * @var int|null
+     */
+    private ?int $firstOrLast = null;
 
     /**
      * @var string
@@ -221,6 +230,33 @@ class Query
     {
         $this->withTrashed = true;
         return $this;
+    }
+
+    /**
+     * Get Only first row of query result
+     *
+     * @return $this
+     */
+    public function first(): self
+    {
+        $this->firstOrLast = self::GET_FIRST;
+        return $this;
+    }
+
+    /**
+     * Get Only last row of query result
+     *
+     * @return $this
+     */
+    public function last(): self
+    {
+        $this->firstOrLast = self::GET_LAST;
+        return $this;
+    }
+
+    public function getFirstOrLast(): ?int
+    {
+        return $this->firstOrLast;
     }
 
     /**
