@@ -107,7 +107,6 @@ class Router
     {
         $request = Request::createFromGlobals();
         $requestedUri = Str::removeTrailingSlash($request->getPathInfo());
-        // dd($requestedUri);
         $collection = $this->routeCollection[$request->getMethod()];
         foreach ($collection as $route) {
             /* @var Route $route */

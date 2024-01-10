@@ -230,7 +230,7 @@ class Route
             $this->parameters[] = (new RouteParameter($param, $isNullable));
 
             // In the route match regex, replace the parameter by a regex catchable group.
-            $this->matchRegex = preg_replace('#\{'.$param.'\??}#', '([a-zA-Z0-9]+)', $this->matchRegex);
+            $this->matchRegex = preg_replace('#\{'.$param.'\??}#', '([^\s!?\/.*\#|]+)', $this->matchRegex);
         }
     }
 
