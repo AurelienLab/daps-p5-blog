@@ -1773,6 +1773,42 @@ select {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
+.codex-editor {
+  line-height: 1.4;
+}
+
+h1.ce-header, h2.ce-header, h3.ce-header, h4.ce-header, h5.ce-header, h6.ce-header {
+  font-weight: bolder;
+}
+
+h6.ce-header {
+  font-size: 1.1rem;
+}
+
+h5.ce-header {
+  font-size: 1.25rem
+}
+
+h4.ce-header {
+  font-size: 1.4rem;
+}
+
+h3.ce-header {
+  font-size: 1.5rem;
+}
+
+h2.ce-header {
+  font-size: 1.7rem;
+  font-family: 'Lalezar', 'Arial Black', sans-serif;
+  font-weight: normal;
+}
+
+h1.ce-header {
+  font-family: 'Lalezar', 'Arial Black', sans-serif;
+  font-weight: normal;
+  font-size: 1.9rem;
+}
+
 .placeholder\:text-gray-400::-moz-placeholder {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
