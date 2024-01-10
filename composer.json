@@ -24,6 +24,7 @@
     "marcw/twig-heroicons": "^1.0",
     "behat/transliterator": "^1.5",
     "nesbot/carbon": "^2.72",
-    "symfony/security-csrf": "^6.4"
+    "symfony/security-csrf": "^6.4",
+    "codex-team/editor.js": "dev-master"
   }
 }

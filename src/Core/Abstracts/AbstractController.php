@@ -2,9 +2,9 @@
 
 namespace App\Core\Abstracts;
 
+use App\Core\Classes\TwigEnvironment;
 use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
-use MarcW\Heroicons\Twig\HeroiconsExtension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -13,10 +13,7 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\FilesystemLoader;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
 
 abstract class AbstractController
 {
@@ -36,27 +33,7 @@ abstract class AbstractController
 
         $this->formErrors = new FormErrorBag();
 
-        $this->twig = new Environment($loader);
-        $this->twig->addExtension(new IntlExtension());
-        $this->twig->addExtension(new HeroiconsExtension());
-
-        // Get a config value
-        $this->twig->addFunction(new TwigFunction('config', 'config'));
-
-        // Enable dump function in twig
-        $this->twig->addFunction(new TwigFunction('dump', 'twigDump'));
-
-        // Get Route url from name & args
-        $this->twig->addFunction(new TwigFunction('route', 'route'));
-
-        // Generate csrf token
-        $this->twig->addFunction(new TwigFunction('csrf', 'generateCsrfField'));
-
-        // Get form error
-        $this->twig->addFunction(new TwigFunction('error', [$this->formErrors, 'getError']));
-
-        // Get datetime value as (XX min ago)
-        $this->twig->addFilter(new TwigFilter('diff', 'dateTimeAgo'));
+        $this->twig = new TwigEnvironment($loader, ['formErrors' => $this->formErrors]);
     }
 
 

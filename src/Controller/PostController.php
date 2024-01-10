@@ -16,8 +16,12 @@ class PostController extends AbstractController
         ]);
     }
 
-    public function show()
+    public function show(string $slug)
     {
-        return $this->render('post/show.html.twig');
+        $post = PostRepository::getOnePublishedBySlug($slug);
+
+        return $this->render('post/show.html.twig', [
+            'post' => $post
+        ]);
     }
 }
