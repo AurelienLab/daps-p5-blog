@@ -28,5 +28,8 @@ Route::prefix('/admin')->name('admin.')->group([
         Route::post('/{id}/editer', [Admin\PostController::class, 'update'])->name('edit.post'),
 
         Route::get('/{id}/remove', [Admin\PostController::class, 'remove'])->name('remove')
-    ])
+    ]),
+
+    Route::post('/editorjs/upload-file', [Admin\EditorController::class, 'uploadFile']),
+    Route::post('/editorjs/fetch-url', [Admin\EditorController::class, 'fetchUrl']),
 ]);

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\Abstracts\AbstractController;
+use App\Core\Exception\NotFoundException;
 use App\Repository\PostRepository;
 
 class PostController extends AbstractController
@@ -19,6 +20,10 @@ class PostController extends AbstractController
     public function show(string $slug)
     {
         $post = PostRepository::getOnePublishedBySlug($slug);
+
+        if ($post == null) {
+            throw new NotFoundException();
+        }
 
         return $this->render('post/show.html.twig', [
             'post' => $post

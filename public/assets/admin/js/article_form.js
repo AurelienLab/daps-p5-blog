@@ -12,6 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 class: Paragraph,
                 inlineToolbar: true,
             },
+            image: {
+                class: ImageTool,
+                config: {
+                    endpoints: {
+                        byFile: '/admin/editorjs/upload-file', // Your backend file uploader endpoint
+                        byUrl: '/admin/editorjs/fetch-url', // Your endpoint that provides uploading by Url
+                    }
+                }
+            },
             codeBox: {
                 class: CodeBox,
                 config: {

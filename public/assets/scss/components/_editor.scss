@@ -54,4 +54,12 @@
     line-height: 1.4;
     border-radius: 4px;
   }
+
+  figure {
+    img {
+      &.stretched {
+        width: 100%;
+      }
+    }
+  }
 }
