@@ -37,6 +37,8 @@ class Query
      */
     private ?int $firstOrLast = null;
 
+    private array $orderBy = [];
+
     /**
      * @var string
      */
@@ -259,6 +261,19 @@ class Query
         return $this->firstOrLast;
     }
 
+    public function orderBy(string $field, string $order = 'ASC')
+    {
+        if (in_array(strtolower($order), ['asc', 'desc']) == false) {
+            throw new Exception('$order parameter in orderBy method must be either "ASC" or "DESC"');
+        }
+
+        $this->orderBy = [
+            'field' => $field,
+            'order' => $order
+        ];
+        return $this;
+    }
+
     /**
      * Describe table statement (get columns information)
      *
@@ -301,6 +316,10 @@ class Query
             $wheres = $this->generateWheres();
 
             $statement .= implode(' AND ', $wheres);
+        }
+
+        if (!empty($this->orderBy)) {
+            $statement .= ' ORDER BY '.$this->table.'.'.$this->orderBy['field'].' '.$this->orderBy['order'];
         }
 
 
