@@ -2,15 +2,17 @@
 
 namespace App\Core\Abstracts;
 
+use App\Core\Classes\TwigEnvironment;
+use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
-use MarcW\Heroicons\Twig\HeroiconsExtension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\FilesystemLoader;
 
 abstract class AbstractController
@@ -21,7 +23,7 @@ abstract class AbstractController
      */
     private $twig;
 
-    private $formErrors = [];
+    private $formErrors;
 
 
     public function __construct()
@@ -29,12 +31,9 @@ abstract class AbstractController
         // Initialize twig
         $loader = new FilesystemLoader(ROOT.'/templates');
 
-        $this->twig = new Environment($loader);
-        $this->twig->addExtension(new IntlExtension());
-        $this->twig->addExtension(new HeroiconsExtension());
-        $this->twig->addFunction(new \Twig\TwigFunction('config', 'config'));
-        $this->twig->addFunction(new \Twig\TwigFunction('dump', 'twigDump'));
-        $this->twig->addFunction(new \Twig\TwigFunction('route', 'route'));
+        $this->formErrors = new FormErrorBag();
+
+        $this->twig = new TwigEnvironment($loader, ['formErrors' => $this->formErrors]);
     }
 
 
@@ -52,10 +51,6 @@ abstract class AbstractController
     protected function render(string $template, array $data = []): Response
     {
         $response = new Response();
-
-        $data = array_merge($data, [
-            '_form_errors' => $this->formErrors
-        ]);
 
         $response->setContent($this->twig->render($template, $data));
 
@@ -100,7 +95,7 @@ abstract class AbstractController
      */
     protected function addFormError(string $fieldName, string $errorMessage): void
     {
-        $this->formErrors[$fieldName] = $errorMessage;
+        $this->formErrors->addError($fieldName, $errorMessage);
     }
 
     /**
@@ -110,6 +105,14 @@ abstract class AbstractController
      */
     protected function hasFormErrors(): bool
     {
-        return count($this->formErrors) > 0;
+        return $this->formErrors->hasError();
+    }
+
+    protected function isCsrfValid(string $name, string $tokenValue): bool
+    {
+        $token = new CsrfToken($name, $tokenValue);
+
+        $tokenManager = new CsrfTokenManager();
+        return $tokenManager->isTokenValid($token);
     }
 }

@@ -145,6 +145,11 @@ class CategoryController extends AbstractController
     {
         $data = $request->request;
 
+        //Check CSRF Validity
+        if (!$this->isCsrfValid('category_form', $data->get('_csrf'))) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
         if (empty(trim($data->get('name')))) {
             $this->addFormError('name', 'Vous devez entrer un nom de catégorie');
         }

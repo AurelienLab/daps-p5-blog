@@ -1,0 +1,7 @@
+{% if level is defined %}
+    <h{{ level|trim }}>
+        {{ text }}
+    </h{{ level|trim }}>
+{% else %}
+    <h2>{{ text }}</h2>
+{% endif %}

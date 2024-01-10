@@ -1,0 +1,147 @@
+<div class="space-y-12">
+    <div class="border-b border-gray-900/10 pb-12">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-4">
+                <div class="sm:col-span-3">
+                    <label for="title" class="block text-sm font-medium leading-6 text-gray-900">Titre de
+                        l'article</label>
+                    <div class="mt-2">
+                        <input type="text" name="title" id="title" value="{{ post.title }}"
+                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('title') }}</p>
+                </div>
+            </div>
+
+            <div class="sm:col-span-4">
+                <div class="sm:col-span-3">
+                    <label for="slug" class="block text-sm font-medium leading-6 text-gray-900">Slug</label>
+                    <div class="mt-2">
+                        <input type="text" name="slug" id="slug" value="{{ post.slug }}"
+                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('slug') }}</p>
+                    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-400">Texte affiché dans la barre
+                        d'adresse.<br> Laissez vide pour le générer automatiquement à partir du titre</p>
+
+                </div>
+            </div>
+
+            <div class="sm:col-span-4">
+                <div class="sm:col-span-3">
+                    <label for="category_id" class="block text-sm font-medium leading-6 text-gray-900">Catégorie</label>
+                    <div class="mt-2">
+                        <select id="category_id" name="category_id"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                            <option value="">Choisir une catégorie</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}"
+                                        {% if post.category.id == category.id %}selected="selected"{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('category_id') }}</p>
+                </div>
+            </div>
+
+            <div class="col-span-full">
+                <label for="chapo" class="block text-sm font-medium leading-6 text-gray-900">Introduction /
+                    Chapô</label>
+                <div class="mt-2">
+                    <textarea id="chapo" name="chapo" rows="3" required="required"
+                              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ post.chapo }}</textarea>
+                </div>
+                <p class="mt-1 text-red-400 text-sm">{{ error('chapo') }}</p>
+                <p class="mt-3 text-sm leading-6 text-gray-400">Texte qui sera affiché en introduction dans les pages de
+                    listing et sur la homepage</p>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="read_time" class="block text-sm font-medium leading-6 text-gray-900">Temps de lecture
+                    (min)</label>
+                <div class="mt-2">
+                    <input type="number" name="read_time" id="read_time" value="{{ post.readTime }}" required="required"
+                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+                <p class="mt-1 text-red-400 text-sm">{{ error('read_time') }}</p>
+            </div>
+
+            <div class="col-span-full">
+                <label for="contentEditor" class="block text-sm font-medium leading-6 text-gray-900">Contenu</label>
+                <p class="mt-1 text-red-400 text-sm">{{ error('content') }}</p>
+                <div class="mt-2">
+                    <div id="contentEditor" data-value="{{ post.content }}"
+                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 cursor-text"></div>
+                </div>
+                <input type="hidden" name="content" id="content">
+            </div>
+
+
+            <div class="col-span-full">
+                <span class="block text-sm font-medium leading-6 text-gray-900">Image de couverture</span>
+                <label for="dropzone-file" id="cover-dropzone"
+                       class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 mt-2">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span>
+                            or drag and drop</p>
+                        <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                        <img src="{{ post.featuredImage }}"
+                             class="mt-4 mx-auto max-h-40 {% if post.featuredImage is not defined %}hidden{% endif %}"
+                             id="preview">
+                    </div>
+                    <p class="mt-1 text-red-400 text-sm">{{ error('featured_image') }}</p>
+                    <input id="dropzone-file" name="featured_image" type="file" class="hidden"/>
+                </label>
+            </div>
+
+            <div class="sm:col-span-3">
+                <label for="published_at" class="block text-sm font-medium leading-6 text-gray-900">Date & Heure de
+                    publication</label>
+                <div class="relative mt-2 rounded-md shadow-sm">
+                    <input type="datetime-local" name="published_at" id="published_at"
+                           value="{{ post.publishedAt|date('Y-m-d\\TH:i') }}"
+                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    >
+                </div>
+                <p class="mt-1 text-red-400 text-sm">{{ error('published_at') }}</p>
+            </div>
+            <div x-data="{ switchOn: {{ post.status }} }"
+                 class="flex items-center justify-center space-x-2 mt-6">
+                <input id="status" type="checkbox" name="status" class="hidden" :checked="switchOn">
+
+                <button
+                        x-ref="switchButton"
+                        type="button"
+                        @click="switchOn = ! switchOn"
+                        :class="switchOn ? 'bg-blue-600' : 'bg-neutral-200'"
+                        class="relative inline-flex h-6 py-0.5 ml-4 focus:outline-none rounded-full w-10"
+                        x-cloak>
+                    <span :class="switchOn ? 'translate-x-[18px]' : 'translate-x-0.5'"
+                          class="w-5 h-5 duration-200 ease-in-out bg-white rounded-full shadow-md"></span>
+                </button>
+
+                <label @click="$refs.switchButton.click(); $refs.switchButton.focus()" :id="$id('status')"
+                       :class="{ 'text-blue-600': switchOn, 'text-gray-400': ! switchOn }"
+                       class="text-sm select-none"
+                       x-cloak>
+                    Publié
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-6 flex items-center justify-end gap-x-6">
+    {{ csrf('post_form') }}
+    <a href="{{ route('admin.post.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
+    <button type="submit"
+            class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Enregistrer
+    </button>
+</div>
