@@ -135,7 +135,7 @@ class Query
      * @return void
      * @throws Exception
      */
-    public function leftJoin(string $joinedModel, $fieldName)
+    public function leftJoin(string $joinedModel, $fieldName): self
     {
         $this->leftJoin[] = [
             'model' => $joinedModel,
@@ -145,6 +145,8 @@ class Query
         foreach (Database::getTableFields($joinedModel) as $field) {
             $this->select[$joinedModel::TABLE.'.'.$field] = $field.'_'.count($this->select);
         }
+
+        return $this;
     }
 
     /**
@@ -336,7 +338,13 @@ class Query
     {
         $result = [];
         foreach ($this->where as $where) {
+            if (strtolower($where['comparator']) == 'in') {
+                $in = str_repeat('?,', count($this->parameters[$where['parameterName']]) - 1).'?';
+                $result[] = $where['column'].' '.$where['comparator'].' ('.$in.')';
+                continue;
+            }
             $result[] = $where['column'].' '.$where['comparator'].' '.$where['parameterName'];
+
         }
 
         if ($this->withTrashed === false) {
@@ -408,5 +416,11 @@ class Query
     public function getJoins(): array
     {
         return array_merge($this->leftJoin);
+    }
+
+    public function setTable(string $table): Query
+    {
+        $this->table = $table;
+        return $this;
     }
 }

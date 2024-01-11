@@ -41,10 +41,9 @@
                         </div>
                         <div class="last-post__article__content">
                             <ul class="tag-list">
-                                <li class="tag">Développement</li>
-                                <li class="tag">JS</li>
-                                <li class="tag">Nouveauté</li>
-                                <li class="tag">Framework</li>
+                                {% for tag in lastPost.tags %}
+                                    <li class="tag">{{ tag.name }}</li>
+                                {% endfor %}
                             </ul>
                             <p>
                                 {{ lastPost.chapo|nl2br }}

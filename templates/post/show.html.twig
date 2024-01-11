@@ -22,10 +22,9 @@
                 <p class="hero__category">{{ post.category.name }}</p>
                 <h1 class="hero__title">{{ post.title }}</h1>
                 <ul class="tag-list">
-                    <li class="tag">Développement</li>
-                    <li class="tag">JS</li>
-                    <li class="tag">Nouveauté</li>
-                    <li class="tag">Framework</li>
+                    {% for tag in post.tags %}
+                        <li class="tag">{{ tag.name }}</li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

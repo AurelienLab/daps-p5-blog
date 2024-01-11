@@ -94,7 +94,12 @@ class Database
      * @return mixed
      * @throws Exception
      */
-    public static function query(Query $query, bool $raw = false, int $fetchFlag = PDO::FETCH_ASSOC): mixed
+    public static function query(
+        Query $query,
+        bool  $raw = false,
+        int   $fetchFlag = PDO::FETCH_ASSOC,
+        bool  $withSubquery = true
+    ): mixed
     {
         $database = self::getPDOInstance();
         self::$_instance->queryCount++;
@@ -102,6 +107,7 @@ class Database
 
         $sth = $database->prepare($statement);
 
+        $extraParams = [];
         foreach ($query->getParameters() as $key => $parameter) {
             $bindType = PDO::PARAM_STR;
             if (is_numeric($parameter) === true) {
@@ -112,10 +118,27 @@ class Database
                 $bindType = PDO::PARAM_BOOL;
             }
 
+            if (is_array($parameter)) {
+                foreach ($parameter as $value) {
+                    $extraParams[] = $value;
+                }
+                continue;
+            }
+
             $sth->bindValue($key, $parameter, $bindType);
         }
 
-        $sth->execute();
+
+        if (!empty($extraParams)) {
+            $sth->execute($extraParams);
+        } else {
+            $sth->execute();
+        }
+
+        // if (!$withSubquery) {
+        //     dd($sth->fetchAll());
+        // }
+
 
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
@@ -132,18 +155,29 @@ class Database
             }
 
             if ($query->getFirstOrLast() === Query::GET_FIRST) {
-                return self::mapToModel($queryResult[0], $query->getModel(), $query);
+                $result = self::mapToModel($queryResult[0], $query->getModel(), $query, $withSubquery);
+                if ($withSubquery) {
+                    self::queryRelations($result);
+                }
+                return $result;
             }
 
             if ($query->getFirstOrLast() === Query::GET_LAST) {
-                return self::mapToModel(end($queryResult), $query->getModel(), $query);
+                $result = self::mapToModel(end($queryResult), $query->getModel(), $query, $withSubquery);
+                if ($withSubquery) {
+                    self::queryRelations($result);
+                }
+                return $result;
             }
         }
 
         foreach ($queryResult as $data) {
-            $result[] = self::mapToModel($data, $query->getModel(), $query);
+            $result[] = self::mapToModel($data, $query->getModel(), $query, $withSubquery);
         }
 
+        if ($withSubquery) {
+            self::queryRelations($result);
+        }
 
         return $result;
     }
@@ -159,7 +193,7 @@ class Database
      * @return mixed
      * @throws \ReflectionException
      */
-    private static function mapToModel(array $originalData, string $model, Query $query): mixed
+    private static function mapToModel(array $originalData, string $model, Query $query, bool $lazy = true): mixed
     {
         $joins = $query->getJoins();
         $selectors = $query->getSelect();
@@ -174,25 +208,20 @@ class Database
         $entity = new $model();
 
         $reflectionClass = new ReflectionClass($model);
+        $properties = $reflectionClass->getProperties();
+        foreach ($properties as $property) {
+            $propertyName = Str::toSnakeCase($property->getName());
+            $setter = 'set'.Str::toPascalCase($property->getName());
 
-        foreach ($data as $key => $value) {
-            if (str_starts_with($key, $model::TABLE.'.') === false) {
-                continue;
-            }
+            // Try to get data from database
+            $fieldName = $reflectionClass->getConstant('TABLE').'.'.$propertyName;
+            if ($reflectionClass->hasMethod($setter) === true) {
+                $type = $reflectionClass->getMethod($setter)->getParameters()[0]->getType();
 
-            $key = str_replace($model::TABLE.'.', '', $key);
+                if (isset($data[$fieldName]) === true || isset($data[$fieldName.'_id']) === true) {
+                    $value = isset($data[$fieldName]) === true ? $data[$fieldName] : $data[$fieldName.'_id'];
 
-            if (str_ends_with($key, '_id') === true) {
-                $key = str_replace('_id', '', $key);
-            }
-
-            if ($reflectionClass->hasProperty(Str::toCamelCase($key)) === true) {
-                $setter = 'set'.Str::toPascalCase($key);
-
-                if ($reflectionClass->hasMethod($setter) === true) {
-                    $type = $reflectionClass->getMethod($setter)->getParameters()[0]->getType();
-
-                    if (!$type->isBuiltin() && $value !== null) {
+                    if ($type->isBuiltin() === false && $value !== null) {
                         $name = $type->getName();
                         $subClassReflection = new ReflectionClass($name);
 
@@ -204,12 +233,14 @@ class Database
                                 }
                             }
                             if ($relation === null) {
+                                if ($lazy == false) {
+                                    continue;
+                                }
                                 $repository = 'App\Repository\\'.$subClassReflection->getShortName().'Repository';
                                 $relation = $repository::get($value);
                             }
 
                             $value = $relation;
-
                         } else {
                             $value = new $name($value);
                         }
@@ -218,9 +249,6 @@ class Database
                     $entity->$setter($value);
                     continue;
                 }
-                continue;
-
-                throw new Exception(sprintf('Unable to find a setter for %s in %s', $key, $model));
             }
         }
 
@@ -365,5 +393,77 @@ class Database
         }
 
         return null;
+    }
+
+    private static function queryRelations(mixed $result)
+    {
+        if (empty($result)) {
+            return;
+        }
+
+        if (is_array($result) === false) {
+            $result = [$result];
+        }
+
+        $reflectionClass = new ReflectionClass($result[0]);
+        $primaryKey = self::getPrimaryKey($reflectionClass->getName());
+        $primaryKeyGetter = 'get'.Str::toPascalCase($primaryKey);
+
+        // Check if there is any needed relation
+        $relationsToFetch = [];
+        $properties = $reflectionClass->getProperties();
+        foreach ($properties as $property) {
+            $getter = 'get'.Str::toPascalCase($property->getName());
+            if ($reflectionClass->hasMethod($getter) === true) {
+                $getterResult = $result[0]->$getter();
+                if ($getterResult instanceof EntityCollection) {
+                    $relationsToFetch[$property->getName()] = $getterResult;
+                }
+            }
+        }
+
+        if (empty($relationsToFetch) === false) {
+            $ids = [];
+            foreach ($result as $item) {
+                $ids[$item->$primaryKeyGetter()] = $item;
+            }
+
+            foreach ($relationsToFetch as $name => $relation) {
+                if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
+                    $query = new Query($relation->getRelationModel());
+                    $query->leftJoin($relation->getRelatedEntity(), $relation->getTargetEntityProperty());
+                } else {
+                    $query = new Query($relation->getRelatedEntity());
+                }
+
+                $sourceEntityFieldName = Str::toSnakeCase($reflectionClass->getShortName()).'_id';
+
+                $query
+                    ->select()
+                    ->leftJoin($reflectionClass->getName(), Str::toSnakeCase($reflectionClass->getShortName()))
+                    ->where($sourceEntityFieldName, 'IN', array_keys($ids));
+
+
+                $results = self::query($query, false, PDO::FETCH_ASSOC, false);
+
+                $originalGetter = 'get'.Str::toPascalCase($reflectionClass->getShortName());
+                $collectionGetter = 'get'.Str::toPascalCase($name);
+
+                if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
+                    $targetGetter = 'get'.Str::toPascalCase($relation->getTargetEntityProperty());
+                }
+
+                foreach ($results as $result) {
+                    $originalObject = $ids[$result->$originalGetter()->$primaryKeyGetter()];
+                    if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
+                        $target = $result->$targetGetter();
+                    } else {
+                        $target = $result;
+                    }
+
+                    $originalObject->$collectionGetter()->add($target);
+                }
+            }
+        }
     }
 }

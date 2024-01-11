@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Core\Database\EntityCollection;
+
 class Tag
 {
 
@@ -21,6 +23,18 @@ class Tag
      * @var string
      */
     private string $name;
+
+    private EntityCollection $posts;
+
+    public function __construct()
+    {
+        $this->posts = new EntityCollection(
+            Post::class,
+            EntityCollection::TYPE_MANY_TO_MANY,
+            'post',
+            PostTag::class
+        );
+    }
 
     /**
      * @return int
@@ -77,5 +91,10 @@ class Tag
     {
         $this->name = $name;
         return $this;
+    }
+
+    public function getPosts(): EntityCollection
+    {
+        return $this->posts;
     }
 }
