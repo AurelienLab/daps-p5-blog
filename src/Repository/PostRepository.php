@@ -2,14 +2,15 @@
 
 namespace App\Repository;
 
+use App\Core\Abstracts\AbstractRepository;
 use App\Core\Database\Database;
 use App\Core\Database\Query;
 use App\Model\Post;
 
-class PostRepository extends \App\Core\Abstracts\AbstractRepository
+class PostRepository extends AbstractRepository
 {
 
-    const MODEL = \App\Model\Post::class;
+    const MODEL = Post::class;
 
     public static function getPublished($relations = []): false|array
     {
