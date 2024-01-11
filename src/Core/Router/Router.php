@@ -20,6 +20,8 @@ class Router
      */
     private array $routeCollection;
 
+    private ?string $currentRoute = null;
+
     /**
      * @var null|Router
      */
@@ -112,6 +114,7 @@ class Router
             /* @var Route $route */
 
             if ($route->matchUri($requestedUri) === true) {
+                $this->currentRoute = $route->getName();
                 $this->runMiddleware($route, $request);
                 $this->runController($route, $requestedUri);
                 return;
@@ -289,5 +292,10 @@ class Router
         }
 
         return $result;
+    }
+
+    public function getCurrentRoute()
+    {
+        return $this->currentRoute;
     }
 }

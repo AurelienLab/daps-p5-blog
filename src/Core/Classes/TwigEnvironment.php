@@ -2,7 +2,9 @@
 
 namespace App\Core\Classes;
 
+use App\Core\Router\Router;
 use MarcW\Heroicons\Twig\HeroiconsExtension;
+use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\LoaderInterface;
@@ -15,6 +17,11 @@ class TwigEnvironment extends Environment
     public function __construct(LoaderInterface $loader, $options = [])
     {
         parent::__construct($loader, $options);
+
+        $this->addGlobal('app', [
+            'request' => Request::createFromGlobals(),
+            'router' => Router::getInstance()
+        ]);
 
         $this->addExtension(new IntlExtension());
         $this->addExtension(new HeroiconsExtension());
@@ -38,6 +45,8 @@ class TwigEnvironment extends Environment
 
         // EditorJs clean data to html
         $this->addFunction(new TwigFunction('editorjs_to_html', 'editorJsToHtml'));
+
+        $this->addFunction(new TwigFunction('starts_with', 'str_starts_with'));
 
         // Get datetime value as (XX min ago)
         $this->addFilter(new TwigFilter('diff', 'dateTimeAgo'));
