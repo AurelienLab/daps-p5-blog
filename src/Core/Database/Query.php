@@ -423,4 +423,9 @@ class Query
         $this->table = $table;
         return $this;
     }
+
+    public function isInsert()
+    {
+        return str_starts_with($this->verb, 'INSERT INTO');
+    }
 }

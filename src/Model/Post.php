@@ -240,4 +240,9 @@ class Post
     {
         return $this->tags;
     }
+
+    public function getTagsJson(): string
+    {
+        return json_encode($this->getTags()->toArray());
+    }
 }

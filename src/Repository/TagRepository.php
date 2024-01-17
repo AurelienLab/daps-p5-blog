@@ -22,4 +22,14 @@ class TagRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
+    public static function searchByName(string $searchString): array
+    {
+        $query = new Query(static::MODEL);
+        $query->select()
+            ->where('name', 'LIKE', '%'.$searchString.'%')
+            ->orderBy('name', 'ASC');
+
+        return Database::query($query);
+    }
 }

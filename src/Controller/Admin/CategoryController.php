@@ -141,7 +141,7 @@ class CategoryController extends AbstractController
      * @return bool
      * @throws \Exception
      */
-    private function save(PostCategory $postCategory, Request $request)
+    private function save(PostCategory $postCategory, Request $request): bool|PostCategory
     {
         $data = $request->request;
 
@@ -167,8 +167,6 @@ class CategoryController extends AbstractController
             ->setName($data->get('name'))
             ->setSlug(Transliterator::urlize($slug));
 
-        PostCategoryRepository::save($postCategory);
-
-        return true;
+        return PostCategoryRepository::save($postCategory);
     }
 }

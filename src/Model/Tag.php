@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Core\Database\EntityCollection;
 
-class Tag
+class Tag implements \JsonSerializable
 {
 
     const TABLE = 'tags';
@@ -96,5 +96,14 @@ class Tag
     public function getPosts(): EntityCollection
     {
         return $this->posts;
+    }
+    
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'slug' => $this->getSlug(),
+            'name' => $this->getName()
+        ];
     }
 }

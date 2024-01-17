@@ -128,18 +128,16 @@ class Database
             $sth->bindValue($key, $parameter, $bindType);
         }
 
-
         if (!empty($extraParams)) {
             $sth->execute($extraParams);
         } else {
             $sth->execute();
         }
 
-        // if (!$withSubquery) {
-        //     dd($sth->fetchAll());
-        // }
-
-
+        if ($query->isInsert() === true) {
+            return $database->lastInsertId();
+        }
+        
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }

@@ -50,6 +50,10 @@ class EntityCollection implements \Iterator
         return $this->relationModel;
     }
 
+    public function toArray(): array
+    {
+        return $this->collection;
+    }
 
     /* ITERATION METHODS */
 
