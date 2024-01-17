@@ -7,6 +7,7 @@ use App\Core\Database\Database;
 use App\Core\Database\Query;
 use App\Model\Post;
 use App\Model\PostTag;
+use App\Model\Tag;
 
 class PostRepository extends AbstractRepository
 {
@@ -67,6 +68,7 @@ class PostRepository extends AbstractRepository
         }
 
         $query = new Query(static::MODEL);
+        $now = new \DateTime();
         $query->select()
             ->groupBy(static::MODEL::TABLE.'.id')
             ->leftJoin(PostTag::class, [
@@ -74,10 +76,32 @@ class PostRepository extends AbstractRepository
                     static::MODEL::TABLE.'.id'
                 ]
             )
+            ->where('published_at', '<', $now)
+            ->where('status', '=', Post::STATE_PUBLISHED)
             ->where(Post::TABLE.'.id', '!=', $post->getId())
             ->where(PostTag::TABLE.'.tag_id', 'IN', $tagIds)
             ->orderBy('published_at', 'DESC')
             ->limit(3);
+
+        return Database::query($query);
+    }
+
+    public static function getPublishedByTag(Tag $tag): array
+    {
+
+        $query = new Query(static::MODEL);
+        $now = new \DateTime();
+        $query->select()
+            ->groupBy(static::MODEL::TABLE.'.id')
+            ->leftJoin(PostTag::class, [
+                    PostTag::TABLE.'.post_id',
+                    static::MODEL::TABLE.'.id'
+                ]
+            )
+            ->where('published_at', '<', $now)
+            ->where('status', '=', Post::STATE_PUBLISHED)
+            ->where(PostTag::TABLE.'.tag_id', '=', $tag->getId())
+            ->orderBy('published_at', 'DESC');
 
         return Database::query($query);
     }

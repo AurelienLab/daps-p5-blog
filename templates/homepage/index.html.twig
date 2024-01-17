@@ -42,7 +42,7 @@
                         <div class="last-post__article__content">
                             <ul class="tag-list">
                                 {% for tag in lastPost.tags %}
-                                    <li class="tag">{{ tag.name }}</li>
+                                    {% include 'post/_tag.html.twig' with { tag } %}
                                 {% endfor %}
                             </ul>
                             <p>

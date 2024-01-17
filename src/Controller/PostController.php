@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\Abstracts\AbstractController;
 use App\Core\Exception\NotFoundException;
 use App\Repository\PostRepository;
+use App\Repository\TagRepository;
 
 class PostController extends AbstractController
 {
@@ -30,6 +31,19 @@ class PostController extends AbstractController
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'relatedPosts' => $relatedPosts
+        ]);
+    }
+
+    public function tag(string $slug)
+    {
+        $tag = TagRepository::getOneBySlug($slug);
+        if ($tag == null) {
+            throw new NotFoundException();
+        }
+
+        $posts = PostRepository::getPublishedByTag($tag);
+        return $this->render('post/index.html.twig', [
+            'posts' => $posts
         ]);
     }
 }

@@ -3,7 +3,7 @@
         <img src="{{ post.featuredImage }}"/>
         <ul class="tag-list">
             {% for tag in post.tags %}
-                <li class="tag">{{ tag.name }}</li>
+                {% include 'post/_tag.html.twig' with { tag } %}
             {% endfor %}
         </ul>
     </div>

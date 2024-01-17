@@ -560,6 +560,7 @@ a.extended:before {
 }
 
 .tag {
+  position: relative;
   font-size: 0.8em;
   line-height: 1.4;
   padding: 3px 15px;
