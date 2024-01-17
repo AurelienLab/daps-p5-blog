@@ -86,4 +86,5 @@ document.addEventListener('DOMContentLoaded', function () {
             preview.classList.remove('hidden');
         };
     }
+
 })

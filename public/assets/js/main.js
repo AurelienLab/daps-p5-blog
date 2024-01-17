@@ -1,11 +1,11 @@
 import {Header} from "./Header/Header.js";
 
-import {hljs} from './lib/highlight/highlight.js'
+// import {hljs} from './lib/highlight/highlight.js'
 
 const header = new Header('.header')
 
 document.addEventListener('DOMContentLoaded', function () {
     header.init()
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
+    // hljs.highlightAll();
+    // hljs.initLineNumbersOnLoad();
 })

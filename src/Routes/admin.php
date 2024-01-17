@@ -30,6 +30,7 @@ Route::prefix('/admin')->name('admin.')->group([
         Route::get('/{id}/remove', [Admin\PostController::class, 'remove'])->name('remove')
     ]),
 
+    Route::get('/tags/search/{query?}', [Admin\TagController::class, 'search'])->name('tag.search'),
     Route::post('/editorjs/upload-file', [Admin\EditorController::class, 'uploadFile']),
     Route::post('/editorjs/fetch-url', [Admin\EditorController::class, 'fetchUrl']),
 ]);

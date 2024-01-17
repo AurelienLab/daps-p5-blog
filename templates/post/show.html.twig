@@ -22,10 +22,9 @@
                 <p class="hero__category">{{ post.category.name }}</p>
                 <h1 class="hero__title">{{ post.title }}</h1>
                 <ul class="tag-list">
-                    <li class="tag">Développement</li>
-                    <li class="tag">JS</li>
-                    <li class="tag">Nouveauté</li>
-                    <li class="tag">Framework</li>
+                    {% for tag in post.tags %}
+                        <li class="tag">{{ tag.name }}</li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -150,6 +149,17 @@
                 {% endif %}
             </div>
         </section>
+
+        {% if relatedPosts is defined and relatedPosts|length > 0 %}
+            <section class="post-show__related">
+                <h2 class="heading heading--dark">Articles qui pourraient vous plaire</h2>
+                <div class="post-show__related__list post-list">
+                    {% for relatedPost in relatedPosts %}
+                        {% include 'post/_post-card.html.twig' with { post: relatedPost } %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
     </main>
 
 {% endblock %}

@@ -28,6 +28,16 @@ class Query
     private array $select = [];
 
     /**
+     * @var string
+     */
+    private ?string $groupBy;
+
+    /**
+     * @var int|null
+     */
+    private ?int $limit;
+
+    /**
      * @var array
      */
     private array $leftJoin = [];
@@ -99,6 +109,13 @@ class Query
         return $this;
     }
 
+    public function groupBy(string $column): self
+    {
+        $this->groupBy = $column;
+
+        return $this;
+    }
+
 
     /**
      * @param string $column Database column
@@ -135,16 +152,18 @@ class Query
      * @return void
      * @throws Exception
      */
-    public function leftJoin(string $joinedModel, $fieldName)
+    public function leftJoin(string $joinedModel, $relation): self
     {
         $this->leftJoin[] = [
             'model' => $joinedModel,
-            'field' => $fieldName
+            'relation' => $relation
         ];
 
         foreach (Database::getTableFields($joinedModel) as $field) {
             $this->select[$joinedModel::TABLE.'.'.$field] = $field.'_'.count($this->select);
         }
+
+        return $this;
     }
 
     /**
@@ -274,6 +293,12 @@ class Query
         return $this;
     }
 
+    public function limit(int $limit): self
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
     /**
      * Describe table statement (get columns information)
      *
@@ -306,8 +331,8 @@ class Query
         if (!empty($this->leftJoin)) {
             foreach ($this->leftJoin as $leftJoin) {
                 $tableName = $leftJoin['model']::TABLE;
-                $field = $leftJoin['field'];
-                $statement .= ' LEFT JOIN '.$tableName.' ON '.$tableName.'.id = '.$this->table.'.'.$field.'_id';
+                $relation = $leftJoin['relation'];
+                $statement .= ' LEFT JOIN '.$tableName.' ON '.$relation[0].' = '.$relation[1];
             }
         }
 
@@ -318,12 +343,21 @@ class Query
             $statement .= implode(' AND ', $wheres);
         }
 
+        if (!empty($this->groupBy)) {
+            $statement .= ' GROUP BY '.$this->groupBy;
+        }
+
         if (!empty($this->orderBy)) {
             $statement .= ' ORDER BY '.$this->table.'.'.$this->orderBy['field'].' '.$this->orderBy['order'];
         }
 
+        if (!empty($this->limit)) {
+            $statement .= ' LIMIT '.$this->limit;
+        }
+
 
         $statement .= ';';
+
         return $statement;
     }
 
@@ -335,8 +369,29 @@ class Query
     private function generateWheres(): array
     {
         $result = [];
+        $inParam = 0;
         foreach ($this->where as $where) {
+            if (strtolower($where['comparator']) == 'in') {
+                $values = $this->parameters[$where['parameterName']];
+                $in = '';
+                $i = 1;
+                foreach ($values as $value) {
+                    $paramName = '_whereIn_'.$inParam;
+                    $in .= ':'.$paramName;
+                    if ($i < count($values)) {
+                        $in .= ',';
+                    }
+
+                    $this->parameters[$paramName] = $value;
+                    $i++;
+                    $inParam++;
+                }
+                unset($this->parameters[$where['parameterName']]);
+                $result[] = $where['column'].' '.$where['comparator'].' ('.$in.')';
+                continue;
+            }
             $result[] = $where['column'].' '.$where['comparator'].' '.$where['parameterName'];
+
         }
 
         if ($this->withTrashed === false) {
@@ -408,5 +463,16 @@ class Query
     public function getJoins(): array
     {
         return array_merge($this->leftJoin);
+    }
+
+    public function setTable(string $table): Query
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    public function isInsert()
+    {
+        return str_starts_with($this->verb, 'INSERT INTO');
     }
 }

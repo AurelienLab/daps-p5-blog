@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Core\Database\EntityCollection;
 use App\Model\Trait\SoftDeleteTrait;
 use App\Model\Trait\TimestampableTrait;
 
@@ -79,6 +80,18 @@ class Post
      * @var int
      */
     private int $status;
+
+    private EntityCollection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new EntityCollection(
+            Tag::class,
+            EntityCollection::TYPE_MANY_TO_MANY,
+            'tag',
+            PostTag::class
+        );
+    }
 
     public function getId(): int
     {
@@ -221,5 +234,15 @@ class Post
     {
         $this->status = $status;
         return $this;
+    }
+
+    public function getTags(): EntityCollection
+    {
+        return $this->tags;
+    }
+
+    public function getTagsJson(): string
+    {
+        return json_encode($this->getTags()->toArray());
     }
 }
