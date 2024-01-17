@@ -25,8 +25,11 @@ class PostController extends AbstractController
             throw new NotFoundException();
         }
 
+        $relatedPosts = PostRepository::getRelatedPosts($post);
+
         return $this->render('post/show.html.twig', [
-            'post' => $post
+            'post' => $post,
+            'relatedPosts' => $relatedPosts
         ]);
     }
 }

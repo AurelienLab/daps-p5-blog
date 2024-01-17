@@ -149,6 +149,17 @@
                 {% endif %}
             </div>
         </section>
+
+        {% if relatedPosts is defined and relatedPosts|length > 0 %}
+            <section class="post-show__related">
+                <h2 class="heading heading--dark">Articles qui pourraient vous plaire</h2>
+                <div class="post-show__related__list post-list">
+                    {% for relatedPost in relatedPosts %}
+                        {% include 'post/_post-card.html.twig' with { post: relatedPost } %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
     </main>
 
 {% endblock %}

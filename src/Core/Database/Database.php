@@ -107,7 +107,6 @@ class Database
 
         $sth = $database->prepare($statement);
 
-        $extraParams = [];
         foreach ($query->getParameters() as $key => $parameter) {
             $bindType = PDO::PARAM_STR;
             if (is_numeric($parameter) === true) {
@@ -118,26 +117,20 @@ class Database
                 $bindType = PDO::PARAM_BOOL;
             }
 
-            if (is_array($parameter)) {
-                foreach ($parameter as $value) {
-                    $extraParams[] = $value;
-                }
-                continue;
-            }
-
             $sth->bindValue($key, $parameter, $bindType);
         }
 
-        if (!empty($extraParams)) {
-            $sth->execute($extraParams);
-        } else {
+        try {
             $sth->execute();
+        } catch (Exception $e) {
+            dd($e, $statement);
         }
+
 
         if ($query->isInsert() === true) {
             return $database->lastInsertId();
         }
-        
+
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
@@ -427,18 +420,37 @@ class Database
             }
 
             foreach ($relationsToFetch as $name => $relation) {
+                $sourceEntityFieldName = Str::toSnakeCase($reflectionClass->getShortName()).'_id';
                 if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
                     $query = new Query($relation->getRelationModel());
-                    $query->leftJoin($relation->getRelatedEntity(), $relation->getTargetEntityProperty());
+                    $query->leftJoin(
+                        $relation->getRelatedEntity(),
+                        [
+                            $relation->getRelationModel()::TABLE.'.'.$relation->getTargetEntityProperty().'_id',
+                            $relation->getRelatedEntity()::TABLE.'.id'
+                        ]
+                    )
+                        ->leftJoin(
+                            $reflectionClass->getName(),
+                            [
+                                $reflectionClass->getName()::TABLE.'.id',
+                                $relation->getRelationModel()::TABLE.'.'.$sourceEntityFieldName
+                            ]
+                        );
                 } else {
                     $query = new Query($relation->getRelatedEntity());
+                    $query->leftJoin(
+                        $reflectionClass->getName(),
+                        [
+                            $reflectionClass->getName()::TABLE.'.id',
+                            $relation->getRelationModel()::TABLE.'.'.$sourceEntityFieldName
+                        ]
+                    );
                 }
 
-                $sourceEntityFieldName = Str::toSnakeCase($reflectionClass->getShortName()).'_id';
 
                 $query
                     ->select()
-                    ->leftJoin($reflectionClass->getName(), Str::toSnakeCase($reflectionClass->getShortName()))
                     ->where($sourceEntityFieldName, 'IN', array_keys($ids));
 
 

@@ -108,7 +108,7 @@ abstract class AbstractRepository
         } else {
             $query->updateOne($dbMapping->entityArray, $dbMapping->primaryKey);
         }
-        
+
         $result = Database::query($query);
 
         if (isset($dbMapping->entityArray[$dbMapping->primaryKey]) === false) {
@@ -181,7 +181,7 @@ abstract class AbstractRepository
                     $setter = 'set'.Str::toPascalCase($relation);
                     if ($reflection->hasMethod($setter)) {
                         $class = $reflection->getMethod($setter)->getParameters()[0]->getType()->getName();
-                        $query->leftJoin($class, $relation);
+                        $query->leftJoin($class, [static::MODEL::TABLE.'.'.$relation.'_id', $class::TABLE.'.id']);
                     }
                 }
             }
