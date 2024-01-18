@@ -1,0 +1,70 @@
+.subscription {
+  @include mq($from: tablet) {
+    margin-top: 4rem;
+    margin-bottom: 8rem;
+  }
+  z-index: 20;
+  position: relative;
+  overflow: hidden;
+  @include default-container;
+  box-shadow: $primary-shadow;
+
+  padding: 34px 25px;
+  border-radius: 12px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.13) 21.76%, rgba(0, 0, 0, 0.00) 38.69%), radial-gradient(59.06% 80.95% at 49.96% 50%, rgba(93, 107, 235, 0.80) 0%, rgba(60, 72, 181, 0.80) 100%), white;
+
+  &__background {
+    z-index: 0;
+    position: absolute;
+    width: 90%;
+    max-width: 650px;
+    opacity: 45%;
+    top: 28%;
+    transform-origin: center left;
+    transform: rotate(-15deg);
+
+    svg {
+      color: #FFFFFF;
+    }
+  }
+
+  &__container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  &__heading {
+    @include mq($from: tablet) {
+      padding: 16px 57px;
+    }
+    font-size: 1em;
+    margin: auto;
+    color: #FFF;
+    border-radius: 12px;
+    border: 2px solid #323C97;
+    background: rgba(60, 72, 181, 0.59);
+    backdrop-filter: blur(6px);
+    padding: 10px 40px;
+  }
+
+  &__submit {
+    @include mq($from: tablet) {
+      justify-content: flex-end;
+      .btn {
+        max-width: 190px;
+      }
+    }
+    padding-top: 20px;
+
+    .btn {
+      width: 100%;
+      border: none;
+      box-shadow: 4px 8px 8px -4px rgba(0, 0, 0, 0.15);
+    }
+  }
+}

@@ -120,6 +120,17 @@
       padding-bottom: 4rem;
     }
   }
+
+  &--subscription {
+    $overpass-height: 100px;
+
+    .hero__container {
+      gap: 50px;
+      margin-top: 50px;
+      margin-bottom: - $overpass-height;
+      padding-bottom: calc($overpass-height + 4rem);
+    }
+  }
 }
 
 @keyframes dezoom {
