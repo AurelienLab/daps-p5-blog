@@ -8,6 +8,16 @@
   transition: all 150ms ease-in-out;
   min-width: 190px;
 
+  &--primary {
+    background: map-get($colors, primary);
+    color: #FFFFFF;
+
+    &:hover, &:focus {
+      background: #FFFFFF;
+      color: map-get($colors, primary);
+    }
+  }
+
   &--bg-light {
     background: #FFFFFF;
   }

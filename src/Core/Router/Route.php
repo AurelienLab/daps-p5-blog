@@ -318,6 +318,9 @@ class Route
             $uri = preg_replace($pattern, $value, $uri);
         }
 
+        if ($uri === '/') {
+            return $uri;
+        }
         return Str::removeTrailingSlash(str_replace('//', '/', $uri));
     }
 }

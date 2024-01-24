@@ -109,6 +109,14 @@ a.extended:before {
   transition: all 150ms ease-in-out;
   min-width: 190px;
 }
+.btn--primary {
+  background: #0569FF;
+  color: #FFFFFF;
+}
+.btn--primary:hover, .btn--primary:focus {
+  background: #FFFFFF;
+  color: #0569FF;
+}
 .btn--bg-light {
   background: #FFFFFF;
 }
@@ -245,6 +253,33 @@ a.extended:before {
   color: black;
   border-radius: 50%;
   background: #EBEBEB;
+}
+.header--login {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.header--login .header__logo {
+  color: #0569FF;
+}
+.header--login .header__container {
+  width: auto;
+}
+.header--login nav a {
+  display: flex;
+  align-items: center;
+  color: #323C97;
+}
+.header--login nav a:hover svg {
+  transform: translateX(-8px);
+}
+.header--login nav a svg {
+  transition: transform 200ms ease-in-out;
+  margin-right: 8px;
+  width: 30px;
 }
 
 .burger {
@@ -734,6 +769,17 @@ a.extended:before {
   width: 100%;
 }
 
+.base-login {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.base-login main {
+  width: 100%;
+}
+
 .last-post {
   display: flex;
   flex-direction: column;
@@ -932,13 +978,14 @@ a.extended:before {
   z-index: 20;
   position: relative;
   overflow: hidden;
-  margin: auto;
-  max-width: 1200px;
-  width: 95%;
+  max-width: 600px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
   box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
-  padding: 34px 25px;
+  padding: 34px 20px;
   border-radius: 12px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.13) 21.76%, rgba(0, 0, 0, 0) 38.69%), radial-gradient(59.06% 80.95% at 49.96% 50%, rgba(93, 107, 235, 0.8) 0%, rgba(60, 72, 181, 0.8) 100%), white;
+  background: white;
 }
 @media (min-width: 46.25em) {
   .subscription {
@@ -946,42 +993,32 @@ a.extended:before {
     margin-bottom: 8rem;
   }
 }
-.subscription__background {
-  z-index: 0;
-  position: absolute;
-  width: 90%;
-  max-width: 650px;
-  opacity: 45%;
-  top: 28%;
-  transform-origin: center left;
-  transform: rotate(-15deg);
-}
-.subscription__background svg {
-  color: #FFFFFF;
-}
 .subscription__container {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 1000px;
+  max-width: 400px;
   margin: auto;
 }
 .subscription__heading {
   font-size: 1em;
   margin: auto;
-  color: #FFF;
+  color: #323C97;
   border-radius: 12px;
   border: 2px solid #323C97;
-  background: rgba(60, 72, 181, 0.59);
   backdrop-filter: blur(6px);
   padding: 10px 40px;
+  text-align: center;
 }
 @media (min-width: 46.25em) {
   .subscription__heading {
     padding: 16px 57px;
   }
+}
+.subscription .form label {
+  color: #0569FF;
 }
 .subscription__submit {
   padding-top: 20px;
@@ -998,6 +1035,9 @@ a.extended:before {
   width: 100%;
   border: none;
   box-shadow: 4px 8px 8px -4px rgba(0, 0, 0, 0.15);
+}
+.subscription__submit .btn:hover {
+  outline: 2px solid #0569FF;
 }
 
 .form {
@@ -1016,6 +1056,9 @@ a.extended:before {
   flex-direction: column;
   flex-grow: 1;
   gap: 8px;
+}
+.form__field:has(input[required]) label:after, .form__field:has(textarea[required]) label:after {
+  content: " *";
 }
 .form__field:has(input:placeholder-shown) label, .form__field:has(textarea:placeholder-shown) label {
   color: #0569FF;

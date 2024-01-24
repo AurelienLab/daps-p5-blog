@@ -16,6 +16,13 @@
     flex-grow: 1;
     gap: 8px;
 
+    &:has(input[required]),
+    &:has(textarea[required]) {
+      label:after {
+        content: ' *'
+      }
+    }
+
 
     &:has(input:placeholder-shown),
     &:has(textarea:placeholder-shown) {
