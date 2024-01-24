@@ -739,6 +739,7 @@ a.extended:before {
   overflow: hidden;
   width: 49px;
   border-radius: 50%;
+  background: white;
 }
 @media (min-width: 61.25em) {
   .profile-pic {
@@ -749,6 +750,9 @@ a.extended:before {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.profile-pic--medium {
+  width: 40px;
 }
 
 .editor-rendered h1, .editor-rendered h2, .editor-rendered h3, .editor-rendered h4, .editor-rendered h5, .editor-rendered h6 {
