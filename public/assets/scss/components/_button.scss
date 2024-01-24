@@ -8,6 +8,12 @@
   transition: all 150ms ease-in-out;
   min-width: 190px;
 
+  &--wide {
+    display: block;
+    width: 100%;
+    flex-grow: 1;
+  }
+
   &--primary {
     background: map-get($colors, primary);
     color: #FFFFFF;

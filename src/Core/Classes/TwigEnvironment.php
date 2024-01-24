@@ -18,11 +18,16 @@ class TwigEnvironment extends Environment
     {
         parent::__construct($loader, $options);
 
-        $this->addGlobal('app', [
+        $app = [
             'request' => Request::createFromGlobals(),
             'router' => Router::getInstance(),
-            'user' => $options['user']
-        ]);
+        ];
+
+        if (isset($options['user'])) {
+            $app['user'] = $options['user'];
+        }
+
+        $this->addGlobal('app', $app);
 
         $this->addExtension(new IntlExtension());
         $this->addExtension(new HeroiconsExtension());

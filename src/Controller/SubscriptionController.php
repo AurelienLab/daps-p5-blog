@@ -49,12 +49,12 @@ class SubscriptionController extends AbstractController
             $this->addFormError('name', 'Le nom doit être renseigné et contenir au moins 3 caractères');
         }
 
-        if (empty($data->get('email')) === true) {
+        if (empty(trim($data->get('email'))) === true) {
             $this->addFormError('email', 'L\'adresse email ne doit pas être vide');
-        } elseif (filter_var($data->get('email'), FILTER_VALIDATE_EMAIL) === false) {
+        } elseif (filter_var(trim($data->get('email')), FILTER_VALIDATE_EMAIL) === false) {
             $this->addFormError('email', 'L\'adresse email est invalide');
         } else {
-            if (UserRepository::isEmailExist(trim($data->get('email')))) {
+            if (UserRepository::isEmailExist(strtolower(trim($data->get('email'))))) {
                 $this->addFormError('email', 'L\'adresse email est déjà utilisée');
             }
         }
@@ -76,7 +76,7 @@ class SubscriptionController extends AbstractController
 
         $user
             ->setName($data->get('name'))
-            ->setEmail($data->get('email'));
+            ->setEmail(strtolower(trim($data->get('email'))));
 
         if ($this->hasFormErrors()) {
             return false;

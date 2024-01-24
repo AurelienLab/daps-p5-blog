@@ -12,7 +12,7 @@ class UserRepository extends AbstractRepository
 
     const MODEL = User::class;
 
-    public static function isEmailExist($email): bool
+    public static function getByEmail(string $email)
     {
         $query = new Query(static::MODEL);
 
@@ -20,6 +20,13 @@ class UserRepository extends AbstractRepository
             ->where('email', '=', $email)
             ->first();
 
-        return Database::query($query) != null;
+        return Database::query($query);
+    }
+
+    public static function isEmailExist($email): bool
+    {
+        $result = static::getByEmail($email);
+
+        return $result != null;
     }
 }

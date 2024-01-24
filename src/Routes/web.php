@@ -17,3 +17,8 @@ Route::get('/articles/{slug}', [PostController::class, 'show'])->name('articles.
 Route::get('/inscription', [SubscriptionController::class, 'subscribe'])->name('user.subscribe');
 Route::post('/inscription', [SubscriptionController::class, 'register'])->name('user.subscribe.post');
 Route::get('/bienvenue', [SubscriptionController::class, 'success'])->name('user.subscribe.success');
+
+// LOGIN
+Route::get('/connexion', [\App\Controller\LoginController::class, 'login'])->name('user.login');
+Route::post('/connexion', [\App\Controller\LoginController::class, 'loginPost'])->name('user.login.post');
+Route::get('/deconnexion', [\App\Controller\LoginController::class, 'logout'])->name('user.logout');

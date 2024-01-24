@@ -38,7 +38,10 @@
           color: #FFFFFF;
         }
       }
+    }
 
+    .header__menu__user__logout svg {
+      color: map-get($colors, primary);
     }
   }
 
@@ -122,6 +125,7 @@
     &__user {
       @include mq($from: desktop) {
         display: flex;
+        gap: 1rem
       }
       display: none;
 
@@ -138,6 +142,20 @@
           color: black;
           border-radius: 50%;
           background: #EBEBEB;
+        }
+      }
+
+      &__logout {
+        font-size: 0.8em;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        svg {
+          transition: color 150ms ease-in-out;
+          width: 40px;
+          padding: 10px;
+          color: #FFFFFF;
         }
       }
     }
@@ -170,7 +188,7 @@
         }
 
         svg {
-          transition: transform 200ms ease-in-out;
+          transition: transform 150ms ease-in-out;
           margin-right: 8px;
           width: 30px;
         }
@@ -241,8 +259,13 @@
 
     .header__menu__user {
       display: flex;
+      gap: 1rem;
       font-size: 1.7em;
       color: #3C48B5;
+
+      &__logout svg {
+        color: #3C48B5;
+      }
     }
   }
 }

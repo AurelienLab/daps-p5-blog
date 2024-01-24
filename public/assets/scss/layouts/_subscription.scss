@@ -55,9 +55,9 @@
 
   &__submit {
     @include mq($from: tablet) {
-      justify-content: flex-end;
+      justify-content: center;
       .btn {
-        max-width: 190px;
+        max-width: 300px;
       }
     }
     padding-top: 20px;
