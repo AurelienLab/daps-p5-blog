@@ -9,8 +9,12 @@ use App\Core\Exception\NotFoundException;
 use App\Core\Utils\Str;
 use App\Model\Post;
 use App\Model\PostCategory;
+use App\Model\PostTag;
+use App\Model\Tag;
 use App\Repository\PostCategoryRepository;
 use App\Repository\PostRepository;
+use App\Repository\PostTagRepository;
+use App\Repository\TagRepository;
 use Behat\Transliterator\Transliterator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -267,7 +271,43 @@ class PostController extends AbstractController
             $post->setFeaturedImage($featuredImagePath);
         }
 
-        PostRepository::save($post);
+        $post = PostRepository::save($post);
+
+        $tags = json_decode($data->get('tags'), true);
+
+        $existingTags = [];
+        foreach ($post->getTags() as $tag) {
+            $existingTags[$tag->getId()] = $tag;
+        }
+
+        foreach ($tags as $tag) {
+            if (isset($tag['id']) === true) {
+                if (isset($existingTags[$tag['id']])) {
+                    unset($existingTags[$tag['id']]);
+                    continue;
+                }
+
+                $tagEntity = TagRepository::getOrError($tag['id']);
+            } else {
+                $tagEntity = new Tag();
+                $tagEntity->setName($tag['name'])
+                    ->setSlug(Transliterator::urlize($tag['name']));
+
+                $tagEntity = TagRepository::save($tagEntity);
+            }
+
+            $relation = new PostTag();
+            $relation->setPost($post)
+                ->setTag($tagEntity);
+
+            PostTagRepository::save($relation);
+        }
+
+        foreach ($existingTags as $tag) {
+            $relation = PostTagRepository::getByPostAndTag($post, $tag);
+            PostTagRepository::remove($relation);
+        }
+
         return true;
     }
 }

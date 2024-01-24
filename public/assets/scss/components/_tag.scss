@@ -6,6 +6,7 @@
 }
 
 .tag {
+  position: relative;
   @include mq($from: tablet) {
     padding: 5px 25px;
   }

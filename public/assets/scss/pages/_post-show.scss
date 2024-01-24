@@ -143,4 +143,12 @@
       }
     }
   }
+
+  &__related {
+    @include default-container;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-top: 4rem;
+  }
 }

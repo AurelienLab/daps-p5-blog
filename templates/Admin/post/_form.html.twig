@@ -1,3 +1,78 @@
+<script type="text/javascript">
+    function tagSelect() {
+        return {
+            open: false,
+            textInput: '',
+            tags: [],
+            init() {
+                this.tags = JSON.parse(this.$el.parentNode.getAttribute('data-tags'));
+            },
+            addTag(tag, id = null) {
+                tag = tag.trim()
+                if (tag != "" && !this.hasTag(tag)) {
+                    if (id == null) {
+                        this.tags.push({name: tag})
+                    } else {
+                        this.tags.push({name: tag, id: id})
+                    }
+                }
+                this.clearSearch()
+                this.$refs.textInput.focus()
+                this.fireTagsUpdateEvent()
+            },
+            fireTagsUpdateEvent() {
+                this.$refs.tagsValue.value = JSON.stringify(this.tags)
+                this.$el.dispatchEvent(new CustomEvent('tags-update', {
+                    detail: {tags: this.tags},
+                    bubbles: true,
+                }));
+            },
+            hasTag(tag) {
+                var tag = this.tags.find(e => {
+                    return e.name.toLowerCase() === tag.toLowerCase()
+                })
+                return tag != undefined
+            },
+            removeTag(index) {
+                this.tags.splice(index, 1)
+                this.fireTagsUpdateEvent()
+            },
+            search(q) {
+                if (q != '') {
+                    fetch('{{ route('admin.tag.search') }}/' + q)
+                        .then(res => {
+                            if (res.ok) {
+                                return res.json()
+                            }
+                        })
+                        .then(data => {
+                            for (item of document.querySelectorAll('.js-tag-result')) {
+                                console.log(item)
+                                item.remove()
+                            }
+                            console.log(data)
+                            const searchResults = document.getElementById('tag_search_results')
+                            for (item of data) {
+                                let frag = document.createRange().createContextualFragment(`<a @click.prevent="addTag('${item.name}', ${item.id})"
+                                           class="block py-1 px-5 cursor-pointer hover:bg-indigo-600 hover:text-white js-tag-result">${item.name}</a>`);
+                                searchResults.prepend(frag)
+                            }
+                        })
+                }
+                this.toggleSearch()
+            },
+            clearSearch() {
+                this.textInput = ''
+                this.toggleSearch()
+
+            },
+            toggleSearch() {
+                this.open = this.textInput != ''
+            }
+        }
+    }
+</script>
+
 <div class="space-y-12">
     <div class="border-b border-gray-900/10 pb-12">
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -44,6 +119,50 @@
                     <p class="mt-1 text-red-400 text-sm">{{ error('category_id') }}</p>
                 </div>
             </div>
+
+            <div class="sm:col-span-6">
+                <div x-data @tags-update="console.log('tags updated', $event.detail.tags)"
+                     data-tags='{{ post.getTagsJson }}'
+                     class="sm:col-span-3"
+                     id="js-tags-parent">
+                    <label for="category_id" class="block text-sm font-medium leading-6 text-gray-900">Tags</label>
+                    <div x-data="tagSelect()" x-init="init()" @click.away="clearSearch()"
+                         @keydown.escape="clearSearch()">
+                        <div class="relative mt-2" @keydown.enter.prevent="addTag(textInput)">
+
+                            <input type="hidden" name="tags" value="{{ post.getTagsJson }}" x-ref="tagsValue"/>
+                            <input x-model="textInput" x-ref="textInput" @input="search($event.target.value)"
+                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                   placeholder="Entrez le nom d'un tag">
+                            <div :class="[open ? 'block' : 'hidden']">
+                                <div class="absolute z-40 left-0 mt-2 w-full">
+                                    <div id="tag_search_results"
+                                         class="py-1 text-sm bg-white rounded shadow-lg border border-gray-300">
+                                        <a @click.prevent="addTag(textInput)"
+                                           class="block py-1 px-5 cursor-pointer hover:bg-indigo-600 hover:text-white">Créer
+                                            le tag "<span class="font-semibold" x-text="textInput"></span>"</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- selections -->
+                            <template x-for="(tag, index) in tags">
+                                <div class="bg-indigo-100 inline-flex items-center text-sm rounded mt-2 mr-1">
+                                    <span class="ml-2 mr-1 leading-relaxed truncate max-w-xs" x-text="tag.name"></span>
+                                    <button @click.prevent="removeTag(index)"
+                                            class="w-6 h-8 inline-block align-middle text-gray-500 hover:text-gray-600 focus:outline-none">
+                                        <svg class="w-6 h-6 fill-current mx-auto" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd"
+                                                  d="M15.78 14.36a1 1 0 0 1-1.42 1.42l-2.82-2.83-2.83 2.83a1 1 0 1 1-1.42-1.42l2.83-2.82L7.3 8.7a1 1 0 0 1 1.42-1.42l2.83 2.83 2.82-2.83a1 1 0 0 1 1.42 1.42l-2.83 2.83 2.83 2.82z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="col-span-full">
                 <label for="chapo" class="block text-sm font-medium leading-6 text-gray-900">Introduction /
@@ -111,7 +230,7 @@
                 </div>
                 <p class="mt-1 text-red-400 text-sm">{{ error('published_at') }}</p>
             </div>
-            <div x-data="{ switchOn: {{ post.status }} }"
+            <div x-data="{ switchOn: {{ post.status ?? 'false' }} }"
                  class="flex items-center justify-center space-x-2 mt-6">
                 <input id="status" type="checkbox" name="status" class="hidden" :checked="switchOn">
 

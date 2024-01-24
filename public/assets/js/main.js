@@ -7,5 +7,4 @@ const header = new Header('.header')
 document.addEventListener('DOMContentLoaded', function () {
     header.init()
     hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
 })

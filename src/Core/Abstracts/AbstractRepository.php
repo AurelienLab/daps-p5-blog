@@ -98,7 +98,7 @@ abstract class AbstractRepository
      * @return void
      * @throws Exception
      */
-    public static function save(object $entity): void
+    public static function save(object $entity): object
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
@@ -109,7 +109,15 @@ abstract class AbstractRepository
             $query->updateOne($dbMapping->entityArray, $dbMapping->primaryKey);
         }
 
-        Database::query($query);
+        $result = Database::query($query);
+
+        if (isset($dbMapping->entityArray[$dbMapping->primaryKey]) === false) {
+            $entity = static::get($result);
+        } else {
+            static::refresh($entity);
+        }
+
+        return $entity;
     }
 
     /**
@@ -143,8 +151,16 @@ abstract class AbstractRepository
             $query->deleteOne($dbMapping->primaryKey, $dbMapping->entityArray[$dbMapping->primaryKey]);
         }
 
-
         Database::query($query);
+    }
+
+    public static function refresh(object $entity): void
+    {
+        $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
+
+        if (isset($dbMapping->entityArray[$dbMapping->primaryKey]) === true) {
+            $entity = static::get($dbMapping->entityArray[$dbMapping->primaryKey]);
+        }
     }
 
     /**
@@ -165,7 +181,7 @@ abstract class AbstractRepository
                     $setter = 'set'.Str::toPascalCase($relation);
                     if ($reflection->hasMethod($setter)) {
                         $class = $reflection->getMethod($setter)->getParameters()[0]->getType()->getName();
-                        $query->leftJoin($class, $relation);
+                        $query->leftJoin($class, [static::MODEL::TABLE.'.'.$relation.'_id', $class::TABLE.'.id']);
                     }
                 }
             }
