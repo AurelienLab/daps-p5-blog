@@ -52,9 +52,8 @@ class CategoryController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $request = Request::createFromGlobals();
         $category = new PostCategory();
 
         if ($this->save($category, $request)) {
@@ -98,9 +97,8 @@ class CategoryController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function update(int $id): Response
+    public function update(int $id, Request $request): Response
     {
-        $request = Request::createFromGlobals();
         $category = PostCategoryRepository::getOrError($id);
 
         if ($this->save($category, $request)) {

@@ -5,7 +5,9 @@ namespace App\Core\Abstracts;
 use App\Core\Classes\TwigEnvironment;
 use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -25,15 +27,26 @@ abstract class AbstractController
 
     private $formErrors;
 
+    private $user = null;
 
-    public function __construct()
+
+    public function __construct(Request $request)
     {
+        // Get User if logged in
+        $userId = $request->getSession()->get('userId');
+        if ($userId) {
+            $this->user = UserRepository::getOrError($userId);
+        }
+
         // Initialize twig
         $loader = new FilesystemLoader(ROOT.'/templates');
 
         $this->formErrors = new FormErrorBag();
 
-        $this->twig = new TwigEnvironment($loader, ['formErrors' => $this->formErrors]);
+        $this->twig = new TwigEnvironment($loader, [
+            'formErrors' => $this->formErrors,
+            'user' => $this->getUser()
+        ]);
     }
 
 
@@ -114,5 +127,10 @@ abstract class AbstractController
 
         $tokenManager = new CsrfTokenManager();
         return $tokenManager->isTokenValid($token);
+    }
+
+    protected function getUser(): mixed
+    {
+        return $this->user;
     }
 }

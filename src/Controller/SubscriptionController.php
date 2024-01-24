@@ -10,17 +10,19 @@ use Symfony\Component\HttpFoundation\Request;
 class SubscriptionController extends AbstractController
 {
 
-    public function subscribe()
+    public function subscribe(Request $request)
     {
         return $this->render('user/subscribe.html.twig');
     }
 
-    public function register()
+    public function register(Request $request)
     {
         $user = new User();
-        $request = Request::createFromGlobals();
 
-        if ($this->save($user, $request)) {
+
+        $user = $this->save($user, $request);
+        if ($user) {
+            $request->getSession()->set('userId', $user->getId());
             return $this->redirect('user.subscribe.success');
         }
 
@@ -29,7 +31,7 @@ class SubscriptionController extends AbstractController
         ]);
     }
 
-    public function success()
+    public function success(Request $request)
     {
         return $this->render('user/subscribe_confirm.html.twig');
     }

@@ -20,7 +20,8 @@ class TwigEnvironment extends Environment
 
         $this->addGlobal('app', [
             'request' => Request::createFromGlobals(),
-            'router' => Router::getInstance()
+            'router' => Router::getInstance(),
+            'user' => $options['user']
         ]);
 
         $this->addExtension(new IntlExtension());

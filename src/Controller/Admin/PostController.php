@@ -69,9 +69,8 @@ class PostController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $request = Request::createFromGlobals();
         $post = new Post();
 
         if ($this->save($post, $request)) {
@@ -121,9 +120,8 @@ class PostController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function update(int $id): Response
+    public function update(int $id, Request $request): Response
     {
-        $request = Request::createFromGlobals();
         $post = PostRepository::getOrError($id);
 
         if ($this->save($post, $request)) {
