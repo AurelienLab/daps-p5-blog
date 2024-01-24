@@ -11,11 +11,11 @@ class User
     private string $name;
     private string $email;
     private string $password;
-    private ?string $rememberMeToken;
+    private ?string $rememberMeToken = null;
 
     private bool $isAdmin = false;
 
-    private string $profilePicture;
+    private ?string $profilePicture = null;
 
     public function getId(): int
     {
@@ -83,12 +83,12 @@ class User
         return $this;
     }
 
-    public function getProfilePicture(): string
+    public function getProfilePicture(): ?string
     {
         return $this->profilePicture;
     }
 
-    public function setProfilePicture(string $profilePicture): User
+    public function setProfilePicture(?string $profilePicture): User
     {
         $this->profilePicture = $profilePicture;
         return $this;

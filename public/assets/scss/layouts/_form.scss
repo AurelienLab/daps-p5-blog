@@ -83,4 +83,9 @@
       cursor: pointer;
     }
   }
+
+  &__error {
+    color: #c00202;
+    padding: 8px 5px 0 5px;
+  }
 }

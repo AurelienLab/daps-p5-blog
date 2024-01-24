@@ -779,6 +779,12 @@ a.extended:before {
 .base-login main {
   width: 100%;
 }
+.base-login h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  font-size: 2rem;
+}
 
 .last-post {
   display: flex;
@@ -1017,6 +1023,12 @@ a.extended:before {
     padding: 16px 57px;
   }
 }
+.subscription__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
 .subscription .form label {
   color: #0569FF;
 }
@@ -1113,6 +1125,10 @@ a.extended:before {
   background: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat 98%, linear-gradient(90deg, rgba(0, 0, 0, 0) 88%, #0569FF 88%);
   padding-right: 2rem;
   cursor: pointer;
+}
+.form__error {
+  color: #c00202;
+  padding: 8px 5px 0 5px;
 }
 
 .filters {
