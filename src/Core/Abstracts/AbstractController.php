@@ -3,6 +3,7 @@
 namespace App\Core\Abstracts;
 
 use App\Core\Classes\TwigEnvironment;
+use App\Core\Form\FormData;
 use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
 use App\Repository\UserRepository;
@@ -122,6 +123,31 @@ abstract class AbstractController
     protected function hasFormErrors(): bool
     {
         return $this->formErrors->hasError();
+    }
+
+    protected function validateForm(Request $request, string $csrfName, array $fields): FormData
+    {
+        $formData = new FormData($request);
+
+        if (!$this->isCsrfValid($csrfName, $formData->get('_csrf'))) {
+            throw new \Exception('Invalid CSRF token');
+        }
+
+        foreach ($fields as $fieldName => $validators) {
+            foreach ($validators as $validator) {
+                /** @var AbstractValidator $validator */
+                $validator = new $validator(
+                    $fieldName,
+                    $this->formErrors,
+                    $formData
+                );
+                if (!$validator->validate()) {
+                    break;
+                }
+            }
+        }
+
+        return $formData;
     }
 
     protected function isCsrfValid(string $name, string $tokenValue): bool

@@ -6,6 +6,7 @@ use App\Core\Abstracts\AbstractController;
 use App\Core\Exception\NotFoundException;
 use App\Model\PostCategory;
 use App\Repository\PostCategoryRepository;
+use App\Validator\NotEmptyValidator;
 use Behat\Transliterator\Transliterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -143,14 +144,9 @@ class CategoryController extends AbstractController
     {
         $data = $request->request;
 
-        //Check CSRF Validity
-        if (!$this->isCsrfValid('category_form', $data->get('_csrf'))) {
-            throw new \Exception('Invalid CSRF token');
-        }
-
-        if (empty(trim($data->get('name')))) {
-            $this->addFormError('name', 'Vous devez entrer un nom de catégorie');
-        }
+        $this->validateForm($request, 'category_form', [
+            'name' => [NotEmptyValidator::class]
+        ]);
 
         if ($this->hasFormErrors()) {
             return false;

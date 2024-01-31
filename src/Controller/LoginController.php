@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Core\Abstracts\AbstractController;
 use App\Repository\UserRepository;
+use App\Validator\EmailValidator;
+use App\Validator\NotEmptyValidator;
 use Symfony\Component\HttpFoundation\Request;
 
 class LoginController extends AbstractController
@@ -22,13 +24,11 @@ class LoginController extends AbstractController
     {
         $user = null;
         $data = $request->request;
-        if (empty(trim($data->get('email')))) {
-            $this->addFormError('email', 'L\'adresse email ne doit pas être vide');
-        }
 
-        if (empty(trim($data->get('password')))) {
-            $this->addFormError('password', 'Le mot de passe ne doit pas être vide');
-        }
+        $this->validateForm($request, 'login_form', [
+            'email' => [NotEmptyValidator::class, EmailValidator::class],
+            'password' => [NotEmptyValidator::class]
+        ]);
 
         if (!$this->hasFormErrors()) {
             $user = UserRepository::getByEmail(strtolower($data->get('email')));

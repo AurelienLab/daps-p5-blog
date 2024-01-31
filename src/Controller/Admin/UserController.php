@@ -9,6 +9,11 @@ use App\Model\PostCategory;
 use App\Model\User;
 use App\Repository\PostCategoryRepository;
 use App\Repository\UserRepository;
+use App\Validator\EmailValidator;
+use App\Validator\ExistingEmailValidator;
+use App\Validator\NicknameLengthValidator;
+use App\Validator\NotEmptyValidator;
+use App\Validator\PasswordStrengthValidator;
 use Behat\Transliterator\Transliterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -149,45 +154,16 @@ class UserController extends AbstractController
      */
     private function save(User $user, Request $request): bool|User
     {
-        $data = $request->request;
+        $data = $this->validateForm($request, 'user_form', [
+            'name' => [NotEmptyValidator::class, NicknameLengthValidator::class],
+            'email' => [NotEmptyValidator::class, EmailValidator::class, ExistingEmailValidator::class],
+            'password' => $request->request->get('password') !== null && !empty($request->request->get('password')) ?
+                [NotEmptyValidator::class, PasswordStrengthValidator::class]
+                : []
+
+        ]);
         $profilePicture = $request->files->get('profile_picture');
 
-        //Check CSRF Validity
-        if (!$this->isCsrfValid('user_form', $data->get('_csrf'))) {
-            throw new \Exception('Invalid CSRF token');
-        }
-
-        if (empty(trim($data->get('name'))) === true || strlen(trim($data->get('name'))) < 3) {
-            $this->addFormError('name', 'Le nom doit être renseigné et contenir au moins 3 caractères');
-        }
-
-        if (is_null($user->getEmail())
-            || trim(strtolower($data->get('email'))) != trim(strtolower($user->getEmail()))) {
-            if (empty(trim($data->get('email'))) === true) {
-                $this->addFormError('email', 'L\'adresse email ne doit pas être vide');
-            } elseif (filter_var(trim($data->get('email')), FILTER_VALIDATE_EMAIL) === false) {
-                $this->addFormError('email', 'L\'adresse email est invalide');
-            } else {
-                if (UserRepository::isEmailExist(strtolower(trim($data->get('email'))))) {
-                    $this->addFormError('email', 'L\'adresse email est déjà utilisée');
-                }
-            }
-        }
-
-        if ($data->get('password') !== null && !empty(trim($data->get('password')))) {
-            $passwordPattern = '/^';
-            $passwordPattern .= '(?=.*?[0-9])'; // At least 1 number
-            $passwordPattern .= '(?=.*?[#?!@$%^&*-])'; // At least 1 special char
-            $passwordPattern .= '.{8,}'; // At least 8 chars
-            $passwordPattern .= '$/';
-
-            if (!preg_match($passwordPattern, $data->get('password'))) {
-                $this->addFormError(
-                    'password',
-                    'Le mot de passe doit contenir au minimum: 8 caractères, 1 lettre minuscule, 1 caractère special'
-                );
-            }
-        }
 
         $profilePicturePath = $user->getProfilePicture() ?? '';
         $uploadImage = false;
