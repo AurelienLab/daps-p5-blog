@@ -5,6 +5,7 @@ namespace App\Core\Abstracts;
 use App\Core\Database\Database;
 use App\Core\Database\Query;
 use App\Core\Exception\NotFoundException;
+use App\Core\Utils\Model;
 use App\Core\Utils\Str;
 use App\Model\Trait\SoftDeleteTrait;
 use Exception;
@@ -132,12 +133,9 @@ abstract class AbstractRepository
     {
         $softDelete = false;
         if ($hard == false) {
-            $reflection = new \ReflectionClass($entity);
-            foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
-                if ($trait == SoftDeleteTrait::class) {
-                    $entity->setDeletedAt(new \DateTime());
-                    $softDelete = true;
-                }
+            if (Model::isSoftDeletable($entity)) {
+                $entity->setDeletedAt(new \DateTime());
+                $softDelete = true;
             }
         }
 

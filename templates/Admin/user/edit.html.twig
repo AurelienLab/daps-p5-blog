@@ -1,11 +1,13 @@
 {% extends 'Admin/base.html.twig' %}
 
-{% block content %}
-    <h2 class="text-base font-semibold leading-7 text-gray-900">Editer la catégorie {{ category.name }}</h2>
-    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Tous les articles associés à cette catégorie obtiendront
-        les modifications</p>
+{% block js %}
+    <script type="module" src="/assets/admin/js/user_form.js"></script>
+{% endblock %}
 
-    <form method="POST" action="{{ route('admin.category.edit.post', { id: category.id }) }}">
-        {% include 'Admin/category/_form.html.twig' %}
+{% block content %}
+    <h2 class="text-base font-semibold leading-7 text-gray-900">Modifier l'utilisateur {{ user.name }}</h2>
+
+    <form method="POST" action="#" enctype="multipart/form-data">
+        {% include 'Admin/user/_form.html.twig' %}
     </form>
 {% endblock %}

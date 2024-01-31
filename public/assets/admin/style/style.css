@@ -952,6 +952,10 @@ select {
   display: none;
 }
 
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
 .h-11 {
   height: 2.75rem;
 }
@@ -982,6 +986,18 @@ select {
 
 .h-full {
   height: 100%;
+}
+
+.h-32 {
+  height: 8rem;
+}
+
+.h-40 {
+  height: 10rem;
+}
+
+.h-\[50px\] {
+  height: 50px;
 }
 
 .max-h-40 {
@@ -1042,6 +1058,18 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[50px\] {
+  width: 50px;
+}
+
+.w-\[50\] {
+  width: 50;
+}
+
+.w-40 {
+  width: 10rem;
 }
 
 .min-w-full {

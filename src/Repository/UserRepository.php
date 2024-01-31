@@ -18,6 +18,7 @@ class UserRepository extends AbstractRepository
 
         $query->select()
             ->where('email', '=', $email)
+            ->withTrashed()
             ->first();
 
         return Database::query($query);

@@ -13,9 +13,9 @@ class User
 
     const TABLE = 'users';
 
-    private int $id;
+    private ?int $id = null;
     private string $name;
-    private string $email;
+    private ?string $email = null;
     private string $password;
     private ?string $rememberMeToken = null;
 
@@ -23,7 +23,7 @@ class User
 
     private ?string $profilePicture = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -45,7 +45,7 @@ class User
         return $this;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }

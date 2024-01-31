@@ -4,7 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Core\Abstracts\AbstractController;
 use App\Core\Exception\NotFoundException;
+use App\Core\Utils\Str;
 use App\Model\PostCategory;
+use App\Model\User;
 use App\Repository\PostCategoryRepository;
 use App\Repository\UserRepository;
 use Behat\Transliterator\Transliterator;
@@ -58,17 +60,19 @@ class UserController extends AbstractController
      */
     public function create(Request $request): Response
     {
-        $category = new PostCategory();
+        $user = new User();
 
-        if ($this->save($category, $request)) {
-            return $this->redirect('admin.category.index');
+        if ($this->save($user, $request)) {
+            return $this->redirect('admin.user.index');
         }
 
-        return $this->render('Admin/category/add.html.twig');
+        return $this->render('Admin/user/add.html.twig', [
+            'user' => $user
+        ]);
     }
 
     /**
-     * Display edit category form
+     * Display edit user form
      *
      * @param int $id
      *
@@ -80,18 +84,18 @@ class UserController extends AbstractController
      */
     public function edit(int $id): Response
     {
-        $category = PostCategoryRepository::getOrError($id);
+        $user = UserRepository::getOrError($id);
 
         return $this->render(
-            'Admin/category/edit.html.twig',
+            'Admin/user/edit.html.twig',
             [
-                'category' => $category
+                'user' => $user
             ]
         );
     }
 
     /**
-     * Handle edit category form post
+     * Handle edit user form post
      *
      * @param int $id
      *
@@ -103,16 +107,16 @@ class UserController extends AbstractController
      */
     public function update(int $id, Request $request): Response
     {
-        $category = PostCategoryRepository::getOrError($id);
+        $user = UserRepository::getOrError($id);
 
-        if ($this->save($category, $request)) {
-            return $this->redirect('admin.category.index');
+        if ($this->save($user, $request)) {
+            return $this->redirect('admin.user.index');
         }
 
         return $this->render(
-            'Admin/category/edit.html.twig',
+            'Admin/user/edit.html.twig',
             [
-                'category' => $category
+                'user' => $user
             ]
         );
     }
@@ -143,32 +147,89 @@ class UserController extends AbstractController
      * @return bool
      * @throws \Exception
      */
-    private function save(PostCategory $postCategory, Request $request): bool|PostCategory
+    private function save(User $user, Request $request): bool|User
     {
         $data = $request->request;
+        $profilePicture = $request->files->get('profile_picture');
 
         //Check CSRF Validity
-        if (!$this->isCsrfValid('category_form', $data->get('_csrf'))) {
+        if (!$this->isCsrfValid('user_form', $data->get('_csrf'))) {
             throw new \Exception('Invalid CSRF token');
         }
 
-        if (empty(trim($data->get('name')))) {
-            $this->addFormError('name', 'Vous devez entrer un nom de catégorie');
+        if (empty(trim($data->get('name'))) === true || strlen(trim($data->get('name'))) < 3) {
+            $this->addFormError('name', 'Le nom doit être renseigné et contenir au moins 3 caractères');
         }
+
+        if (is_null($user->getEmail())
+            || trim(strtolower($data->get('email'))) != trim(strtolower($user->getEmail()))) {
+            if (empty(trim($data->get('email'))) === true) {
+                $this->addFormError('email', 'L\'adresse email ne doit pas être vide');
+            } elseif (filter_var(trim($data->get('email')), FILTER_VALIDATE_EMAIL) === false) {
+                $this->addFormError('email', 'L\'adresse email est invalide');
+            } else {
+                if (UserRepository::isEmailExist(strtolower(trim($data->get('email'))))) {
+                    $this->addFormError('email', 'L\'adresse email est déjà utilisée');
+                }
+            }
+        }
+
+        if ($data->get('password') !== null && !empty(trim($data->get('password')))) {
+            $passwordPattern = '/^';
+            $passwordPattern .= '(?=.*?[0-9])'; // At least 1 number
+            $passwordPattern .= '(?=.*?[#?!@$%^&*-])'; // At least 1 special char
+            $passwordPattern .= '.{8,}'; // At least 8 chars
+            $passwordPattern .= '$/';
+
+            if (!preg_match($passwordPattern, $data->get('password'))) {
+                $this->addFormError(
+                    'password',
+                    'Le mot de passe doit contenir au minimum: 8 caractères, 1 lettre minuscule, 1 caractère special'
+                );
+            }
+        }
+
+        $profilePicturePath = $user->getProfilePicture() ?? '';
+        $uploadImage = false;
+        if ($profilePicture != null) {
+            if (!str_starts_with($profilePicture->getMimeType(), 'image/')) {
+                $this->addFormError('profile_picture', 'Format incompatible');
+            } else {
+                $uploadImage = true;
+            }
+        }
+
+
+        $user
+            ->setName(trim($data->get('name')))
+            ->setEmail(trim($data->get('email')))
+            ->setIsAdmin(!empty($data->get('is_admin')));
 
         if ($this->hasFormErrors()) {
             return false;
         }
 
-        $slug = $data->get('slug');
-        if (empty(trim($slug))) {
-            $slug = $data->get('name');
+        // New user
+        if (empty($user->getId())) {
+            $password = Str::rand(12);
+        } elseif ($data->get('password') !== null) {
+            $password = trim($data->get('password'));
         }
 
-        $postCategory
-            ->setName($data->get('name'))
-            ->setSlug(Transliterator::urlize($slug));
+        if (isset($password)) {
+            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+            $user->setPassword($passwordHash);
+        }
 
-        return PostCategoryRepository::save($postCategory);
+        if ($uploadImage) {
+            // Upload file
+            $filename = Transliterator::urlize($user->getName()).'-'.Str::rand(4);
+            $filename .= '.'.$profilePicture->getClientOriginalExtension();
+            $profilePicturePath = '/'.$profilePicture->move(config('uploads.post.featured_image.dir'), $filename);
+
+            $user->setProfilePicture($profilePicturePath);
+        }
+
+        return UserRepository::save($user);
     }
 }

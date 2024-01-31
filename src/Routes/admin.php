@@ -33,6 +33,12 @@ Route::prefix('/admin')->name('admin.')->group([
     Route::prefix('/utilisateurs')->name('user.')->group([
         Route::get('/', [Admin\UserController::class, 'index'])->name('index'),
 
+        Route::get('/ajouter', [Admin\UserController::class, 'add'])->name('add'),
+        Route::post('/ajouter', [Admin\UserController::class, 'create'])->name('add.post'),
+
+        Route::get('/{id}/editer', [Admin\UserController::class, 'edit'])->name('edit'),
+        Route::post('/{id}/editer', [Admin\UserController::class, 'update'])->name('edit.post'),
+
         Route::get('/{id}/remove', [Admin\UserController::class, 'remove'])->name('remove')
     ]),
     Route::get('/tags/search/{query?}', [Admin\TagController::class, 'search'])->name('tag.search'),

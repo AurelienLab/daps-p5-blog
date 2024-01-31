@@ -8,7 +8,7 @@
                 <p class="mt-2 text-sm text-gray-700">Liste des utilisateurs inscrits sur le site</p>
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <a href="#"
+                <a href="{{ route('admin.user.add') }}"
                    class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Ajouter un utilisateur
                 </a>
@@ -24,6 +24,7 @@
                                 class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Nom
                             </th>
                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rôle</th>
 
                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                 <span class="sr-only">Editer</span>
@@ -43,12 +44,15 @@
                                 <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                     <div class="mt-1 text-gray-500">{{ user.email }}</div>
                                 </td>
+                                <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                                    <div class="mt-1 text-gray-500">{{ user.isAdmin ? 'Administrateur' : 'Utilisateur' }}</div>
+                                </td>
                                 <td class="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                 <span class="isolate inline-flex rounded-md shadow-sm">
-{#                                  <a href="{{ route('admin.category.edit', { id: category.id}) }}" #}
-                                    {#                                     class="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"> #}
-                                    {#                                      {{ heroicon('pencil', 'h-4 w-4 shrink-0 text-gray-500 group-hover:text-white') }} #}
-                                    {#                                  </a> #}
+                                  <a href="{{ route('admin.user.edit', { id: user.id}) }}"
+                                     class="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">
+                                      {{ heroicon('pencil', 'h-4 w-4 shrink-0 text-gray-500 group-hover:text-white') }}
+                                  </a>
 
                                     <button type="button"
                                             @click="$dispatch('remove_{{ user.id }}')"
