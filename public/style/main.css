@@ -1186,6 +1186,7 @@ a.extended:before {
   margin: auto;
   max-width: 1200px;
   width: 95%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 1.5rem;

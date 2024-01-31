@@ -14,7 +14,7 @@ class PostRepository extends AbstractRepository
 
     const MODEL = Post::class;
 
-    public static function getPublished($relations = []): false|array
+    public static function getPublished($relations = [], $limit = null): false|array
     {
         $query = new Query(static::MODEL);
         $now = new \DateTime();
@@ -23,6 +23,10 @@ class PostRepository extends AbstractRepository
             ->where('published_at', '<', $now)
             ->where('status', '=', Post::STATE_PUBLISHED)
             ->orderBy('published_at', 'DESC');
+
+        if (!is_null($limit)) {
+            $query->limit($limit);
+        }
 
         static::addRelationsToQuery($relations, $query);
 
