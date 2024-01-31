@@ -2,6 +2,7 @@
 
 namespace App\Core\Database;
 
+use App\Core\Utils\Model;
 use App\Model\Trait\SoftDeleteTrait;
 use Exception;
 
@@ -105,6 +106,10 @@ class Query
         }
 
         $this->verb = 'SELECT';
+
+        if ($this->withTrashed === null && Model::isSoftDeletable($this->model)) {
+            $this->withTrashed = false;
+        }
 
         return $this;
     }
@@ -336,13 +341,11 @@ class Query
             }
         }
 
-        if (str_starts_with($this->verb, 'DESCRIBE') === false) {
-            if (!empty($this->where) || $this->withTrashed === false || $this->withTrashed === null) {
-                $statement .= ' WHERE ';
-                $wheres = $this->generateWheres();
+        if (!empty($this->where) || $this->withTrashed === false) {
+            $statement .= ' WHERE ';
+            $wheres = $this->generateWheres();
 
-                $statement .= implode(' AND ', $wheres);
-            }
+            $statement .= implode(' AND ', $wheres);
         }
 
 
@@ -397,7 +400,7 @@ class Query
 
         }
 
-        if ($this->withTrashed === false || $this->withTrashed === null) {
+        if ($this->withTrashed === false) {
             $result[] = $this->table.'.deleted_at IS NULL';
         }
 
@@ -444,18 +447,6 @@ class Query
     public function getParameters(): array
     {
         return $this->parameters;
-    }
-
-    private function isModelSoftDeletable(): bool
-    {
-        $reflection = new \ReflectionClass($this->model);
-        foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
-            if ($trait == SoftDeleteTrait::class) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
