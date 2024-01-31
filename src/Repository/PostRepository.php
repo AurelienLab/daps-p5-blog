@@ -64,7 +64,7 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
-    public static function getRelatedPosts(Post $post)
+    public static function getRelatedPosts(Post $post, int $amount = 3)
     {
         $tagIds = [];
         foreach ($post->getTags() as $tag) {
@@ -85,7 +85,7 @@ class PostRepository extends AbstractRepository
             ->where(Post::TABLE.'.id', '!=', $post->getId())
             ->where(PostTag::TABLE.'.tag_id', 'IN', $tagIds)
             ->orderBy('published_at', 'DESC')
-            ->limit(3);
+            ->limit($amount);
 
         return Database::query($query);
     }
