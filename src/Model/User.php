@@ -2,8 +2,14 @@
 
 namespace App\Model;
 
+use App\Model\Trait\SoftDeleteTrait;
+use App\Model\Trait\TimestampableTrait;
+
 class User
 {
+
+    use TimestampableTrait,
+        SoftDeleteTrait;
 
     const TABLE = 'users';
 

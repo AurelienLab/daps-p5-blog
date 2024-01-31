@@ -35,7 +35,10 @@ abstract class AbstractController
         // Get User if logged in
         $userId = $request->getSession()->get('userId');
         if ($userId) {
-            $this->user = UserRepository::getOrError($userId);
+            $user = UserRepository::get($userId);
+            if ($user) {
+                $this->user = $user;
+            }
         }
 
         // Initialize twig

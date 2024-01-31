@@ -336,12 +336,15 @@ class Query
             }
         }
 
-        if (!empty($this->where) || $this->withTrashed === false) {
-            $statement .= ' WHERE ';
-            $wheres = $this->generateWheres();
+        if (str_starts_with($this->verb, 'DESCRIBE') === false) {
+            if (!empty($this->where) || $this->withTrashed === false || $this->withTrashed === null) {
+                $statement .= ' WHERE ';
+                $wheres = $this->generateWheres();
 
-            $statement .= implode(' AND ', $wheres);
+                $statement .= implode(' AND ', $wheres);
+            }
         }
+
 
         if (!empty($this->groupBy)) {
             $statement .= ' GROUP BY '.$this->groupBy;
@@ -394,7 +397,7 @@ class Query
 
         }
 
-        if ($this->withTrashed === false) {
+        if ($this->withTrashed === false || $this->withTrashed === null) {
             $result[] = $this->table.'.deleted_at IS NULL';
         }
 
