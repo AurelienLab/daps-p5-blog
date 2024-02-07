@@ -26,7 +26,7 @@
 
     &:has(input:placeholder-shown),
     &:has(textarea:placeholder-shown) {
-      label {
+      label:not(.no-animation) {
         @include mq($from: tablet) {
           transform: translateX(10px) translateY(38px);
         }

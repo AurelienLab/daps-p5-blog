@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <main class="user-area">
+        <div class="hero hero--user-area">
+            <div class="hero__overlay">
+                <img class="hero__image" src="/assets/images/hero-pattern.svg">
+            </div>
+
+            <div class="hero__container">
+                <h1 class="hero__title">Espace utilisateur</h1>
+            </div>
+        </div>
+
+        <section class="user-area__container">
+            {% for flash in app.flashes %}
+                <div class="alert alert--{{ flash.type }}">{{ flash.message }}</div>
+            {% endfor %}
+            <form class="form user-area__form" method="POST" action="#" enctype="multipart/form-data">
+                <h2 class="heading heading--dark">Editer mon profil</h2>
+                <div class="form__row">
+                    <div class="form__field">
+                        <label for="firstname">Nom / Pseudonyme</label>
+                        <input type="text" id="firstname" name="name" placeholder=" " required
+                               value="{{ app.user.name }}"/>
+                        {% if(error('name')) %}
+                            <div class="form__error">{{ error('name') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form__row">
+                    <div class="form__field">
+                        <label for="dropzone-file" class="no-animation">Photo de profil</label>
+                        <label for="dropzone-file" id="profile-dropzone"
+                               class="no-animation dropzone">
+                            <div class="dropzone__content">
+                                <svg aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                </svg>
+                                <p class="text-sm"><span class="font-semibold">Click to upload</span>
+                                    or drag and drop</p>
+                                <p class="text-xs">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+
+                                <img src="{{ app.user.profilePicture }}"
+                                     class="dropzone-preview {% if not app.user.profilePicture|default %}hidden{% endif %}"
+                                     id="preview">
+                            </div>
+                            <p class="form__error">{{ error('profile_picture') }}</p>
+                            <input id="dropzone-file" name="profile_picture" type="file"/>
+                        </label>
+                        {% if(error('name')) %}
+                            <div class="form__error">{{ error('name') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form__row">
+                    {{ csrf('user_profile_form') }}
+                    <button type="submit" name="save-profile" class="btn btn--primary">Enregistrer</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="user-area__container">
+            <form class="form user-area__form" method="POST" action="#">
+                <h2 class="heading heading--dark">Modifier mon mot de passe</h2>
+                <div class="form__row">
+                    <div class="form__field">
+                        <label for="old-password">Mot de passe actuel</label>
+                        <input type="password" id="old-password" name="old-password" placeholder=" " required>
+                        {% if(error('old-password')) %}
+                            <div class="form__error">{{ error('old-password') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form__row">
+                    <div class="form__field">
+                        <label for="password1">Nouveau mot de passe</label>
+                        <input type="password" id="password1" name="password1" placeholder=" " required>
+                        {% if(error('password1')) %}
+                            <div class="form__error">{{ error('password1') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form__row">
+                    <div class="form__field">
+                        <label for="password2">Vérification du mot de passe</label>
+                        <input type="password" id="password2" name="password2" placeholder=" " required>
+                        {% if(error('password2')) %}
+                            <div class="form__error">{{ error('password2') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form__row">
+                    {{ csrf('user_password_form') }}
+                    <button type="submit" name="save-password" class="btn btn--primary">Enregistrer</button>
+                </div>
+            </form>
+        </section>
+    </main>
+{% endblock %}
+
+{% block js %}
+    <script type="module" src="/assets/js/profile.js?v=0.1"></script>
+{% endblock %}

@@ -9,7 +9,7 @@
             </svg>
         </a>
     {% else %}
-        <a href="#" class="header__menu__user__login">
+        <a href="{{ route('user.profile.edit') }}" class="header__menu__user__login">
             <span>{{ app.user.name }}</span>
             <div class="profile-pic profile-pic--medium">
                 {% if(app.user.profilePicture) %}

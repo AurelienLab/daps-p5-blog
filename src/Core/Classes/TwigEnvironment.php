@@ -27,6 +27,10 @@ class TwigEnvironment extends Environment
             $app['user'] = $options['user'];
         }
 
+        if (isset($options['flashes'])) {
+            $app['flashes'] = $options['flashes'];
+        }
+
         $this->addGlobal('app', $app);
 
         $this->addExtension(new IntlExtension());

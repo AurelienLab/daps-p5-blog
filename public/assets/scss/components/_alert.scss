@@ -1,0 +1,20 @@
+.alert {
+  width: 100%;
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 1rem 1rem;
+
+  &--success {
+    $alert-color: #046201;
+    color: $alert-color;
+    border-color: $alert-color;
+    background-color: lighten($alert-color, 75);
+  }
+
+  &--danger {
+    $alert-color: #880000;
+    color: $alert-color;
+    border-color: $alert-color;
+    background-color: lighten($alert-color, 65);
+  }
+}

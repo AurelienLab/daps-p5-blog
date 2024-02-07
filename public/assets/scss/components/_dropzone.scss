@@ -1,0 +1,63 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 8rem;
+  border: 2px dashed rgb(209 213 219);
+  cursor: pointer;
+  background: rgb(249 250 251);
+
+  &:hover {
+    background: rgb(243 244 246);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1.25rem;
+    padding-bottom: 1.5rem;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 1rem;
+      color: rgb(107 114 128);
+    }
+
+    p {
+      color: rgb(107 114 128);
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+
+    .text-xs {
+      font-size: 0.75rem;
+      line-height: 1rem;
+    }
+
+    .dropzone-preview {
+      margin-top: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+      height: 4rem;
+      width: 4rem;
+      object-fit: cover;
+      border-radius: 50%;
+
+      &.hidden {
+        display: none;
+      }
+    }
+  }
+
+  input[type=file] {
+    display: none;
+  }
+}

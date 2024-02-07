@@ -3,6 +3,8 @@
 namespace App\Core\Abstracts;
 
 use App\Core\Classes\TwigEnvironment;
+use App\Core\Components\Flash\FlashesBag;
+use App\Core\Components\Flash\FlashMessage;
 use App\Core\Form\FormData;
 use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
@@ -27,6 +29,7 @@ abstract class AbstractController
     private $twig;
 
     private $formErrors;
+    private FlashesBag $flashesBag;
 
     private $user = null;
 
@@ -46,10 +49,12 @@ abstract class AbstractController
         $loader = new FilesystemLoader(ROOT.'/templates');
 
         $this->formErrors = new FormErrorBag();
+        $this->flashesBag = new FlashesBag($request);
 
         $this->twig = new TwigEnvironment($loader, [
             'formErrors' => $this->formErrors,
-            'user' => $this->getUser()
+            'user' => $this->getUser(),
+            'flashes' => $this->flashesBag
         ]);
     }
 
@@ -68,7 +73,7 @@ abstract class AbstractController
     protected function render(string $template, array $data = []): Response
     {
         $response = new Response();
-
+        $this->flashesBag->saveToSession();
         $response->setContent($this->twig->render($template, $data));
 
         return $response;
@@ -81,6 +86,7 @@ abstract class AbstractController
      */
     protected function redirect(string $routeName, array $args = []): RedirectResponse
     {
+        $this->flashesBag->saveToSession();
         $uri = Router::getInstance()->getUriByName($routeName, $args);
         return new RedirectResponse($uri);
     }
@@ -161,5 +167,11 @@ abstract class AbstractController
     protected function getUser(): mixed
     {
         return $this->user;
+    }
+
+    protected function addFlash(string $type, string $message)
+    {
+        $flash = new FlashMessage($type, $message);
+        $this->flashesBag->addFlash($flash);
     }
 }
