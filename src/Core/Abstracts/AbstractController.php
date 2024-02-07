@@ -9,6 +9,7 @@ use App\Core\Form\FormData;
 use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,7 @@ abstract class AbstractController
     private $formErrors;
     private FlashesBag $flashesBag;
 
+    private array $cookies = [];
     private $user = null;
 
 
@@ -75,7 +77,7 @@ abstract class AbstractController
         $response = new Response();
         $this->flashesBag->saveToSession();
         $response->setContent($this->twig->render($template, $data));
-
+        $this->setCookiesInResponse($response);
         return $response;
     }
 
@@ -88,7 +90,10 @@ abstract class AbstractController
     {
         $this->flashesBag->saveToSession();
         $uri = Router::getInstance()->getUriByName($routeName, $args);
-        return new RedirectResponse($uri);
+
+        $response = new RedirectResponse($uri);
+        $this->setCookiesInResponse($response);
+        return $response;
     }
 
 
@@ -173,5 +178,17 @@ abstract class AbstractController
     {
         $flash = new FlashMessage($type, $message);
         $this->flashesBag->addFlash($flash);
+    }
+
+    protected function addCookie(Cookie $cookie)
+    {
+        $this->cookies[] = $cookie;
+    }
+
+    protected function setCookiesInResponse(Response $response)
+    {
+        foreach ($this->cookies as $cookie) {
+            $response->headers->setCookie($cookie);
+        }
     }
 }

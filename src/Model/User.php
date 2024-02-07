@@ -100,5 +100,24 @@ class User
         return $this;
     }
 
+    public function generateRememberMeToken()
+    {
+        $key = config('app.key');
 
+        $data = [
+            'userId' => $this->getId(),
+            'email' => $this->getEmail(),
+            'generated_at' => time()
+        ];
+
+        $method = 'AES-256-CBC';
+        $iv = random_bytes(16);
+        $token = openssl_encrypt(serialize($data), $method, $key, 0, $iv);
+
+        $token = base64_encode($iv.'//'.$token);
+        
+        $this->setRememberMeToken($token);
+
+        return $token;
+    }
 }

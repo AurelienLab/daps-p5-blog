@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Jost&family=Lalezar&family=Ubuntu+Mono&display=swap");
 *, *:before, *:after {
   box-sizing: border-box;
@@ -1230,6 +1231,42 @@ a.extended:before {
   background: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat 98%, linear-gradient(90deg, rgba(0, 0, 0, 0) 88%, #0569FF 88%);
   padding-right: 2rem;
   cursor: pointer;
+}
+.form__field--checkbox {
+  flex-direction: row-reverse;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+.form__field--checkbox label {
+  cursor: pointer;
+  color: #000;
+  font-size: 1.1rem;
+}
+.form__field--checkbox input {
+  position: relative;
+  aspect-ratio: 1/1;
+  width: 1rem;
+  min-width: revert;
+  cursor: pointer;
+}
+.form__field--checkbox input:not(:checked):after {
+  display: none;
+}
+.form__field--checkbox input:after {
+  display: block;
+  content: "✓";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: -2px;
+  bottom: 0;
+  left: 2px;
+  right: 0;
+  font-size: 2rem;
+  line-height: 0.5;
+  color: #3C48B5;
 }
 .form__error {
   color: #c00202;

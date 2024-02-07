@@ -30,6 +30,13 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="form__row">
+                        <div class="form__field form__field--checkbox">
+                            <label for="remember_me">Se souvenir de moi</label>
+                            <input type="checkbox" id="remember_me" name="remember_me"
+                                   {% if credentials.remember_me %}checked{% endif %}>
+                        </div>
+                    </div>
                     <div class="form__row subscription__submit">
                         {{ csrf('login_form') }}
                         <button type="submit" class="btn btn--primary btn--wide">Connexion</button>
