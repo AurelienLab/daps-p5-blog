@@ -16,10 +16,17 @@
     flex-grow: 1;
     gap: 8px;
 
+    &:has(input[required]),
+    &:has(textarea[required]) {
+      label:after {
+        content: ' *'
+      }
+    }
+
 
     &:has(input:placeholder-shown),
     &:has(textarea:placeholder-shown) {
-      label {
+      label:not(.no-animation) {
         @include mq($from: tablet) {
           transform: translateX(10px) translateY(38px);
         }
@@ -75,5 +82,53 @@
       padding-right: 2rem;
       cursor: pointer;
     }
+
+    &--checkbox {
+      flex-direction: row-reverse;
+      justify-content: start;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1rem;
+
+      label {
+        cursor: pointer;
+        color: #000;
+        font-size: 1.1rem;
+      }
+
+      input {
+        position: relative;
+        aspect-ratio: 1/1;
+        width: 1rem;
+        min-width: revert;
+        cursor: pointer;
+
+        &:not(:checked) {
+          &:after {
+            display: none;
+          }
+        }
+
+        &:after {
+          display: block;
+          content: '\2713';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: -2px;
+          bottom: 0;
+          left: 2px;
+          right: 0;
+          font-size: 2rem;
+          line-height: 0.5;
+          color: #3C48B5;
+        }
+      }
+    }
+  }
+
+  &__error {
+    color: #c00202;
+    padding: 8px 5px 0 5px;
   }
 }

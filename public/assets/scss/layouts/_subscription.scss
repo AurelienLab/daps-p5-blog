@@ -1,0 +1,75 @@
+.subscription {
+  @include mq($from: tablet) {
+    margin-top: 4rem;
+    margin-bottom: 8rem;
+  }
+  z-index: 20;
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: $primary-shadow;
+
+  padding: 34px 20px;
+  border-radius: 12px;
+  background: white;
+
+  &__container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: auto;
+  }
+
+  &__heading {
+    @include mq($from: tablet) {
+      padding: 16px 57px;
+    }
+    font-size: 1em;
+    margin: auto;
+    color: #323C97;
+    border-radius: 12px;
+    border: 2px solid #323C97;
+    backdrop-filter: blur(6px);
+    padding: 10px 40px;
+    text-align: center;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .form {
+    label {
+      color: map-get($colors, primary);
+    }
+  }
+
+  &__submit {
+    @include mq($from: tablet) {
+      justify-content: center;
+      .btn {
+        max-width: 300px;
+      }
+    }
+    padding-top: 20px;
+
+    .btn {
+      width: 100%;
+      border: none;
+      box-shadow: 4px 8px 8px -4px rgba(0, 0, 0, 0.15);
+
+      &:hover {
+        outline: 2px solid map-get($colors, primary);
+      }
+    }
+  }
+}

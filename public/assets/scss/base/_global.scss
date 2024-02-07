@@ -27,6 +27,10 @@ p {
   font-style: italic;
 }
 
+.text-center {
+  text-align: center;
+}
+
 p a {
   color: map-get($colors, primary);
 

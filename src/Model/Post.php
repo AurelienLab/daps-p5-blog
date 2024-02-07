@@ -137,9 +137,9 @@ class Post
         return $this;
     }
 
-    public function getCategory(): PostCategory
+    public function getCategory(): ?PostCategory
     {
-        return $this->category;
+        return isset($this->category) ? $this->category : null;
     }
 
     public function setCategory(PostCategory $category): Post
