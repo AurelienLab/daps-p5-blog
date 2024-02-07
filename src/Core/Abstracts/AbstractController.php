@@ -8,6 +8,7 @@ use App\Core\Components\Flash\FlashMessage;
 use App\Core\Form\FormData;
 use App\Core\Form\FormErrorBag;
 use App\Core\Router\Router;
+use App\Model\User;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -169,7 +170,7 @@ abstract class AbstractController
         return $tokenManager->isTokenValid($token);
     }
 
-    protected function getUser(): mixed
+    protected function getUser(): ?User
     {
         return $this->user;
     }

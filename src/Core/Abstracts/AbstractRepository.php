@@ -28,7 +28,8 @@ abstract class AbstractRepository
     public static function getAll($relations = []): false|array
     {
         $query = new Query(static::MODEL);
-        $query->select();
+        $query->select()
+            ->orderBy('published_at', 'DESC');
 
         self::addRelationsToQuery($relations, $query);
 

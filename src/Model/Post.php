@@ -20,7 +20,7 @@ class Post
     /**
      * @var int
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
      * @var string
@@ -55,7 +55,7 @@ class Post
     /**
      * @var int
      */
-    private int $userId;
+    private User $user;
 
     /**
      * @var \DateTime
@@ -93,7 +93,7 @@ class Post
         );
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -170,14 +170,14 @@ class Post
         return $this;
     }
 
-    public function getUserId(): int
+    public function getUser(): User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(int $userId): Post
+    public function setUser(User $user): Post
     {
-        $this->userId = $userId;
+        $this->user = $user;
         return $this;
     }
 

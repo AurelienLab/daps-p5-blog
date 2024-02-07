@@ -41,7 +41,7 @@ class PostController extends AbstractController
      */
     public function index(): Response
     {
-        $posts = PostRepository::getAll(['category']);
+        $posts = PostRepository::getAll(['category', 'user']);
 
         return $this->render('Admin/post/index.html.twig', [
             'posts' => $posts
@@ -104,7 +104,7 @@ class PostController extends AbstractController
      */
     public function edit(int $id): Response
     {
-        $post = PostRepository::getOrError($id, ['category']);
+        $post = PostRepository::getOrError($id, ['category', 'user']);
         $categories = PostCategoryRepository::getAll();
 
         return $this->render(
@@ -219,13 +219,16 @@ class PostController extends AbstractController
             ->setPublishedAt($data->get('published_at'))
             ->setFeaturedImage($featuredImagePath)
             ->setStatus($state)
-            ->setUserId(1)
             ->setValidatedAt(new \DateTime())
             ->setValidatorUserId(1);
 
 
         if ($this->hasFormErrors()) {
             return false;
+        }
+
+        if ($post->getId() === null) {
+            $post->setUser($this->getUser());
         }
 
         if ($uploadImage) {
