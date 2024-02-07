@@ -68,7 +68,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                                    <div class="text-gray-900">Nom de l'auteur</div>
+                                    <div class="text-gray-900">{{ post.user.name }}</div>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                     {% set dateColor = post.publishedAt|date('U') > 'now'|date('U') ? 'text-orange-700' : 'text-gray-500' %}

@@ -230,28 +230,11 @@
                 </div>
                 <p class="mt-1 text-red-400 text-sm">{{ error('published_at') }}</p>
             </div>
-            <div x-data="{ switchOn: {{ post.status ?? 'false' }} }"
-                 class="flex items-center justify-center space-x-2 mt-6">
-                <input id="status" type="checkbox" name="status" class="hidden" :checked="switchOn">
-
-                <button
-                        x-ref="switchButton"
-                        type="button"
-                        @click="switchOn = ! switchOn"
-                        :class="switchOn ? 'bg-blue-600' : 'bg-neutral-200'"
-                        class="relative inline-flex h-6 py-0.5 ml-4 focus:outline-none rounded-full w-10"
-                        x-cloak>
-                    <span :class="switchOn ? 'translate-x-[18px]' : 'translate-x-0.5'"
-                          class="w-5 h-5 duration-200 ease-in-out bg-white rounded-full shadow-md"></span>
-                </button>
-
-                <label @click="$refs.switchButton.click(); $refs.switchButton.focus()" :id="$id('status')"
-                       :class="{ 'text-blue-600': switchOn, 'text-gray-400': ! switchOn }"
-                       class="text-sm select-none"
-                       x-cloak>
-                    Publié
-                </label>
-            </div>
+            {% include 'Admin/_components/form/_switch.html.twig' with {
+                switch_value: post.status,
+                switch_field_name: 'status',
+                switch_label: 'Publié'
+            } %}
         </div>
     </div>
 </div>

@@ -9,5 +9,8 @@ return [
     ],
     'editor' => [
         'image' => 'uploads/editor/images'
+    ],
+    'user' => [
+        'image' => 'uploads/users'
     ]
 ];

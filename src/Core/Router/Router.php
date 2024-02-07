@@ -6,6 +6,8 @@ use App\Core\Utils\Str;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 class Router
 {
@@ -113,10 +115,19 @@ class Router
         foreach ($collection as $route) {
             /* @var Route $route */
 
+
             if ($route->matchUri($requestedUri) === true) {
+                // Initialize sessions
+                $sessionStorage = new NativeSessionStorage();
+                $session = new Session($sessionStorage);
+                if (!$session->isStarted()) {
+                    $session->start();
+                }
+                $request->setSession($session);
+
                 $this->currentRoute = $route->getName();
                 $this->runMiddleware($route, $request);
-                $this->runController($route, $requestedUri);
+                $this->runController($route, $requestedUri, $request);
                 return;
             } // end if
         }
@@ -176,10 +187,10 @@ class Router
      * @return void
      * @throws Exception
      */
-    private function runController(Route $route, string $requestedUri): void
+    private function runController(Route $route, string $requestedUri, Request $request): void
     {
         $class = $route->getFunction()['class'];
-        $controller = new $class();
+        $controller = new $class($request);
         if (class_exists($class) === false) {
             throw new Exception(sprintf('Unable to find class %s.', $class), 500);
         }
@@ -190,6 +201,14 @@ class Router
         }
 
         $args = $route->retrieveParametersFromUri($requestedUri);
+
+        $reflectionMethod = new \ReflectionMethod($class, $method);
+
+        foreach ($reflectionMethod->getParameters() as $parameter) {
+            if ($parameter->getType() == Request::class) {
+                $args[$parameter->getName()] = $request;
+            }
+        }
 
         try {
             /** @var Response $response */

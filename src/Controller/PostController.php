@@ -12,7 +12,7 @@ class PostController extends AbstractController
 
     public function index()
     {
-        $posts = PostRepository::getPublished(['category']);
+        $posts = PostRepository::getPublished(['category', 'user']);
         return $this->render('post/index.html.twig', [
             'posts' => $posts
         ]);
@@ -26,7 +26,12 @@ class PostController extends AbstractController
             throw new NotFoundException();
         }
 
-        $relatedPosts = PostRepository::getRelatedPosts($post);
+
+        if (empty($post->getTags()->toArray())) {
+            $relatedPosts = PostRepository::getPublished(['category', 'user'], 3);
+        } else {
+            $relatedPosts = PostRepository::getRelatedPosts($post);
+        }
 
         return $this->render('post/show.html.twig', [
             'post' => $post,

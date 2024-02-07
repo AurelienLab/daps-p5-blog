@@ -2,6 +2,7 @@
 
 namespace App\Core\Database;
 
+use App\Core\Utils\Model;
 use App\Model\Trait\SoftDeleteTrait;
 use Exception;
 
@@ -105,6 +106,10 @@ class Query
         }
 
         $this->verb = 'SELECT';
+
+        if ($this->withTrashed === null && Model::isSoftDeletable($this->model)) {
+            $this->withTrashed = false;
+        }
 
         return $this;
     }
@@ -343,6 +348,7 @@ class Query
             $statement .= implode(' AND ', $wheres);
         }
 
+
         if (!empty($this->groupBy)) {
             $statement .= ' GROUP BY '.$this->groupBy;
         }
@@ -441,18 +447,6 @@ class Query
     public function getParameters(): array
     {
         return $this->parameters;
-    }
-
-    private function isModelSoftDeletable(): bool
-    {
-        $reflection = new \ReflectionClass($this->model);
-        foreach ($reflection->getTraits() as $trait => $reflectionTrait) {
-            if ($trait == SoftDeleteTrait::class) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

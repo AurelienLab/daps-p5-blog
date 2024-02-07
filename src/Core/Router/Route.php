@@ -182,7 +182,13 @@ class Route
      */
     public function getMiddleware(): array|null
     {
-        return $this->middleware;
+        $middlewares = [];
+        if (!empty($this->parent)) {
+            $middlewares = $this->parent->getMiddleware();
+        }
+        $middlewares = array_merge($middlewares, $this->middleware);
+
+        return $middlewares;
     }
 
     /**
@@ -318,6 +324,9 @@ class Route
             $uri = preg_replace($pattern, $value, $uri);
         }
 
+        if ($uri === '/') {
+            return $uri;
+        }
         return Str::removeTrailingSlash(str_replace('//', '/', $uri));
     }
 }

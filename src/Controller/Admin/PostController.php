@@ -15,6 +15,13 @@ use App\Repository\PostCategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\PostTagRepository;
 use App\Repository\TagRepository;
+use App\Validator\ChapoLengthValidator;
+use App\Validator\DateTimeValidator;
+use App\Validator\JsonValidator;
+use App\Validator\NotEmptyValidator;
+use App\Validator\NumericValidator;
+use App\Validator\PostCategoryValidator;
+use App\Validator\PostContentBlocksValidator;
 use Behat\Transliterator\Transliterator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,7 +41,7 @@ class PostController extends AbstractController
      */
     public function index(): Response
     {
-        $posts = PostRepository::getAll(['category']);
+        $posts = PostRepository::getAll(['category', 'user']);
 
         return $this->render('Admin/post/index.html.twig', [
             'posts' => $posts
@@ -69,9 +76,8 @@ class PostController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $request = Request::createFromGlobals();
         $post = new Post();
 
         if ($this->save($post, $request)) {
@@ -98,7 +104,7 @@ class PostController extends AbstractController
      */
     public function edit(int $id): Response
     {
-        $post = PostRepository::getOrError($id, ['category']);
+        $post = PostRepository::getOrError($id, ['category', 'user']);
         $categories = PostCategoryRepository::getAll();
 
         return $this->render(
@@ -121,9 +127,8 @@ class PostController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function update(int $id): Response
+    public function update(int $id, Request $request): Response
     {
-        $request = Request::createFromGlobals();
         $post = PostRepository::getOrError($id);
 
         if ($this->save($post, $request)) {
@@ -165,20 +170,19 @@ class PostController extends AbstractController
      */
     private function save(Post $post, Request $request)
     {
-        $data = $request->request;
+
+        // Validate form and return processed data
+        $data = $this->validateForm($request, 'post_form', [
+            'title' => [NotEmptyValidator::class],
+            'category_id' => [PostCategoryValidator::class],
+            'chapo' => [NotEmptyValidator::class, ChapoLengthValidator::class],
+            'read_time' => [NotEmptyValidator::class, NumericValidator::class],
+            'content' => [JsonValidator::class, PostContentBlocksValidator::class],
+            'published_at' => [NotEmptyValidator::class, DateTimeValidator::class]
+        ]);
 
         /** @var UploadedFile $featuredImage */
         $featuredImage = $request->files->get('featured_image');
-
-        //Check CSRF Validity
-        if (!$this->isCsrfValid('post_form', $data->get('_csrf'))) {
-            throw new \Exception('Invalid CSRF token');
-        }
-
-        // Check title validity
-        if (empty(trim($data->get('title')))) {
-            $this->addFormError('title', 'Vous devez entrer un titre');
-        }
 
         //Generate Slug
         $slug = $data->get('slug');
@@ -186,50 +190,10 @@ class PostController extends AbstractController
             $slug = $data->get('title');
         }
 
-        // Check category validity
-        $category = null;
-        if (!is_numeric($data->get('category_id'))) {
-            $this->addFormError('category_id', 'Vous devez sélectionner une catégorie');
-        } else {
-            $category = PostCategoryRepository::get(intval($data->get('category_id')));
-            if ($category === null) {
-                $this->addFormError('category_id', 'Vous devez sélectionner une catégorie');
-            }
-        }
-
-        // Check excerpt validity
-        if (empty(trim($data->get('chapo')))
-            || strlen(trim($data->get('chapo'))) < 50) {
-            $this->addFormError('chapo', 'Le chapô doit faire au moins 50 caractères');
-        }
-
-
-        // Check read time validity
-        if (!is_numeric($data->get('read_time'))) {
-            $this->addFormError('read_time', 'Vous devez entrer un temps de lecture');
-        }
-
-        // Check content json validity
-        $decodedContent = json_decode($data->get('content'), true);
-        if ($decodedContent === null) {
-            $this->addFormError('content', 'Une erreur est survenue lors de la récupération du contenu');
-        }
-        if (empty($decodedContent['blocks'])) {
-            $this->addFormError('content', 'Vous devez entrer un contenu');
-        }
-
         // Define post state
         $state = !empty($data->get('status'));
 
-        $publishedAt = null;
-
-        try {
-            $publishedAt = new \DateTime($data->get('published_at'));
-        } catch (\Exception) {
-            $this->addFormError('published_at', 'Impossible d\'interpréter la date');
-        }
-
-
+        // Handle cover image
         $featuredImagePath = $post->getFeaturedImage() ?? '';
         $uploadImage = false;
         if ($featuredImage == null && empty($post->getFeaturedImage()) == true) {
@@ -242,24 +206,29 @@ class PostController extends AbstractController
             }
         }
 
+        if (!empty($data->get('category_id'))) {
+            $post->setCategory($data->get('category_id'));
+        }
 
         $post
             ->setTitle(trim($data->get('title')))
             ->setSlug(Transliterator::urlize($slug))
-            ->setCategory($category)
             ->setChapo($data->get('chapo'))
             ->setReadTime($data->get('read_time'))
             ->setContent($data->get('content'))
-            ->setPublishedAt($publishedAt)
+            ->setPublishedAt($data->get('published_at'))
             ->setFeaturedImage($featuredImagePath)
             ->setStatus($state)
-            ->setUserId(1)
             ->setValidatedAt(new \DateTime())
             ->setValidatorUserId(1);
 
 
         if ($this->hasFormErrors()) {
             return false;
+        }
+
+        if ($post->getId() === null) {
+            $post->setUser($this->getUser());
         }
 
         if ($uploadImage) {
@@ -272,6 +241,8 @@ class PostController extends AbstractController
         }
 
         $post = PostRepository::save($post);
+
+        // Generate Tags
 
         $tags = json_decode($data->get('tags'), true);
 

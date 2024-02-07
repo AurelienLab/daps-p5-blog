@@ -32,12 +32,14 @@
         <div class="post-show__content">
             <div class="post-show__content__header">
                 <div class="post-show__author">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27" fill="none">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                              d="M26.1026 13.0513C26.1026 20.2593 20.2593 26.1026 13.0513 26.1026C5.84325 26.1026 0 20.2593 0 13.0513C0 5.84325 5.84325 0 13.0513 0C20.2593 0 26.1026 5.84325 26.1026 13.0513ZM16.3141 8.15705C16.3141 9.95906 14.8533 11.4199 13.0513 11.4199C11.2493 11.4199 9.78846 9.95906 9.78846 8.15705C9.78846 6.35504 11.2493 4.89423 13.0513 4.89423C14.8533 4.89423 16.3141 6.35504 16.3141 8.15705ZM13.0512 14.6827C9.75973 14.6827 6.92361 16.6322 5.63447 19.4394C7.42949 21.5216 10.0864 22.8397 13.0512 22.8397C16.016 22.8397 18.673 21.5217 20.468 19.4396C19.1789 16.6322 16.3427 14.6827 13.0512 14.6827Z"
-                              fill="#4A5568"/>
-                    </svg>
-                    <span>Aurélien Lorence</span>
+                    <div class="profile-pic profile-pic--medium">
+                        {% if(post.user.profilePicture) %}
+                            <img src="{{ post.user.profilePicture }}" alt="{{ post.user.name }}"/>
+                        {% else %}
+                            <img src="/assets/images/profile_placeholder.svg" alt="{{ post.user.name }}"/>
+                        {% endif %}
+                    </div>
+                    <span>{{ post.user.name }}</span>
                 </div>
                 <ul class="post-show__extra-data">
                     <li>

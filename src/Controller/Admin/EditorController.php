@@ -17,10 +17,8 @@ class EditorController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function uploadFile(): JsonResponse
+    public function uploadFile(Request $request): JsonResponse
     {
-        $request = Request::createFromGlobals();
-
         $image = $request->files->get('image');
 
         if (is_null($image) === true) {
@@ -45,10 +43,8 @@ class EditorController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function fetchUrl(): JsonResponse
+    public function fetchUrl(Request $request): JsonResponse
     {
-        $request = Request::createFromGlobals();
-
         $url = $request->getPayload()->get('url');
         $info = pathinfo($url);
         $contents = file_get_contents($url);

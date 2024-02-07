@@ -15,12 +15,17 @@
 @import 'components/comment';
 @import 'components/profile-pic';
 @import 'components/editor';
+@import 'components/dropzone';
+@import 'components/alert';
 
+@import "layouts/base_login";
 @import 'layouts/last-post';
 @import 'layouts/about-me';
 @import 'layouts/contact';
+@import 'layouts/subscription';
 @import 'layouts/form';
 @import 'layouts/filters';
 @import 'layouts/post-list';
+@import 'layouts/user-area';
 
 @import "pages/post-show";

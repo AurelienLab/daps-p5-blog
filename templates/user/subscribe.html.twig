@@ -1,0 +1,55 @@
+{% extends 'base-login.html.twig' %}
+
+{% block content %}
+    <main>
+        <!-- SUBSCRIPTION FORM -->
+        <section class="subscription">
+            <div class="subscription__container">
+                <h2 class="subscription__heading">Inscription</h2>
+                <form class="form" method="POST" action="#">
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="firstname">Nom / Pseudonyme</label>
+                            <input type="text" id="firstname" name="name" placeholder=" " required
+                                   value="{{ user.name }}"/>
+                            {% if(error('name')) %}
+                                <div class="form__error">{{ error('name') }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="email">Adresse e-mail</label>
+                            <input type="email" id="email" name="email" placeholder=" " required
+                                   value="{{ user.email }}"/>
+                            {% if(error('email')) %}
+                                <div class="form__error">{{ error('email') }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="password1">Mot de passe</label>
+                            <input type="password" id="password1" name="password1" placeholder=" " required>
+                            {% if(error('password1')) %}
+                                <div class="form__error">{{ error('password1') }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form__field">
+                            <label for="password2">Retapez le mot de passe</label>
+                            <input type="password" id="password2" name="password2" placeholder=" " required>
+                            {% if(error('password2')) %}
+                                <div class="form__error">{{ error('password2') }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form__row subscription__submit">
+                        {{ csrf('subscription_form') }}
+                        <button type="submit" class="btn btn--primary">Envoyer</button>
+                    </div>
+                </form>
+                <p>Vous disposez déjà d'un compte ? <a href="#">Me connecter</a></p>
+            </div>
+        </section>
+    </main>
+{% endblock %}
