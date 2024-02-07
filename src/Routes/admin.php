@@ -2,8 +2,10 @@
 
 use App\Controller\Admin;
 use App\Core\Router\Facades\Route;
+use App\Middleware\AdminAuthMiddleware;
+use App\Middleware\AutoLoginMiddleware;
 
-Route::prefix('/admin')->name('admin.')->group([
+Route::prefix('/admin')->middleware([AutoLoginMiddleware::class, AdminAuthMiddleware::class])->name('admin.')->group([
     Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard'),
 
     Route::prefix('/categories')->name('category.')->group([

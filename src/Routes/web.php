@@ -1,9 +1,12 @@
 <?php
 
 use App\Controller\HomeController;
+use App\Controller\LoginController;
 use App\Controller\PostController;
 use App\Controller\SubscriptionController;
+use App\Controller\UserController;
 use App\Core\Router\Facades\Route;
+use App\Middleware\AuthMiddleware;
 use App\Middleware\AutoLoginMiddleware;
 
 Route::middleware([AutoLoginMiddleware::class])->group([
@@ -21,10 +24,10 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     Route::get('/bienvenue', [SubscriptionController::class, 'success'])->name('user.subscribe.success'),
 
     // LOGIN
-    Route::get('/connexion', [\App\Controller\LoginController::class, 'login'])->name('user.login'),
-    Route::post('/connexion', [\App\Controller\LoginController::class, 'loginPost'])->name('user.login.post'),
-    Route::get('/deconnexion', [\App\Controller\LoginController::class, 'logout'])->name('user.logout'),
+    Route::get('/connexion', [LoginController::class, 'login'])->name('user.login'),
+    Route::post('/connexion', [LoginController::class, 'loginPost'])->name('user.login.post'),
+    Route::get('/deconnexion', [LoginController::class, 'logout'])->name('user.logout')->middleware(AuthMiddleware::class),
 
-    Route::get('/mon-profil', [\App\Controller\UserController::class, 'editProfile'])->name('user.profile.edit'),
-    Route::post('/mon-profil', [\App\Controller\UserController::class, 'updateProfile'])->name('user.profile.post'),
+    Route::get('/mon-profil', [UserController::class, 'editProfile'])->name('user.profile.edit')->middleware(AuthMiddleware::class),
+    Route::post('/mon-profil', [UserController::class, 'updateProfile'])->name('user.profile.post')->middleware(AuthMiddleware::class),
 ]);
