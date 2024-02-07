@@ -156,7 +156,7 @@ class UserController extends AbstractController
     {
         $data = $this->validateForm($request, 'user_form', [
             'name' => [NotEmptyValidator::class, NicknameLengthValidator::class],
-            'email' => [NotEmptyValidator::class, EmailValidator::class, ExistingEmailValidator::class],
+            'email' => $request->request->get('email') != $user->getEmail() ? [NotEmptyValidator::class, EmailValidator::class, ExistingEmailValidator::class] : [NotEmptyValidator::class, EmailValidator::class],
             'password' => $request->request->get('password') !== null && !empty($request->request->get('password')) ?
                 [NotEmptyValidator::class, PasswordStrengthValidator::class]
                 : []
@@ -188,7 +188,7 @@ class UserController extends AbstractController
         // New user
         if (empty($user->getId())) {
             $password = Str::rand(12);
-        } elseif ($data->get('password') !== null) {
+        } elseif ($data->get('password') !== null && !empty($data->get('password'))) {
             $password = trim($data->get('password'));
         }
 
@@ -201,7 +201,7 @@ class UserController extends AbstractController
             // Upload file
             $filename = Transliterator::urlize($user->getName()).'-'.Str::rand(4);
             $filename .= '.'.$profilePicture->getClientOriginalExtension();
-            $profilePicturePath = '/'.$profilePicture->move(config('uploads.post.featured_image.dir'), $filename);
+            $profilePicturePath = '/'.$profilePicture->move(config('uploads.user.image'), $filename);
 
             $user->setProfilePicture($profilePicturePath);
         }

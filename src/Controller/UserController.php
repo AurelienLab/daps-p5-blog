@@ -72,7 +72,7 @@ class UserController extends AbstractController
             // Upload file
             $filename = Transliterator::urlize($user->getName()).'-'.Str::rand(4);
             $filename .= '.'.$profilePicture->getClientOriginalExtension();
-            $profilePicturePath = '/'.$profilePicture->move(config('uploads.post.featured_image.dir'), $filename);
+            $profilePicturePath = '/'.$profilePicture->move(config('uploads.user.image'), $filename);
 
             $user->setProfilePicture($profilePicturePath);
         }

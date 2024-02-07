@@ -15,6 +15,6 @@ class ExistingEmailValidator extends AbstractValidator
 
     protected function processData($data): bool
     {
-        return !UserRepository::isEmailExist(strtolower(trim($data)));
+        return !UserRepository::isEmailExist($data);
     }
 }

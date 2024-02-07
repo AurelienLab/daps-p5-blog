@@ -14,6 +14,8 @@ class EmailValidator extends AbstractValidator
 
     protected function processData($data): bool
     {
-        return filter_var(trim($data), FILTER_VALIDATE_EMAIL);
+        $cleanEmail = trim(strtolower($data));
+        $this->transformData($cleanEmail);
+        return filter_var(trim(strtolower($data)), FILTER_VALIDATE_EMAIL);
     }
 }
