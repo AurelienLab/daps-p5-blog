@@ -14,11 +14,15 @@ class LoginController extends AbstractController
 
     public function login(Request $request)
     {
+        $referer = $request->headers->get('referer');
+
         if ($this->getUser()) {
             return $this->redirect('homepage.index');
         }
 
-        return $this->render('user/login.html.twig');
+        return $this->render('user/login.html.twig', [
+            'referer' => $referer
+        ]);
     }
 
     public function loginPost(Request $request)
@@ -47,6 +51,10 @@ class LoginController extends AbstractController
                 $this->addCookie(new Cookie('_app_remember_me', $token, $cookieExpiration));
             }
 
+
+            if (!empty($data->get('referer'))) {
+                return $this->redirectUrl($data->get('referer'));
+            }
             return $this->redirect('homepage.index');
         }
 

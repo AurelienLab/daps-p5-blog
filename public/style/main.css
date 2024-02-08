@@ -55,6 +55,7 @@ a {
 html {
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
+  scroll-padding-top: calc(90px + 1rem);
 }
 
 body {
