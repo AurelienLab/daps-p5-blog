@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Core\Abstracts\AbstractController;
+use App\Core\Components\Mailer\Mailer;
+use App\Core\Utils\Encryption;
 use App\Model\User;
 use App\Repository\UserRepository;
 use App\Validator\EmailValidator;
@@ -26,7 +28,25 @@ class SubscriptionController extends AbstractController
 
         $result = $this->save($user, $request);
         if ($result) {
-            $request->getSession()->set('userId', $result->getId());
+            $dataToEncrypt = [
+                'userId' => $result->getId(),
+                'userEmail' => $result->getEmail()
+            ];
+
+            $emailToken = Encryption::encrypt($dataToEncrypt);
+
+            $mailer = new Mailer();
+
+            $mailer->sendMail(
+                $result->getEmail(),
+                'Vérification de votre adresse email',
+                'email/email-verification.html.twig',
+                [
+                    'user' => $result,
+                    'link' => url('user.verify', ['token' => $emailToken, 'email' => $result->getEmail()])
+                ]
+            );
+
             return $this->redirect('user.subscribe.success');
         }
 
@@ -73,5 +93,49 @@ class SubscriptionController extends AbstractController
         $user->setPassword($passwordHash);
 
         return UserRepository::save($user);
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $token = $request->query->get('token');
+        $email = $request->query->get('email');
+
+        if (empty($token) || empty($email)) {
+            throw new \Exception('Element de validation manquant dans la requête.');
+        }
+
+        $data = Encryption::decrypt($token);
+
+        $hasError = false;
+
+        if ($data['userEmail'] != $email) {
+            $hasError = true;
+        }
+
+        /* @var ?User $user */
+        $user = UserRepository::get($data['userId']);
+
+        if (empty($user)) {
+            $hasError = true;
+        } else {
+            if ($user->getEmailValidatedAt() !== null) {
+                return $this->render('user/verify_already.html.twig');
+            }
+            if ($data['userEmail'] != $user->getEmail() || $email != $user->getEmail()) {
+                $hasError = true;
+            }
+        }
+
+        if ($hasError === true) {
+            throw new \Exception('Impossible de valider l\'adresse email');
+        }
+
+        $user->setEmailValidatedAt(new \DateTimeImmutable());
+
+        UserRepository::save($user);
+
+        $request->getSession()->set('userId', $user->getId());
+
+        return $this->render('user/verify_confirm.html.twig');
     }
 }

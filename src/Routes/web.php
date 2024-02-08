@@ -28,6 +28,7 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     // SUBSCRIPTION
     Route::get('/inscription', [SubscriptionController::class, 'subscribe'])->name('user.subscribe'),
     Route::post('/inscription', [SubscriptionController::class, 'register'])->name('user.subscribe.post'),
+    Route::get('/verification-email', [SubscriptionController::class, 'verifyEmail'])->name('user.verify'),
     Route::get('/bienvenue', [SubscriptionController::class, 'success'])->name('user.subscribe.success'),
 
     // LOGIN

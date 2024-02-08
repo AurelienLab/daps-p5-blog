@@ -1,14 +1,14 @@
 {% extends 'email/email-base.html.twig' %}
 
 {% block content %}
-    <p>Bonjour - pseudo -, et bienvenue !</p>
+    <p>Bonjour {{ user.name }}, et bienvenue !</p>
     <p>Vous venez de créer un compte sur le splendide blog de Aurélien Lorence. Pour finaliser votre inscription et
         accéder aux merveilleuses fonctionnalités du site, merci de valider votre adresse mail en cliquant sur le bouton
         ci-dessous.</p>
-    <p><a href="#" class="button center">Valider mon adresse</a></p>
+    <p><a href="{{ link }}" class="button center">Valider mon adresse</a></p>
     <p>ou en copiant l'adresse ci-dessous dans votre navigateur préféré.</p>
     <code>
-        https://monadresse.fr/email-verify?token=OIQjfqpeghmqkejflqjfbv654zeflqkj54dhvùoiDVHPUvpqhvqiufvhqpfdv
+        {{ link }}
     </code>
     <p>
         A très bientôt sur mon blog !<br>

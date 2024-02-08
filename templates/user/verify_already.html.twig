@@ -1,0 +1,17 @@
+{% extends 'base-login.html.twig' %}
+
+{% block content %}
+    <main>
+        <!-- SUBSCRIPTION FORM -->
+        <section class="subscription">
+            <div class="subscription__container">
+                <h2 class="subscription__heading">Inscription</h2>
+                <div class="subscription__content">
+                    <h3>Encore vous ❓</h3>
+                    <p>Il semblerait que votre adresse soit déjà validée, allez vite profiter du blog !</p>
+                    <a href="{{ route('homepage.index') }}" class="btn btn--outline--primary">Accéder au site</a>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

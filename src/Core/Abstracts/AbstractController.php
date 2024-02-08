@@ -43,7 +43,7 @@ abstract class AbstractController
         $userId = $request->getSession()->get('userId');
         if ($userId) {
             $user = UserRepository::get($userId);
-            if ($user) {
+            if ($user && $user->canConnect()) {
                 $this->user = $user;
             }
         }
