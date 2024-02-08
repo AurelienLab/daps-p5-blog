@@ -39,6 +39,7 @@
                     </div>
                     <div class="form__row subscription__submit">
                         {{ csrf('login_form') }}
+                        <input type="hidden" name="referer" value="{{ referer }}"/>
                         <button type="submit" class="btn btn--primary btn--wide">Connexion</button>
                     </div>
                 </form>

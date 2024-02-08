@@ -49,7 +49,16 @@
                                   d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
                         </svg>
 
-                        <span><a href="#comments">10 commentaires</a></span>
+                        <span>
+
+                            <a href="#comments">
+                                {% if post.comments|length == 0 %}
+                                    Commenter
+                                {% else %}
+                                    {{ post.comments|length }} commentaire{{ post.comments|length > 1 ? 's' : '' }}
+                                {% endif %}
+                            </a>
+                        </span>
                     </li>
                     <li>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -77,80 +86,7 @@
             </div>
         </div>
 
-        <section class="post-show__comments" id="comments">
-            <div class="post-show__comments__header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
-                    <path d="M19.6667 6.33333H22.3333C23.8061 6.33333 25 7.52724 25 9V17C25 18.4728 23.8061 19.6667 22.3333 19.6667H19.6667V25L14.3333 19.6667H9C8.26363 19.6667 7.59696 19.3681 7.11439 18.8856M7.11439 18.8856L11.6667 14.3333H17C18.4728 14.3333 19.6667 13.1395 19.6667 11.6667V3.66667C19.6667 2.19391 18.4728 1 17 1H3.66667C2.19391 1 1 2.19391 1 3.66667V11.6667C1 13.1395 2.19391 14.3333 3.66667 14.3333H6.33333V19.6667L7.11439 18.8856Z"
-                          stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <h2>Commentaires</h2>
-            </div>
-            <div class="post-show__comments__body">
-                <div class="comment">
-                    <div class="comment__header">
-                        <div class="profile-pic">
-                            <img src="/assets/images/profile/profile2.png" alt="Profil de l'auteur du commentaire 1">
-                        </div>
-                        <div class="comment__data">
-                            <p class="comment__author">Erwann D.</p>
-                            <span class="comment__date">Le 19 avril 2023 à 15h42</span>
-                        </div>
-                    </div>
-                    <p class="comment__body">
-                        Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et
-                        dolore magna aliqua. Donec sed odio operae, eu vulputate felis rhoncus. Salutantibus vitae elit
-                        libero, a pharetra augue. Nihil hic munitissimus habendi senatus locus, nihil horum? A communi
-                        observantia non est recedendum.<br>
-                        Quisque ut dolor gravida, placerat libero vel, euismod. Ambitioni dedisse scripsisse
-                        iudicaretur. Donec sed odio operae, eu vulputate felis rhoncus. Nihilne te nocturnum praesidium
-                        Palati, nihil urbis vigiliae.
-                    </p>
-                </div>
-                <div class="comment">
-                    <div class="comment__header">
-                        <div class="profile-pic">
-                            <img src="/assets/images/profile/profile1.png" alt="Profil de l'auteur du commentaire 2">
-                        </div>
-                        <div class="comment__data">
-                            <p class="comment__author">Lou C.</p>
-                            <span class="comment__date">Le 19 avril 2023 à 15h42</span>
-                        </div>
-                    </div>
-                    <p class="comment__body">
-                        Cum sociis natoque penatibus et magnis dis parturient. Curabitur blandit tempus ardua ridiculus
-                        sed magna. Salutantibus vitae elit libero, a pharetra augue.<br><br>
-                        Quisque ut dolor gravida, placerat libero vel, euismod. Ambitioni dedisse scripsisse
-                        iudicaretur. Donec sed odio operae, eu vulputate felis rhoncus. Nihilne te nocturnum praesidium
-                        Palati, nihil urbis vigiliae.
-                    </p>
-                </div>
-            </div>
-            <div class="post-show__comments__footer">
-                <p class="bold">Ajouter un commentaire</p>
-                {% if true %}
-                    <p class="italic">
-                        Vous êtes déconnecté. <a href="#">Se connecter</a> ou <a
-                                href="#">s'inscrire</a> pour réagir à ce post.
-                    </p>
-
-                {% else %}
-                    <form method="post" action="#" class="form">
-                        <div class="form__row">
-                            <div class="profile-pic">
-                                <img src="/assets/images/profile/profile2.png" alt="Profil de l'utilisateur en cours">
-                            </div>
-                            <div class="form__field">
-                                <label for="message">Commentaire</label>
-                                <textarea id="message" name="message" placeholder=" " rows="6"></textarea>
-                            </div>
-                        </div>
-                        <div class="form__row comment__submit">
-                            <button type="submit" class="btn btn--outline--primary">Envoyer</button>
-                        </div>
-                    </form>
-                {% endif %}
-            </div>
-        </section>
+        {% include 'post/_comments.html.twig' %}
 
         {% if relatedPosts is defined and relatedPosts|length > 0 %}
             <section class="post-show__related">

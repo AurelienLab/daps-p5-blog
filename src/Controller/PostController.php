@@ -25,8 +25,7 @@ class PostController extends AbstractController
         if ($post == null) {
             throw new NotFoundException();
         }
-
-
+        
         if (empty($post->getTags()->toArray())) {
             $relatedPosts = PostRepository::getPublished(['category', 'user'], 3);
         } else {

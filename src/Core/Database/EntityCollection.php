@@ -14,7 +14,8 @@ class EntityCollection implements \Iterator
         private string  $relatedEntity,
         private int     $relationType,
         private ?string $targetEntityProperty = null,
-        private ?string $relationModel = null
+        private ?string $relationModel = null,
+        private array   $targetRelations = []
     )
     {
     }
@@ -55,6 +56,11 @@ class EntityCollection implements \Iterator
         return $this->collection;
     }
 
+    public function getTargetRelations(): array
+    {
+        return $this->targetRelations;
+    }
+    
     /* ITERATION METHODS */
 
     public function rewind(): void

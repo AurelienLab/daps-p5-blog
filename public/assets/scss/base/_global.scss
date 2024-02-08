@@ -1,6 +1,7 @@
 html {
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
+  scroll-padding-top: calc($header-height + 1rem);
 }
 
 
@@ -48,4 +49,16 @@ a.extended {
     top: 0;
     left: 0;
   }
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+button {
+  background: transparent;
+  border: none;
+  color: #000;
+  cursor: pointer;
 }

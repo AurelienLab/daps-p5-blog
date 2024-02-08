@@ -1,11 +1,13 @@
 <?php
 
+use App\Controller\CommentController;
 use App\Controller\HomeController;
 use App\Controller\LoginController;
 use App\Controller\PostController;
 use App\Controller\SubscriptionController;
 use App\Controller\UserController;
 use App\Core\Router\Facades\Route;
+use App\Middleware\AdminAuthMiddleware;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\AutoLoginMiddleware;
 
@@ -17,6 +19,11 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     Route::get('/articles', [PostController::class, 'index'])->name('articles.index'),
     Route::get('/articles/tag/{slug}', [PostController::class, 'tag'])->name('articles.tag'),
     Route::get('/articles/{slug}', [PostController::class, 'show'])->name('articles.show'),
+
+    // COMMENTS
+    Route::post('/articles/post-comment/{postId}', [CommentController::class, 'postComment'])->middleware(AuthMiddleware::class)->name('comment.post'),
+    Route::post('/articles/edit-comment/{commentId}', [CommentController::class, 'editComment'])->middleware(AdminAuthMiddleware::class)->name('comment.edit'),
+    Route::post('/articles/remove-comment/{commentId}', [CommentController::class, 'removeComment'])->middleware(AdminAuthMiddleware::class)->name('comment.remove'),
 
     // SUBSCRIPTION
     Route::get('/inscription', [SubscriptionController::class, 'subscribe'])->name('user.subscribe'),

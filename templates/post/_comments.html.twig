@@ -1,0 +1,123 @@
+<section class="post-show__comments" id="comments">
+    <div class="post-show__comments__header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path d="M19.6667 6.33333H22.3333C23.8061 6.33333 25 7.52724 25 9V17C25 18.4728 23.8061 19.6667 22.3333 19.6667H19.6667V25L14.3333 19.6667H9C8.26363 19.6667 7.59696 19.3681 7.11439 18.8856M7.11439 18.8856L11.6667 14.3333H17C18.4728 14.3333 19.6667 13.1395 19.6667 11.6667V3.66667C19.6667 2.19391 18.4728 1 17 1H3.66667C2.19391 1 1 2.19391 1 3.66667V11.6667C1 13.1395 2.19391 14.3333 3.66667 14.3333H6.33333V19.6667L7.11439 18.8856Z"
+                  stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>Commentaires</h2>
+    </div>
+    <div class="post-show__comments__body">
+        {% if post.comments|length > 0 %}
+            {% for comment in post.comments %}
+                <div class="comment">
+                    <div class="comment__header">
+                        <div class="profile-pic">
+                            {% if(comment.user.profilePicture) %}
+                                <img src="{{ comment.user.profilePicture }}" alt="{{ comment.user.name }}"/>
+                            {% else %}
+                                <img src="/assets/images/profile_placeholder.svg" alt="{{ comment.user.name }}"/>
+                            {% endif %}
+                        </div>
+
+                        <div class="comment__data">
+                            <p class="comment__author">{{ comment.user.name }}</p>
+                            <span class="comment__date">Le {{ comment.createdAt|format_datetime('long', 'short', locale='fr') }}</span>
+                        </div>
+                        {% if app.user.isAdmin %}
+                            <div class="comment__moderation">
+                                <a href="#" class="edit js-comment-edit">Editer</a>
+                                <a href="#" class="remove js-comment-remove" data-comment-id="{{ comment.id }}">Supprimer</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <p class="comment__body">
+                        {{ comment.content|nl2br }}
+                    </p>
+                    <form method="post" class="form hidden"
+                          action="{{ route('comment.edit', { commentId: comment.id}) }}">
+                        <div class="form__row">
+                            <div class="form__field">
+                                <textarea id="content" name="content"
+                                          rows="3">{{ comment.content|nl2br }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form__row comment__submit">
+                            {{ csrf('comment_form') }}
+                            <button type="submit" class="btn btn--primary">Enregistrer</button>
+                            <button type="button" class="btn btn--outline--danger js-cancel-comment-edit">Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="post-show__comments__empty">
+                <img src="/assets/images/sad.svg" alt="Pas de commentaire" class="center">
+                <p> Il n'y a aucun commentaire pour le moment, soyez le premier à réagir !</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="post-show__comments__footer">
+        <p class="bold">Ajouter un commentaire</p>
+        {% if app.user %}
+            <form method="post" action="{{ route('comment.post', {postId: post.id}) }}" class="form">
+                <div class="form__row">
+                    <div class="profile-pic">
+                        {% if(app.user.profilePicture) %}
+                            <img src="{{ app.user.profilePicture }}" alt="{{ app.user.name }}"/>
+                        {% else %}
+                            <img src="/assets/images/profile_placeholder.svg" alt="{{ app.user.name }}"/>
+                        {% endif %}
+                    </div>
+                    <div class="form__field">
+                        <label for="content">Commentaire</label>
+                        <textarea id="content" name="content" placeholder=" " rows="6"></textarea>
+                    </div>
+                </div>
+                <div class="form__row comment__submit">
+                    {{ csrf('comment_form') }}
+                    <button type="submit" class="btn btn--outline--primary">Envoyer</button>
+                </div>
+            </form>
+        {% else %}
+            <p class="italic">
+                Vous êtes déconnecté. <a href="{{ route('user.login') }}">Se connecter</a> ou <a
+                        href="{{ route('user.subscribe') }}">s'inscrire</a> pour réagir à ce post.
+            </p>
+        {% endif %}
+    </div>
+</section>
+`
+{% if app.user.admin %}
+    {% for comment in post.comments %}
+        <div class="modal" id="modal-delete-comment-{{ comment.id }}">
+            <div class="modal__overlay js-modal-close"></div>
+            <form method="post" action="{{ route('comment.remove', {commentId: comment.id}) }}"
+                  class="modal__container">
+                <div class="modal__header">
+                    <h3>Titre de la modal</h3>
+                    <button type="button" class="modal__close js-modal-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal__body">
+                    Voulez-vous vraiment supprimer le commentaire de {{ comment.user.name }} ? Cette action est
+                    irréversible.
+                </div>
+                <div class="modal__footer">
+                    <button type="submit" class="btn btn--sm btn--danger">Supprimer</button>
+                    <button class="btn  btn--sm btn--outline--primary js-modal-close">Annuler</button>
+                </div>
+            </form>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% block js %}
+    {% if app.user.isAdmin %}
+        <script type="module" src="/assets/js/admin-front.js?v=0.1"></script>
+    {% endif %}
+{% endblock %}

@@ -108,6 +108,13 @@
       gap: 1em;
     }
 
+    &__empty {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
     &__footer {
       margin-top: 1.8rem;
       display: flex;

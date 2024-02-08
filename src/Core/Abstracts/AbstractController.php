@@ -97,6 +97,19 @@ abstract class AbstractController
         return $response;
     }
 
+    /**
+     * Redirect to given url
+     *
+     * @throws \Exception
+     */
+    protected function redirectUrl(string $url): RedirectResponse
+    {
+        $this->flashesBag->saveToSession();
+        $response = new RedirectResponse($url);
+        $this->setCookiesInResponse($response);
+        return $response;
+    }
+
 
     /**
      * Display given template with passed data via twig instance (no print needed)
