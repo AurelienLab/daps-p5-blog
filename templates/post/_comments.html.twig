@@ -81,8 +81,8 @@
             </form>
         {% else %}
             <p class="italic">
-                Vous êtes déconnecté. <a href="#">Se connecter</a> ou <a
-                        href="#">s'inscrire</a> pour réagir à ce post.
+                Vous êtes déconnecté. <a href="{{ route('user.login') }}">Se connecter</a> ou <a
+                        href="{{ route('user.subscribe') }}">s'inscrire</a> pour réagir à ce post.
             </p>
         {% endif %}
     </div>
