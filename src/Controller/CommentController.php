@@ -31,4 +31,21 @@ class CommentController extends AbstractController
 
         return $this->redirect('articles.show', ['slug' => $post->getSlug()]);
     }
+
+
+    public function editComment(Request $request, int $commentId)
+    {
+        $comment = CommentRepository::getOrError($commentId);
+
+        $data = $this->validateForm($request, 'comment_form', [
+            'content' => [NotEmptyValidator::class]
+        ]);
+
+        $comment
+            ->setContent($data->get('content'));
+
+        CommentRepository::save($comment);
+
+        return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
+    }
 }

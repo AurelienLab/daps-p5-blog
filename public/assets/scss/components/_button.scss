@@ -21,6 +21,7 @@
     &:hover, &:focus {
       background: #FFFFFF;
       color: map-get($colors, primary);
+      border: 2px solid map-get($colors, primary);
     }
   }
 
@@ -34,6 +35,16 @@
 
     &:hover, &:focus {
       background: map-get($colors, primary);
+      color: #FFFFFF;
+    }
+  }
+
+  &--outline--danger {
+    border: 2px solid map-get($colors, danger);
+    color: map-get($colors, danger);
+
+    &:hover, &:focus {
+      background: map-get($colors, danger);
       color: #FFFFFF;
     }
   }

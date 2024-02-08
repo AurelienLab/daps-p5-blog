@@ -101,6 +101,10 @@ a.extended:before {
   left: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .btn {
   background: transparent;
   border: none;
@@ -126,6 +130,7 @@ a.extended:before {
 .btn--primary:hover, .btn--primary:focus {
   background: #FFFFFF;
   color: #0569FF;
+  border: 2px solid #0569FF;
 }
 .btn--bg-light {
   background: #FFFFFF;
@@ -136,6 +141,14 @@ a.extended:before {
 }
 .btn--outline--primary:hover, .btn--outline--primary:focus {
   background: #0569FF;
+  color: #FFFFFF;
+}
+.btn--outline--danger {
+  border: 2px solid #a80000;
+  color: #a80000;
+}
+.btn--outline--danger:hover, .btn--outline--danger:focus {
+  background: #a80000;
   color: #FFFFFF;
 }
 
@@ -717,6 +730,26 @@ a.extended:before {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  flex-grow: 1;
+}
+.comment__moderation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.comment__moderation a {
+  font-size: 0.9rem;
+}
+.comment__moderation a:hover {
+  text-decoration: underline;
+}
+.comment__moderation .edit {
+  color: #0030a9;
+}
+.comment__moderation .remove {
+  color: #a40101;
 }
 .comment__author {
   font-family: "Lalezar", "Arial Black", sans-serif;

@@ -8,33 +8,54 @@
     </div>
     <div class="post-show__comments__body">
         {% if post.comments|length > 0 %}
-        {% for comment in post.comments %}
-            <div class="comment">
-                <div class="comment__header">
-                    <div class="profile-pic">
-                        {% if(comment.user.profilePicture) %}
-                            <img src="{{ comment.user.profilePicture }}" alt="{{ comment.user.name }}"/>
-                        {% else %}
-                            <img src="/assets/images/profile_placeholder.svg" alt="{{ comment.user.name }}"/>
+            {% for comment in post.comments %}
+                <div class="comment">
+                    <div class="comment__header">
+                        <div class="profile-pic">
+                            {% if(comment.user.profilePicture) %}
+                                <img src="{{ comment.user.profilePicture }}" alt="{{ comment.user.name }}"/>
+                            {% else %}
+                                <img src="/assets/images/profile_placeholder.svg" alt="{{ comment.user.name }}"/>
+                            {% endif %}
+                        </div>
+
+                        <div class="comment__data">
+                            <p class="comment__author">{{ comment.user.name }}</p>
+                            <span class="comment__date">Le {{ comment.createdAt|format_datetime('long', 'short', locale='fr') }}</span>
+                        </div>
+                        {% if app.user.isAdmin %}
+                            <div class="comment__moderation">
+                                <a href="#" class="edit js-comment-edit">Editer</a>
+                                <a href="#" class="remove">Supprimer</a>
+                            </div>
                         {% endif %}
                     </div>
-
-                    <div class="comment__data">
-                        <p class="comment__author">{{ comment.user.name }}</p>
-                        <span class="comment__date">Le {{ comment.createdAt|format_datetime('long', 'short', locale='fr') }}</span>
-                    </div>
+                    <p class="comment__body">
+                        {{ comment.content|nl2br }}
+                    </p>
+                    <form method="post" class="form hidden"
+                          action="{{ route('comment.edit', { commentId: comment.id}) }}">
+                        <div class="form__row">
+                            <div class="form__field">
+                                <textarea id="content" name="content"
+                                          rows="3">{{ comment.content|nl2br }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form__row comment__submit">
+                            {{ csrf('comment_form') }}
+                            <button type="submit" class="btn btn--primary">Enregistrer</button>
+                            <button type="button" class="btn btn--outline--danger js-cancel-comment-edit">Annuler
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <p class="comment__body">
-                    {{ comment.content|nl2br }}
-                </p>
-            </div>
-        {% endfor %}
+            {% endfor %}
         {% else %}
-        <div class="post-show__comments__empty">
-            <img src="/assets/images/sad.svg" alt="Pas de commentaire" class="center">
-            <p> Il n'y a aucun commentaire pour le moment, soyez le premier à réagir !</p>
-            {% endif %}
-        </div>
+            <div class="post-show__comments__empty">
+                <img src="/assets/images/sad.svg" alt="Pas de commentaire" class="center">
+                <p> Il n'y a aucun commentaire pour le moment, soyez le premier à réagir !</p>
+            </div>
+        {% endif %}
     </div>
     <div class="post-show__comments__footer">
         <p class="bold">Ajouter un commentaire</p>
@@ -66,3 +87,9 @@
         {% endif %}
     </div>
 </section>
+
+{% block js %}
+    {% if app.user.isAdmin %}
+        <script type="module" src="/assets/js/admin-front.js?v=0.1"></script>
+    {% endif %}
+{% endblock %}
