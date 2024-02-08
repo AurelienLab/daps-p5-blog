@@ -18,6 +18,9 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     Route::get('/articles/tag/{slug}', [PostController::class, 'tag'])->name('articles.tag'),
     Route::get('/articles/{slug}', [PostController::class, 'show'])->name('articles.show'),
 
+    // COMMENTS
+    Route::post('/articles/post-comment/{postId}', [\App\Controller\CommentController::class, 'postComment'])->name('comment.post'),
+
     // SUBSCRIPTION
     Route::get('/inscription', [SubscriptionController::class, 'subscribe'])->name('user.subscribe'),
     Route::post('/inscription', [SubscriptionController::class, 'register'])->name('user.subscribe.post'),

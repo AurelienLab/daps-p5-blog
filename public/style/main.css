@@ -1224,6 +1224,7 @@ a.extended:before {
 }
 .form__field textarea {
   font-family: inherit;
+  resize: vertical;
 }
 .form__field select {
   -webkit-appearance: none;
@@ -1448,6 +1449,12 @@ a.extended:before {
   display: flex;
   flex-direction: column;
   gap: 1em;
+}
+.post-show__comments__empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .post-show__comments__footer {
   margin-top: 1.8rem;

@@ -3,6 +3,7 @@
 namespace App\Core\Database;
 
 use App\Core\Utils\Str;
+use App\Model\Comment;
 use App\Model\Trait\TimestampableTrait;
 use Exception;
 use PDO;
@@ -242,7 +243,7 @@ class Database
                 }
             }
         }
-
+        
         return $entity;
     }
 
@@ -443,7 +444,7 @@ class Database
                         $reflectionClass->getName(),
                         [
                             $reflectionClass->getName()::TABLE.'.id',
-                            $relation->getRelationModel()::TABLE.'.'.$sourceEntityFieldName
+                            $relation->getRelatedEntity()::TABLE.'.'.$sourceEntityFieldName
                         ]
                     );
                 }
@@ -452,6 +453,17 @@ class Database
                 $query
                     ->select()
                     ->where($sourceEntityFieldName, 'IN', array_keys($ids));
+
+                $reflection = new \ReflectionClass($relation->getRelatedEntity());
+                foreach ($relation->getTargetRelations() as $targetRelation) {
+                    if ($reflection->hasProperty($targetRelation)) {
+                        $setter = 'set'.Str::toPascalCase($targetRelation);
+                        if ($reflection->hasMethod($setter)) {
+                            $class = $reflection->getMethod($setter)->getParameters()[0]->getType()->getName();
+                            $query->leftJoin($class, [$relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id', $class::TABLE.'.id']);
+                        }
+                    }
+                }
 
 
                 $results = self::query($query, false, PDO::FETCH_ASSOC, false);
