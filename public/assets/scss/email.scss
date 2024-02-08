@@ -1,0 +1,85 @@
+@import 'utils/variables';
+@import 'base/typography';
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: $font-default;
+  margin: 0;
+}
+
+.wrapper {
+  width: 100%;
+  background: #f1f1f1;
+  height: 100%;
+
+  & > tr {
+    vertical-align: center;
+  }
+}
+
+.email {
+  background: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  max-width: 600px;
+
+  padding: 1.5rem 2rem;
+
+
+  &__header {
+    font-family: $font-logo;
+    font-size: 0.8rem;
+  }
+
+  &__footer {
+    color: #8f8f8f;
+    font-size: 0.9rem;
+  }
+}
+
+a {
+  color: map-get($colors, primary);
+}
+
+.button {
+  display: block;
+  color: #FFF;
+  background: map-get($colors, primary);
+  padding: 8px 35px;
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  text-decoration: none;
+  min-width: 100px;
+  width: fit-content;
+  text-align: center;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+code {
+  padding: 1rem 1rem;
+  display: block;
+  background: #fcf8e3;
+  color: gray;
+  border: 1px solid #8f8f8f;
+  border-radius: 2px;
+  overflow-wrap: anywhere;
+}
+
+p {
+  line-height: 1.4;
+  font-family: $font-default;
+  margin-bottom: 1.5rem;
+}
