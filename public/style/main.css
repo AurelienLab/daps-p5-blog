@@ -105,6 +105,13 @@ a.extended:before {
   display: none !important;
 }
 
+button {
+  background: transparent;
+  border: none;
+  color: #000;
+  cursor: pointer;
+}
+
 .btn {
   background: transparent;
   border: none;
@@ -118,6 +125,10 @@ a.extended:before {
   transition: all 150ms ease-in-out;
   min-width: 190px;
 }
+.btn--sm {
+  padding: 5px 15px;
+  min-width: 100px;
+}
 .btn--wide {
   display: block;
   width: 100%;
@@ -126,11 +137,20 @@ a.extended:before {
 .btn--primary {
   background: #0569FF;
   color: #FFFFFF;
+  outline: 2px solid #0569FF;
 }
 .btn--primary:hover, .btn--primary:focus {
   background: #FFFFFF;
   color: #0569FF;
-  border: 2px solid #0569FF;
+}
+.btn--danger {
+  background: #a80000;
+  color: #FFFFFF;
+  outline: 2px solid #a80000;
+}
+.btn--danger:hover, .btn--danger:focus {
+  background: #FFFFFF;
+  color: #a80000;
 }
 .btn--bg-light {
   background: #FFFFFF;
@@ -906,6 +926,69 @@ a.extended:before {
   color: #880000;
   border-color: #880000;
   background-color: #ffd5d5;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+.modal.open {
+  display: flex;
+}
+.modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(4px);
+  z-index: 0;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+.modal__container {
+  z-index: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 4px 8px 18px 0 rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 500px;
+}
+.modal__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f5f5f5;
+  align-items: center;
+  font-size: 1.2rem;
+}
+.modal__body {
+  padding: 1.5rem 1.5rem;
+  line-height: 1.7;
+}
+.modal__footer {
+  background: #f6f6f6;
+  padding: 1rem 1.5rem;
+  border-radius: 0 0 12px 12px;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 1rem;
+}
+.modal__close svg {
+  width: 25px;
 }
 
 .base-login {

@@ -26,7 +26,7 @@
                         {% if app.user.isAdmin %}
                             <div class="comment__moderation">
                                 <a href="#" class="edit js-comment-edit">Editer</a>
-                                <a href="#" class="remove">Supprimer</a>
+                                <a href="#" class="remove js-comment-remove" data-comment-id="{{ comment.id }}">Supprimer</a>
                             </div>
                         {% endif %}
                     </div>
@@ -87,6 +87,34 @@
         {% endif %}
     </div>
 </section>
+`
+{% if app.user.admin %}
+    {% for comment in post.comments %}
+        <div class="modal" id="modal-delete-comment-{{ comment.id }}">
+            <div class="modal__overlay js-modal-close"></div>
+            <form method="post" action="{{ route('comment.remove', {commentId: comment.id}) }}"
+                  class="modal__container">
+                <div class="modal__header">
+                    <h3>Titre de la modal</h3>
+                    <button type="button" class="modal__close js-modal-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal__body">
+                    Voulez-vous vraiment supprimer le commentaire de {{ comment.user.name }} ? Cette action est
+                    irréversible.
+                </div>
+                <div class="modal__footer">
+                    <button type="submit" class="btn btn--sm btn--danger">Supprimer</button>
+                    <button class="btn  btn--sm btn--outline--primary js-modal-close">Annuler</button>
+                </div>
+            </form>
+        </div>
+    {% endfor %}
+{% endif %}
 
 {% block js %}
     {% if app.user.isAdmin %}

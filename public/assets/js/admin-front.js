@@ -24,4 +24,21 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         })
     }
+
+    const commentRemoveButtons = document.querySelectorAll('.js-comment-remove')
+
+    if (commentRemoveButtons.length > 0) {
+        commentRemoveButtons.forEach((button) => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault()
+
+                const commentId = e.currentTarget.dataset.commentId
+
+                console.log(commentId);
+
+                const modal = document.getElementById('modal-delete-comment-' + commentId)
+                modal.classList.add('open')
+            })
+        })
+    }
 })

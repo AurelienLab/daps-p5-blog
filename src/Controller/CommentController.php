@@ -48,4 +48,13 @@ class CommentController extends AbstractController
 
         return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
     }
+
+    public function removeComment(Request $request, int $commentId)
+    {
+        $comment = CommentRepository::getOrError($commentId);
+
+        CommentRepository::remove($comment);
+
+        return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
+    }
 }

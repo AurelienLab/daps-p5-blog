@@ -23,7 +23,7 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     // COMMENTS
     Route::post('/articles/post-comment/{postId}', [CommentController::class, 'postComment'])->middleware(AuthMiddleware::class)->name('comment.post'),
     Route::post('/articles/edit-comment/{commentId}', [CommentController::class, 'editComment'])->middleware(AdminAuthMiddleware::class)->name('comment.edit'),
-    Route::post('/articles/remove-comment/{commentId}', [CommentController::class, 'edit'])->middleware(AdminAuthMiddleware::class)->name('comment.remove'),
+    Route::post('/articles/remove-comment/{commentId}', [CommentController::class, 'removeComment'])->middleware(AdminAuthMiddleware::class)->name('comment.remove'),
 
     // SUBSCRIPTION
     Route::get('/inscription', [SubscriptionController::class, 'subscribe'])->name('user.subscribe'),
