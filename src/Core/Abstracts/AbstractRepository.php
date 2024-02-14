@@ -184,6 +184,10 @@ abstract class AbstractRepository
      */
     protected static function addRelationsToQuery(array $relations, Query $query)
     {
+        if (empty($relations)) {
+            $relations = static::DEFAULT_RELATIONS;
+        }
+
         if (!empty($relations)) {
             $reflection = new \ReflectionClass(static::MODEL);
             foreach ($relations as $relation) {

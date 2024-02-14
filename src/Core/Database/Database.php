@@ -243,7 +243,7 @@ class Database
                 }
             }
         }
-        
+
         return $entity;
     }
 
@@ -404,47 +404,63 @@ class Database
         // Check if there is any needed relation
         $relationsToFetch = [];
         $properties = $reflectionClass->getProperties();
+
         foreach ($properties as $property) {
-            $getter = 'get'.Str::toPascalCase($property->getName());
-            if ($reflectionClass->hasMethod($getter) === true) {
-                $getterResult = $result[0]->$getter();
-                if ($getterResult instanceof EntityCollection) {
-                    $relationsToFetch[$property->getName()] = $getterResult;
-                }
+            if ($property->getType()->getName() == EntityCollection::class) {
+                $relationsToFetch[$property->getName()] = $property->getValue($result[0]);
             }
         }
 
         if (empty($relationsToFetch) === false) {
+            // Get a list of items we need to hydrate
             $ids = [];
             foreach ($result as $item) {
                 $ids[$item->$primaryKeyGetter()] = $item;
             }
 
             foreach ($relationsToFetch as $name => $relation) {
-                $sourceEntityFieldName = Str::toSnakeCase($reflectionClass->getShortName()).'_id';
+                /** @var EntityCollection $relation */
+                $targetProperty = $relation->getTargetEntityProperty() !== null ?
+                    $relation->getTargetEntityProperty() :
+                    Str::toSnakeCase((new ReflectionClass($relation->getRelatedEntity()))->getShortName());
+
+                $targetEntityFieldName = $targetProperty.'_id';
+
+                $originProperty = $relation->getOriginEntityProperty() !== null ?
+                    $relation->getOriginEntityProperty() :
+                    Str::toSnakeCase($reflectionClass->getShortName());
+
+                $originEntityFieldName = $originProperty.'_id';
+
+
+                // If many to many, we join on pivot table
                 if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
+                    // Init a query on pivot table
                     $query = new Query($relation->getRelationModel());
+
+                    // Left join both sides of the relationship
                     $query->leftJoin(
                         $relation->getRelatedEntity(),
                         [
-                            $relation->getRelationModel()::TABLE.'.'.$relation->getTargetEntityProperty().'_id',
+                            $relation->getRelationModel()::TABLE.'.'.$targetEntityFieldName,
                             $relation->getRelatedEntity()::TABLE.'.id'
                         ]
                     )
                         ->leftJoin(
                             $reflectionClass->getName(),
                             [
-                                $reflectionClass->getName()::TABLE.'.id',
-                                $relation->getRelationModel()::TABLE.'.'.$sourceEntityFieldName
+                                $reflectionClass->getConstant('TABLE').'.'.$primaryKey,
+                                $relation->getRelationModel()::TABLE.'.'.$originEntityFieldName
                             ]
                         );
                 } else {
+                    // Init a query on target entity
                     $query = new Query($relation->getRelatedEntity());
                     $query->leftJoin(
                         $reflectionClass->getName(),
                         [
-                            $reflectionClass->getName()::TABLE.'.id',
-                            $relation->getRelatedEntity()::TABLE.'.'.$sourceEntityFieldName
+                            $reflectionClass->getConstant('TABLE').'.'.$primaryKey,
+                            $relation->getRelatedEntity()::TABLE.'.'.$originEntityFieldName
                         ]
                     );
                 }
@@ -452,23 +468,20 @@ class Database
 
                 $query
                     ->select()
-                    ->where($sourceEntityFieldName, 'IN', array_keys($ids));
+                    ->where($originEntityFieldName, 'IN', array_keys($ids));
 
                 $reflection = new \ReflectionClass($relation->getRelatedEntity());
                 foreach ($relation->getTargetRelations() as $targetRelation) {
                     if ($reflection->hasProperty($targetRelation)) {
-                        $setter = 'set'.Str::toPascalCase($targetRelation);
-                        if ($reflection->hasMethod($setter)) {
-                            $class = $reflection->getMethod($setter)->getParameters()[0]->getType()->getName();
-                            $query->leftJoin($class, [$relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id', $class::TABLE.'.id']);
-                        }
+                        $class = $reflection->getProperty($targetRelation)->getType()->getName();
+                        $query->leftJoin($class, [$relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id', $class::TABLE.'.id']);
                     }
                 }
 
 
                 $results = self::query($query, false, PDO::FETCH_ASSOC, false);
 
-                $originalGetter = 'get'.Str::toPascalCase($reflectionClass->getShortName());
+                $originalGetter = 'get'.Str::toPascalCase($originProperty);
                 $collectionGetter = 'get'.Str::toPascalCase($name);
 
                 if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {

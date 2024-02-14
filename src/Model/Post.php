@@ -90,6 +90,7 @@ class Post
         $this->tags = new EntityCollection(
             Tag::class,
             EntityCollection::TYPE_MANY_TO_MANY,
+            'post',
             'tag',
             PostTag::class
         );
@@ -97,6 +98,7 @@ class Post
         $this->comments = new EntityCollection(
             Comment::class,
             EntityCollection::TYPE_MANY_TO_ONE,
+            null,
             null,
             null,
             ['user']

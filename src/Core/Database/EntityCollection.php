@@ -2,7 +2,7 @@
 
 namespace App\Core\Database;
 
-class EntityCollection implements \Iterator
+class EntityCollection implements \Iterator, \Countable
 {
 
     const TYPE_MANY_TO_ONE = 0;
@@ -13,6 +13,7 @@ class EntityCollection implements \Iterator
     public function __construct(
         private string  $relatedEntity,
         private int     $relationType,
+        private ?string $originEntityProperty = null,
         private ?string $targetEntityProperty = null,
         private ?string $relationModel = null,
         private array   $targetRelations = []
@@ -41,7 +42,13 @@ class EntityCollection implements \Iterator
         return $this->relationType;
     }
 
-    public function getTargetEntityProperty(): string
+    public function getOriginEntityProperty(): ?string
+    {
+        return $this->originEntityProperty;
+    }
+
+
+    public function getTargetEntityProperty(): ?string
     {
         return $this->targetEntityProperty;
     }
@@ -60,7 +67,7 @@ class EntityCollection implements \Iterator
     {
         return $this->targetRelations;
     }
-    
+
     /* ITERATION METHODS */
 
     public function rewind(): void
@@ -86,5 +93,10 @@ class EntityCollection implements \Iterator
     public function valid(): bool
     {
         return key($this->collection) !== null;
+    }
+
+    public function count(): int
+    {
+        return count($this->collection);
     }
 }

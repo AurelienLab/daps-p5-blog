@@ -12,6 +12,7 @@ use App\Model\Tag;
 class PostRepository extends AbstractRepository
 {
 
+    const DEFAULT_RELATIONS = ['user', 'category'];
     const MODEL = Post::class;
 
     public static function getAll($relations = []): false|array
@@ -29,7 +30,7 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
-    public static function getPublished($relations = [], $limit = null): false|array
+    public static function getPublished($relations = [], $limit = null, $filters = []): false|array
     {
         $query = new Query(static::MODEL);
         $now = new \DateTime();
@@ -39,11 +40,27 @@ class PostRepository extends AbstractRepository
             ->where('status', '=', Post::STATE_PUBLISHED)
             ->orderBy('published_at', 'DESC');
 
+
         if (!is_null($limit)) {
             $query->limit($limit);
         }
 
         static::addRelationsToQuery($relations, $query);
+
+        if (!empty($filters)) {
+            if (isset($filters['tag'])) {
+                $query->leftJoin(PostTag::class, [
+                        PostTag::TABLE.'.post_id',
+                        static::MODEL::TABLE.'.id'
+                    ]
+                )
+                    ->where(PostTag::TABLE.'.tag_id', '=', $filters['tag']);
+            }
+
+            if (isset($filters['category'])) {
+                $query->where('category_id', '=', $filters['category']);
+            }
+        }
 
         return Database::query($query);
     }

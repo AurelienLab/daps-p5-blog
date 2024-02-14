@@ -15,21 +15,23 @@
                     <div class="form__row">
                         <div class="form__field">
                             <label for="category">Catégorie</label>
-                            <select name="category" , id="category">
-                                <option>Toutes</option>
-                                <option value="jeux-video">Jeux Vidéo</option>
-                                <option value="programmation">Programmation</option>
-                                <option value="musique">Musique</option>
+                            <select name="category" id="category">
+                                <option value="all">Toutes</option>
+                                {% for category in categoryList %}
+                                    <option value="{{ category.slug }}"
+                                            {% if app.request.query.get('category') == category.slug %}selected{% endif %}>{{ category.name|capitalize }}</option>
+                                {% endfor %}
                             </select>
                         </div>
 
                         <div class="form__field">
-                            <label for="category">Catégorie</label>
-                            <select name="category" , id="category">
-                                <option>Toutes</option>
-                                <option value="jeux-video">Jeux Vidéo</option>
-                                <option value="programmation">Programmation</option>
-                                <option value="musique">Musique</option>
+                            <label for="tag">Thèmatique</label>
+                            <select name="tag" id="tag">
+                                <option value="all">Toutes</option>
+                                {% for tag in tagList %}
+                                    <option value="{{ tag.slug }}"
+                                            {% if app.request.query.get('tag') == tag.slug %}selected{% endif %}>{{ tag.name|capitalize }}</option>
+                                {% endfor %}
                             </select>
                         </div>
 

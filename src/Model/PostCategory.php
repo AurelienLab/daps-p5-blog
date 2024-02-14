@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Core\Database\EntityCollection;
+
 class PostCategory
 {
 
@@ -12,6 +14,17 @@ class PostCategory
     private string $name;
 
     private string $slug;
+
+    private EntityCollection $posts;
+
+    public function __construct()
+    {
+        $this->posts = new EntityCollection(
+            Post::class,
+            EntityCollection::TYPE_MANY_TO_ONE,
+            'category',
+        );
+    }
 
     public function getId(): int
     {
@@ -34,7 +47,7 @@ class PostCategory
         $this->name = $name;
         return $this;
     }
-    
+
     public function getSlug(): string
     {
         return $this->slug;
@@ -46,5 +59,8 @@ class PostCategory
         return $this;
     }
 
-
+    public function getPosts(): EntityCollection
+    {
+        return $this->posts;
+    }
 }
