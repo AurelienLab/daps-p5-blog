@@ -27,4 +27,9 @@ class FormData
     {
         $this->data[$field] = $value;
     }
+
+    public function toArray(): array
+    {
+        return $this->data;
+    }
 }

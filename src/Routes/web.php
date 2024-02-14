@@ -15,6 +15,7 @@ use App\Middleware\AutoLoginMiddleware;
 Route::middleware([AutoLoginMiddleware::class])->group([
     // HOMEPAGE
     Route::get('/', [HomeController::class, 'index'])->name('homepage.index'),
+    Route::post('/', [HomeController::class, 'contact'])->name('homepage.contact'),
 
     // POSTS
     Route::get('/articles', [PostController::class, 'index'])->name('articles.index'),
