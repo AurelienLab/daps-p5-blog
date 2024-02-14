@@ -32,8 +32,7 @@ abstract class AbstractRepository
         }
 
         $query = new Query(static::MODEL);
-        $query->select()
-            ->orderBy('published_at', 'DESC');
+        $query->select();
 
         self::addRelationsToQuery($relations, $query);
 
@@ -55,7 +54,7 @@ abstract class AbstractRepository
         if (empty($relations)) {
             $relations = static::DEFAULT_RELATIONS;
         }
-        
+
         $primaryKey = Database::getPrimaryKey(static::MODEL);
 
         $query = new Query(static::MODEL);

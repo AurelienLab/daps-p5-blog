@@ -14,6 +14,21 @@ class PostRepository extends AbstractRepository
 
     const MODEL = Post::class;
 
+    public static function getAll($relations = []): false|array
+    {
+        if (empty($relations)) {
+            $relations = static::DEFAULT_RELATIONS;
+        }
+
+        $query = new Query(static::MODEL);
+        $query->select()
+            ->orderBy('published_at', 'DESC');
+
+        self::addRelationsToQuery($relations, $query);
+
+        return Database::query($query);
+    }
+
     public static function getPublished($relations = [], $limit = null): false|array
     {
         $query = new Query(static::MODEL);
