@@ -43,18 +43,18 @@ abstract class AbstractController
         $userId = $request->getSession()->get('userId');
         if ($userId) {
             $user = UserRepository::get($userId);
-            if ($user) {
+            if ($user && $user->canConnect()) {
                 $this->user = $user;
             }
         }
 
         // Initialize twig
-        $loader = new FilesystemLoader(ROOT.'/templates');
+
 
         $this->formErrors = new FormErrorBag();
         $this->flashesBag = new FlashesBag($request);
 
-        $this->twig = new TwigEnvironment($loader, [
+        $this->twig = new TwigEnvironment([
             'formErrors' => $this->formErrors,
             'user' => $this->getUser(),
             'flashes' => $this->flashesBag

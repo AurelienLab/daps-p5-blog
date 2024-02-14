@@ -42,6 +42,13 @@ class LoginController extends AbstractController
             }
         }
 
+        if (!$this->hasFormErrors() && $user != null && $user->canConnect() == false) {
+            $this->addFormError(
+                'form',
+                'Vous ne pouvez pas accéder à votre compte pour le moment. Avez-vous validé votre adresse email ?'
+            );
+        }
+
         if (!$this->hasFormErrors() && $user !== null) {
             $request->getSession()->set('userId', $user->getId());
             if ($data->get('remember_me') == 'on') {

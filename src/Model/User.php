@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Core\Utils\Encryption;
 use App\Model\Trait\SoftDeleteTrait;
 use App\Model\Trait\TimestampableTrait;
 
@@ -22,6 +23,8 @@ class User
     private bool $isAdmin = false;
 
     private ?string $profilePicture = null;
+
+    private ?\DateTimeImmutable $emailValidatedAt = null;
 
     public function getId(): ?int
     {
@@ -100,9 +103,19 @@ class User
         return $this;
     }
 
+    public function getEmailValidatedAt(): ?\DateTimeImmutable
+    {
+        return $this->emailValidatedAt;
+    }
+
+    public function setEmailValidatedAt(?\DateTimeImmutable $emailValidatedAt): User
+    {
+        $this->emailValidatedAt = $emailValidatedAt;
+        return $this;
+    }
+
     public function generateRememberMeToken()
     {
-        $key = config('app.key');
 
         $data = [
             'userId' => $this->getId(),
@@ -110,14 +123,19 @@ class User
             'generated_at' => time()
         ];
 
-        $method = 'AES-256-CBC';
-        $iv = random_bytes(16);
-        $token = openssl_encrypt(serialize($data), $method, $key, 0, $iv);
+        $token = Encryption::encrypt($data);
 
-        $token = base64_encode($iv.'//'.$token);
-        
         $this->setRememberMeToken($token);
 
         return $token;
+    }
+
+    public function canConnect(): bool
+    {
+        if ($this->getEmailValidatedAt() === null) {
+            return false;
+        }
+
+        return true;
     }
 }

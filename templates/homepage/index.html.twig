@@ -96,7 +96,7 @@
 
 
         <!-- CONTACT -->
-        <section class="contact">
+        <section class="contact" id="contact">
             <div class="contact__background">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="1 4 23 16" stroke-width="0.7"
                      stroke="currentColor" class="w-6 h-6">
@@ -106,30 +106,47 @@
             </div>
             <div class="contact__container">
                 <h2 class="contact__heading">Me contacter</h2>
-                <form class="form" method="get" action="#">
+                <form class="form" method="post" action="#">
                     <div class="form__row">
                         <div class="form__field">
                             <label for="firstname">Prénom</label>
-                            <input type="text" id="firstname" name="firstname" placeholder=" "/>
+                            <input type="text" id="firstname" name="firstname" placeholder=" "
+                                   value="{{ contact.firstname|default }}"/>
+                            {% if(error('firstname')) %}
+                                <div class="form__error">{{ error('firstname') }}</div>
+                            {% endif %}
                         </div>
                         <div class="form__field">
                             <label for="lastname">Nom</label>
-                            <input type="text" id="lastname" name="lastname" placeholder=" "/>
+                            <input type="text" id="lastname" name="lastname" placeholder=" "
+                                   value="{{ contact.lastname|default }}"/>
+                            {% if(error('lastname')) %}
+                                <div class="form__error">{{ error('lastname') }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form__row">
                         <div class="form__field">
                             <label for="email">Adresse e-mail</label>
-                            <input type="text" id="email" name="email" placeholder=" "/>
+                            <input type="email" id="email" name="email" placeholder=" "
+                                   value="{{ contact.email|default }}"/>
+                            {% if(error('email')) %}
+                                <div class="form__error">{{ error('email') }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form__row">
                         <div class="form__field">
                             <label for="message">Votre message</label>
-                            <textarea id="message" name="message" placeholder=" " rows="6"></textarea>
+                            <textarea id="message" name="message" placeholder=" "
+                                      rows="6">{{ contact.message|default }}</textarea>
+                            {% if(error('message')) %}
+                                <div class="form__error">{{ error('message') }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form__row contact__submit">
+                        {{ csrf('contact_form') }}
                         <button type="submit" class="btn btn--bg-light btn--outline--primary">Envoyer</button>
                     </div>
                 </form>
@@ -137,4 +154,12 @@
         </section>
     </main>
 
+{% endblock %}
+
+{% block js %}
+    {% if contact is defined %}
+        <script>
+            location.hash = "#contact";
+        </script>
+    {% endif %}
 {% endblock %}

@@ -1202,6 +1202,9 @@ button {
   border: none;
   box-shadow: 4px 8px 8px -4px rgba(0, 0, 0, 0.15);
 }
+.contact .form__error {
+  color: #ffb8b8;
+}
 
 .subscription {
   z-index: 20;

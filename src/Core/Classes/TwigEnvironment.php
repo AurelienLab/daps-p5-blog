@@ -6,7 +6,9 @@ use App\Core\Router\Router;
 use MarcW\Heroicons\Twig\HeroiconsExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
+use Twig\Extra\CssInliner\CssInlinerExtension;
 use Twig\Extra\Intl\IntlExtension;
+use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -14,8 +16,10 @@ use Twig\TwigFunction;
 class TwigEnvironment extends Environment
 {
 
-    public function __construct(LoaderInterface $loader, $options = [])
+    public function __construct($options = [])
     {
+        $loader = new FilesystemLoader([ROOT.'/templates', ROOT.'/public']);
+
         parent::__construct($loader, $options);
 
         $app = [
@@ -35,6 +39,7 @@ class TwigEnvironment extends Environment
 
         $this->addExtension(new IntlExtension());
         $this->addExtension(new HeroiconsExtension());
+        $this->addExtension(new CssInlinerExtension());
 
         // Get a config value
         $this->addFunction(new TwigFunction('config', 'config'));

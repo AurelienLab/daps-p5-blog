@@ -1,0 +1,39 @@
+{% apply inline_css(source("style/email.css")) %}
+
+    <!doctype html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    </head>
+    <body>
+    <table class="wrapper">
+        <tr>
+            <td>
+                <table class="email">
+                    <tr class="email__header">
+                        <td>
+                            <h1 class="email__logo">Aurélien Lorence</h1>
+                        </td>
+                    </tr>
+                    <tr class="email__body">
+                        <td>
+                            {% block content %}
+                            {% endblock %}
+                        </td>
+                    </tr>
+                    <tr class="email__footer">
+                        <td>
+                            <p>Ceci est un mail automatique, merci de ne pas y repondre.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    </body>
+    </html>
+{% endapply %}

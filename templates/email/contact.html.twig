@@ -1,0 +1,25 @@
+{% extends 'email/email-base.html.twig' %}
+
+{% block content %}
+    <p>Un message a été envoyé à partir du formulaire de contact</p>
+    <table>
+        <tr>
+            <td class="bold">Prénom:</td>
+            <td>{{ data.firstname }}</td>
+        </tr>
+        <tr>
+            <td class="bold">Nom:</td>
+            <td>{{ data.lastname }}</td>
+        </tr>
+        <tr>
+            <td class="bold">Email:</td>
+            <td><a href="mailto:{{ data.email }}">{{ data.email }}</a></td>
+        </tr>
+        <tr>
+            <td class="bold" colspan="2">Message:</td>
+        </tr>
+        <tr>
+            <td colspan="2">{{ data.message|nl2br }}</td>
+        </tr>
+    </table>
+{% endblock %}
