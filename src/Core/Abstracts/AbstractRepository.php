@@ -15,7 +15,7 @@ abstract class AbstractRepository
 {
 
     const MODEL = '';
-
+    const DEFAULT_RELATIONS = [];
 
     /**
      * Get all records for entity managed by current repository
@@ -27,6 +27,10 @@ abstract class AbstractRepository
      */
     public static function getAll($relations = []): false|array
     {
+        if (empty($relations)) {
+            $relations = static::DEFAULT_RELATIONS;
+        }
+
         $query = new Query(static::MODEL);
         $query->select()
             ->orderBy('published_at', 'DESC');
@@ -48,6 +52,10 @@ abstract class AbstractRepository
      */
     public static function get(mixed $identifier, $relations = []): mixed
     {
+        if (empty($relations)) {
+            $relations = static::DEFAULT_RELATIONS;
+        }
+        
         $primaryKey = Database::getPrimaryKey(static::MODEL);
 
         $query = new Query(static::MODEL);
@@ -82,6 +90,10 @@ abstract class AbstractRepository
      */
     public static function getOrError(mixed $identifier, $relations = []): mixed
     {
+        if (empty($relations)) {
+            $relations = static::DEFAULT_RELATIONS;
+        }
+
         $result = self::get($identifier, $relations);
 
         if (!$result) {

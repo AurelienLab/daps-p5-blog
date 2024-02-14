@@ -1,0 +1,36 @@
+{% extends 'base-login.html.twig' %}
+
+{% block content %}
+    <main>
+        <!-- SUBSCRIPTION FORM -->
+        <section class="subscription">
+            <div class="subscription__container">
+                <h2 class="subscription__heading">Mot de passe oublié</h2>
+                <form class="form" method="POST" action="#">
+                    <p>Merci de remplir les champs ci-dessous pour créer votre nouveau mot de passe.</p>
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="password1">Mot de passe</label>
+                            <input type="password" id="password1" name="password1" placeholder=" " required>
+                            {% if(error('password1')) %}
+                                <div class="form__error">{{ error('password1') }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form__field">
+                            <label for="password2">Retapez le mot de passe</label>
+                            <input type="password" id="password2" name="password2" placeholder=" " required>
+                            {% if(error('password2')) %}
+                                <div class="form__error">{{ error('password2') }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form__row subscription__submit">
+                        {{ csrf('reset_password_form') }}
+                        <input type="hidden" name="reset-token" value="{{ token }}"/>
+                        <button type="submit" class="btn btn--primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock %}

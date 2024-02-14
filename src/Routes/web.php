@@ -4,6 +4,7 @@ use App\Controller\CommentController;
 use App\Controller\HomeController;
 use App\Controller\LoginController;
 use App\Controller\PostController;
+use App\Controller\ResetPasswordController;
 use App\Controller\SubscriptionController;
 use App\Controller\UserController;
 use App\Core\Router\Facades\Route;
@@ -35,6 +36,12 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     Route::get('/connexion', [LoginController::class, 'login'])->name('user.login'),
     Route::post('/connexion', [LoginController::class, 'loginPost'])->name('user.login.post'),
     Route::get('/deconnexion', [LoginController::class, 'logout'])->name('user.logout')->middleware(AuthMiddleware::class),
+
+    // PASSWORD REQUEST
+    Route::get('/mot-de-passe', [ResetPasswordController::class, 'index'])->name('password-request.form'),
+    Route::post('/mot-de-passe', [ResetPasswordController::class, 'post'])->name('password-request.post'),
+    Route::get('/recuperer-mot-de-passe', [ResetPasswordController::class, 'resetPassword'])->name('password-request.reset'),
+    Route::post('/recuperer-mot-de-passe', [ResetPasswordController::class, 'resetPasswordPost'])->name('password-request.reset.post'),
 
     Route::get('/mon-profil', [UserController::class, 'editProfile'])->name('user.profile.edit')->middleware(AuthMiddleware::class),
     Route::post('/mon-profil', [UserController::class, 'updateProfile'])->name('user.profile.post')->middleware(AuthMiddleware::class),

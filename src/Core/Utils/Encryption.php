@@ -9,7 +9,7 @@ class Encryption
     {
         $key = config('app.key');
         $method = 'AES-256-CBC';
-        $iv = random_bytes(16);
+        $iv = Str::rand(16);
         $token = openssl_encrypt(serialize($data), $method, $key, 0, $iv);
         $token = base64_encode($iv.'//'.$token);
 
