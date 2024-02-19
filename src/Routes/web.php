@@ -1,5 +1,6 @@
 <?php
 
+use App\Controller\CareerController;
 use App\Controller\CommentController;
 use App\Controller\HomeController;
 use App\Controller\LoginController;
@@ -25,6 +26,9 @@ Route::middleware([AutoLoginMiddleware::class])->group([
     Route::post('/articles/post-comment/{postId}', [CommentController::class, 'postComment'])->middleware(AuthMiddleware::class)->name('comment.post'),
     Route::post('/articles/edit-comment/{commentId}', [CommentController::class, 'editComment'])->middleware(AdminAuthMiddleware::class)->name('comment.edit'),
     Route::post('/articles/remove-comment/{commentId}', [CommentController::class, 'removeComment'])->middleware(AdminAuthMiddleware::class)->name('comment.remove'),
+
+    // CAREER
+    Route::get('/mon-parcours', [CareerController::class, 'index'])->name('career.index'),
 
     // SUBSCRIPTION
     Route::get('/inscription', [SubscriptionController::class, 'subscribe'])->name('user.subscribe'),
