@@ -735,6 +735,12 @@ button {
 .footer__container a svg {
   width: 100%;
 }
+.footer__link {
+  text-align: center;
+}
+.footer__link a {
+  color: #fff;
+}
 
 .comment {
   display: flex;

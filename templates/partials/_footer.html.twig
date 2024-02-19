@@ -35,4 +35,9 @@
             </a>
         </li>
     </ul>
+    {% if app.user and app.user.isAdmin %}
+        <p class="footer__link">
+            <a href="{{ route('admin.dashboard') }}">Administration</a>
+        </p>
+    {% endif %}
 </footer>
