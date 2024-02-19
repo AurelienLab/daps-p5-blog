@@ -80,19 +80,6 @@ class PostController extends AbstractController
         ]);
     }
 
-    public function tag(string $slug)
-    {
-        $tag = TagRepository::getOneBySlug($slug);
-        if ($tag == null) {
-            throw new NotFoundException();
-        }
-
-        $posts = PostRepository::getPublishedByTag($tag);
-        return $this->render('post/index.html.twig', [
-            'posts' => $posts
-        ]);
-    }
-
     private function sortByEntityName($a, $b)
     {
         return strcmp(trim(strtolower($a->getName())), trim(strtolower($b->getName())));

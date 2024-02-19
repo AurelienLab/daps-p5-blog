@@ -19,7 +19,6 @@ Route::middleware([AutoLoginMiddleware::class])->group([
 
     // POSTS
     Route::get('/articles', [PostController::class, 'index'])->name('articles.index'),
-    Route::get('/articles/tag/{slug}', [PostController::class, 'tag'])->name('articles.tag'),
     Route::get('/articles/{slug}', [PostController::class, 'show'])->name('articles.show'),
 
     // COMMENTS
