@@ -44,6 +44,9 @@ class TwigEnvironment extends Environment
         // Get a config value
         $this->addFunction(new TwigFunction('config', 'config'));
 
+        // Get a config value
+        $this->addFunction(new TwigFunction('ini_get', 'ini_get'));
+
         // Enable dump function in twig
         $this->addFunction(new TwigFunction('dump', 'twigDump'));
 
