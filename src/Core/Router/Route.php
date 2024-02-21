@@ -28,7 +28,7 @@ class Route
     private array $function;
 
     /**
-     * @var array|null
+     * @var array
      */
     private array $middleware = [];
 
@@ -64,7 +64,7 @@ class Route
      * @param string $path Route path
      * @param array $function Controller class & method
      *
-     * @return void
+     * @return Route
      * @throws Exception
      */
     public function get(string $path, array $function): self
@@ -154,7 +154,7 @@ class Route
     /**
      * Get Route name
      *
-     * @return string
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -186,7 +186,7 @@ class Route
     /**
      * Get middleware(s) of the route
      *
-     * @return string|array|null
+     * @return array|null
      */
     public function getMiddleware(): array|null
     {
@@ -194,9 +194,7 @@ class Route
         if (!empty($this->parent)) {
             $middlewares = $this->parent->getMiddleware();
         }
-        $middlewares = array_merge($middlewares, $this->middleware);
-
-        return $middlewares;
+        return array_merge($middlewares, $this->middleware);
     }
 
     /**

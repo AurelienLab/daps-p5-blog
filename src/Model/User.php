@@ -18,18 +18,22 @@ class User
      * @var int|null
      */
     private ?int $id = null;
+
     /**
      * @var string
      */
     private string $name;
+
     /**
      * @var string|null
      */
     private ?string $email = null;
+
     /**
      * @var string
      */
     private string $password;
+
     /**
      * @var string|null
      */
@@ -50,6 +54,7 @@ class User
      */
     private ?\DateTimeImmutable $emailValidatedAt = null;
 
+    
     /**
      * @return int|null
      */

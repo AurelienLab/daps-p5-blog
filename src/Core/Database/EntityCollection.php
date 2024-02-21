@@ -13,6 +13,9 @@ class EntityCollection implements \Iterator, \Countable
     const TYPE_MANY_TO_ONE = 0;
     const TYPE_MANY_TO_MANY = 1;
 
+    /**
+     * @var array
+     */
     private array $collection = [];
 
     /**
@@ -63,32 +66,50 @@ class EntityCollection implements \Iterator, \Countable
         return $this->relatedEntity;
     }
 
+    /**
+     * @return int
+     */
     public function getRelationType(): int
     {
         return $this->relationType;
     }
 
+    /**
+     * @return string|null
+     */
     public function getOriginEntityProperty(): ?string
     {
         return $this->originEntityProperty;
     }
 
 
+    /**
+     * @return string|null
+     */
     public function getTargetEntityProperty(): ?string
     {
         return $this->targetEntityProperty;
     }
 
+    /**
+     * @return string|null
+     */
     public function getRelationModel(): ?string
     {
         return $this->relationModel;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->collection;
     }
 
+    /**
+     * @return array
+     */
     public function getTargetRelations(): array
     {
         return $this->targetRelations;
@@ -96,31 +117,49 @@ class EntityCollection implements \Iterator, \Countable
 
     /* ITERATION METHODS */
 
+    /**
+     * @return void
+     */
     public function rewind(): void
     {
         reset($this->collection);
     }
 
+    /**
+     * @return mixed
+     */
     public function current(): mixed
     {
         return current($this->collection);
     }
 
+    /**
+     * @return string|int|null
+     */
     public function key(): string|int|null
     {
         return key($this->collection);
     }
 
+    /**
+     * @return void
+     */
     public function next(): void
     {
         next($this->collection);
     }
 
+    /**
+     * @return bool
+     */
     public function valid(): bool
     {
         return key($this->collection) !== null;
     }
 
+    /**
+     * @return int
+     */
     public function count(): int
     {
         return count($this->collection);

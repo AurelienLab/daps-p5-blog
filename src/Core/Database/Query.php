@@ -48,6 +48,9 @@ class Query
      */
     private ?int $firstOrLast = null;
 
+    /**
+     * @var array
+     */
     private array $orderBy = [];
 
     /**
@@ -287,6 +290,9 @@ class Query
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getFirstOrLast(): ?int
     {
         return $this->firstOrLast;
@@ -484,6 +490,9 @@ class Query
     }
 
 
+    /**
+     * @return bool
+     */
     public function isInsert()
     {
         return str_starts_with($this->verb, 'INSERT INTO');

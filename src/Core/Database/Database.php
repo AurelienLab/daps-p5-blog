@@ -42,8 +42,14 @@ class Database
      */
     private int $dbPort;
 
+    /**
+     * @var array
+     */
     private array $tableData = [];
 
+    /**
+     * @var int
+     */
     private int $queryCount = 0;
 
     /**

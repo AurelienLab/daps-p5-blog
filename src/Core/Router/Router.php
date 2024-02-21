@@ -5,6 +5,9 @@ namespace App\Core\Router;
 use App\Core\Exception\DisplayableException;
 use App\Core\Utils\Str;
 use Exception;
+use PDOException;
+use ReflectionException;
+use ReflectionMethod;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -184,8 +187,10 @@ class Router
      *
      * @param Route $route
      * @param string $requestedUri
+     * @param Request $request
      *
      * @return void
+     * @throws ReflectionException
      * @throws Exception
      */
     private function runController(Route $route, string $requestedUri, Request $request): void
@@ -203,7 +208,7 @@ class Router
 
         $args = $route->retrieveParametersFromUri($requestedUri);
 
-        $reflectionMethod = new \ReflectionMethod($class, $method);
+        $reflectionMethod = new ReflectionMethod($class, $method);
 
         foreach ($reflectionMethod->getParameters() as $parameter) {
             if ($parameter->getType() == Request::class) {
@@ -224,7 +229,7 @@ class Router
             }
         } catch (DisplayableException $e) {
             throw $e;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new Exception(
                 sprintf(
                     'Error while trying to call %s::%s. %s in %s::%s',
@@ -319,7 +324,7 @@ class Router
     /**
      * @return string|null
      */
-    public function getCurrentRoute()
+    public function getCurrentRoute(): ?string
     {
         return $this->currentRoute;
     }
