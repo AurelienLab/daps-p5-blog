@@ -28,10 +28,10 @@ abstract class AbstractController
     /**
      * @var Environment
      */
-    private $twig;
+    protected $twig;
 
     private $formErrors;
-    private FlashesBag $flashesBag;
+    private ?FlashesBag $flashesBag = null;
 
     private array $cookies = [];
     private $user = null;
@@ -39,21 +39,21 @@ abstract class AbstractController
 
     public function __construct(Request $request)
     {
-        // Get User if logged in
-        $userId = $request->getSession()->get('userId');
-        if ($userId) {
-            $user = UserRepository::get($userId);
-            if ($user && $user->canConnect()) {
-                $this->user = $user;
+        if ($request->hasSession()) {
+            // Get User if logged in
+            $userId = $request->getSession()->get('userId');
+            if ($userId) {
+                $user = UserRepository::get($userId);
+                if ($user && $user->canConnect()) {
+                    $this->user = $user;
+                }
             }
+            $this->flashesBag = new FlashesBag($request);
         }
 
-        // Initialize twig
-
-
         $this->formErrors = new FormErrorBag();
-        $this->flashesBag = new FlashesBag($request);
 
+        // Initialize twig
         $this->twig = new TwigEnvironment([
             'formErrors' => $this->formErrors,
             'user' => $this->getUser(),

@@ -31,7 +31,9 @@ try {
     App\Core\Router\Router::getInstance($routerPath)->handle();
 } catch (Exception $e) {
     if (config('app.env') !== 'dev') {
-        (new \App\Controller\ErrorController())->error($e->getCode(), $e->getMessage());
+        $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+        $errorController = new \App\Controller\ErrorController($request);
+        $errorController->error($e->getCode(), $e->getMessage())->send();
     } else {
         throw $e;
     }

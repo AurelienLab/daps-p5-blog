@@ -56,3 +56,12 @@ function editorJsToHtml(string $data): Markup
 {
     return new Markup((new DecodeEditorJS($data))->toHTML(), 'UTF-8');
 }
+
+function twigStartsWith(?string $haystack, string $needle)
+{
+    if (!empty($haystack)) {
+        return str_starts_with($haystack, $needle);
+    }
+
+    return false;
+}

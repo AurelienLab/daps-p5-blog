@@ -64,7 +64,7 @@ class TwigEnvironment extends Environment
         // EditorJs clean data to html
         $this->addFunction(new TwigFunction('editorjs_to_html', 'editorJsToHtml'));
 
-        $this->addFunction(new TwigFunction('starts_with', 'str_starts_with'));
+        $this->addFunction(new TwigFunction('starts_with', 'twigStartsWith'));
 
         // Get datetime value as (XX min ago)
         $this->addFilter(new TwigFilter('diff', 'dateTimeAgo'));
