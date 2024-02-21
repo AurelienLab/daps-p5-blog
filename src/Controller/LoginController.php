@@ -20,6 +20,8 @@ class LoginController extends AbstractController
             return $this->redirect('homepage.index');
         }
 
+        $this->setTitle('Connexion');
+
         return $this->render('user/login.html.twig', [
             'referer' => $referer
         ]);
@@ -69,6 +71,8 @@ class LoginController extends AbstractController
             'email' => $data->get('email'),
             'password' => $data->get('password')
         ];
+
+        $this->setTitle('Connexion');
 
         return $this->render('user/login.html.twig', [
             'credentials' => $credentials

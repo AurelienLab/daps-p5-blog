@@ -17,6 +17,7 @@ class UserController extends AbstractController
 
     public function editProfile()
     {
+        $this->setTitle('Mon compte');
         $user = $this->getUser();
         return $this->render('user/edit-profile.html.twig', [
             'user' => $user
@@ -25,6 +26,7 @@ class UserController extends AbstractController
 
     public function updateProfile(Request $request)
     {
+        $this->setTitle('Mon compte');
         $user = $this->getUser();
 
         if (!is_null($request->request->get('save-profile'))) {

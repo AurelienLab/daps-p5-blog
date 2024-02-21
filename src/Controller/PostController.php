@@ -53,6 +53,8 @@ class PostController extends AbstractController
         }
         usort($tagList, [$this, 'sortByEntityName']);
 
+        $this->setTitle('Les articles');
+
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
             'categoryList' => $categoryList,
@@ -73,7 +75,7 @@ class PostController extends AbstractController
         } else {
             $relatedPosts = PostRepository::getRelatedPosts($post);
         }
-
+        $this->setTitle($post->getTitle());
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'relatedPosts' => $relatedPosts

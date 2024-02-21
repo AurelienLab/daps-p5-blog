@@ -24,11 +24,14 @@ class ResetPasswordController extends AbstractController
             return $this->redirect('user.profile.edit');
         }
 
+        $this->setTitle('Mot de passe oublié');
         return $this->render('reset-password/request-form.html.twig');
     }
 
     public function post(Request $request)
     {
+        $this->setTitle('Mot de passe oublié');
+
         $data = $this->validateForm($request, 'reset_password_form', [
             'email' => [NotEmptyValidator::class, EmailValidator::class]
         ]);
@@ -79,6 +82,8 @@ class ResetPasswordController extends AbstractController
     {
         $token = $request->query->get('token');
 
+        $this->setTitle('Mot de passe oublié');
+
         if (empty($token)) {
             return $this->render('reset-password/error.html.twig', [
                 'error' => 'Le lien est invalide, merci de vérifier qu\'il
@@ -117,6 +122,7 @@ class ResetPasswordController extends AbstractController
 
     public function resetPasswordPost(Request $request)
     {
+        $this->setTitle('Mot de passe oublié');
         // Check for form errors
         $formData = $this->validateForm($request, 'reset_password_form', [
             'password1' => [NotEmptyValidator::class, PasswordStrengthValidator::class]
@@ -156,6 +162,7 @@ class ResetPasswordController extends AbstractController
         $user->setPassword($passwordHash);
         UserRepository::save($user);
         PasswordRequestRepository::remove($passwordRequest);
+
 
         return $this->render('reset-password/update-confirm.html.twig');
     }

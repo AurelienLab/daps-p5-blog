@@ -19,7 +19,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $lastPost = PostRepository::getLastPublished(['category']);
-
+        $this->setTitle('Accueil');
         return $this->render(
             'homepage/index.html.twig',
             [

@@ -20,11 +20,13 @@ class SubscriptionController extends AbstractController
 
     public function subscribe(Request $request)
     {
+        $this->setTitle('Inscription');
         return $this->render('user/subscribe.html.twig');
     }
 
     public function register(Request $request)
     {
+        $this->setTitle('Inscription');
         $user = new User();
 
         $result = $this->save($user, $request);
@@ -58,6 +60,7 @@ class SubscriptionController extends AbstractController
 
     public function success(Request $request)
     {
+        $this->setTitle('Inscription');
         return $this->render('user/subscribe_confirm.html.twig');
     }
 
@@ -98,6 +101,7 @@ class SubscriptionController extends AbstractController
 
     public function verifyEmail(Request $request)
     {
+        $this->setTitle('Vérification de l\'adresse');
         $token = $request->query->get('token');
         $email = $request->query->get('email');
 

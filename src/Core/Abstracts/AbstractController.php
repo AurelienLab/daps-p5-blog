@@ -36,6 +36,8 @@ abstract class AbstractController
     private array $cookies = [];
     private $user = null;
 
+    private $pageTitle = null;
+
 
     public function __construct(Request $request)
     {
@@ -77,6 +79,9 @@ abstract class AbstractController
     {
         $response = new Response();
         $this->flashesBag->saveToSession();
+        if ($this->pageTitle !== null) {
+            $data['_title'] = $this->pageTitle;
+        }
         $response->setContent($this->twig->render($template, $data));
         $this->setCookiesInResponse($response);
         return $response;
@@ -204,5 +209,10 @@ abstract class AbstractController
         foreach ($this->cookies as $cookie) {
             $response->headers->setCookie($cookie);
         }
+    }
+
+    protected function setTitle(string $title)
+    {
+        $this->pageTitle = $title;
     }
 }
