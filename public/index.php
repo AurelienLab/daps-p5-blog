@@ -13,7 +13,7 @@ $dotenv->safeLoad();
 
 // Initialize Error Handler
 Spatie\Ignition\Ignition::make()
-    ->shouldDisplayException(env('APP_ENV') === 'dev')
+    // ->shouldDisplayException(env('APP_ENV') === 'dev')
     ->applicationPath(realpath(ROOT))
     ->register();
 
@@ -33,7 +33,11 @@ try {
     if (config('app.env') !== 'dev') {
         $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
         $errorController = new \App\Controller\ErrorController($request);
-        $errorController->error($e->getCode(), $e->getMessage())->send();
+        $errorController->error(
+            $e->getCode(),
+            $e->getMessage(),
+            $e instanceof \App\Core\Exception\DisplayableException
+        )->send();
     } else {
         throw $e;
     }

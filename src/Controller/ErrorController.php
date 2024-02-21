@@ -9,14 +9,18 @@ class ErrorController extends AbstractController
 {
 
 
-    public function error($code = 500, $message = '')
+    public function error($code = 500, $message = '', $displayMessage = false)
     {
+        if ($code == 0) {
+            $code = 500;
+        }
 
         $response = new Response();
         $response->setStatusCode($code);
         $response->setContent($this->twig->render('_error/default.html.twig', [
             'code' => $code,
-            'message' => $message
+            'message' => $message,
+            'displayMessage' => $displayMessage
         ]));
         return $response;
     }

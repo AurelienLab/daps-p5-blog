@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\Abstracts\AbstractController;
 use App\Core\Components\Mailer\Mailer;
+use App\Core\Exception\DisplayableException;
 use App\Core\Utils\Encryption;
 use App\Model\User;
 use App\Repository\UserRepository;
@@ -101,7 +102,7 @@ class SubscriptionController extends AbstractController
         $email = $request->query->get('email');
 
         if (empty($token) || empty($email)) {
-            throw new \Exception('Element de validation manquant dans la requête.');
+            throw new DisplayableException('Element de validation manquant dans la requête.');
         }
 
         $data = Encryption::decrypt($token);
@@ -127,7 +128,7 @@ class SubscriptionController extends AbstractController
         }
 
         if ($hasError === true) {
-            throw new \Exception('Impossible de valider l\'adresse email');
+            throw new DisplayableException('Impossible de valider l\'adresse email');
         }
 
         $user->setEmailValidatedAt(new \DateTimeImmutable());
