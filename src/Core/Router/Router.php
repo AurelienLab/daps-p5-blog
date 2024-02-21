@@ -243,7 +243,7 @@ class Router
                     $e->getFile(),
                     $e->getLine(),
                 ),
-                $e->getCode(),
+                $e->getCode() ?: 500,
             );
         }
 
