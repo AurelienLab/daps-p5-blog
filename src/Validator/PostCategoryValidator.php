@@ -35,7 +35,7 @@ class PostCategoryValidator extends AbstractValidator
 
         $category = null;
 
-        $category = PostCategoryRepository::get(intval($data));
+        $category = PostCategoryRepository::get((int) $data);
         if ($category !== null) {
             $this->transformData($category);
             return true;

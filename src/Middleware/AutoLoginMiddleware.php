@@ -25,7 +25,7 @@ class AutoLoginMiddleware extends AbstractMiddleware
 
         $rememberMeCookie = $request->cookies->get('_app_remember_me');
 
-        if (!is_null($rememberMeCookie)) {
+        if ($rememberMeCookie !== null) {
             $userData = Encryption::decrypt($rememberMeCookie);
 
             /* @var User $user */

@@ -2,6 +2,7 @@
 
 namespace App\Core\Database;
 
+use App\Core\Utils\Model;
 use App\Core\Utils\Str;
 use App\Model\Comment;
 use App\Model\Trait\TimestampableTrait;
@@ -281,15 +282,14 @@ class Database
         $reflectionClass = new ReflectionClass(get_class($entity));
 
         //Set timestamps if applicable
-        foreach ($reflectionClass->getTraits() as $trait => $reflexionTrait) {
-            if ($trait == TimestampableTrait::class) {
-                if (is_null($entity->getCreatedAt())) {
-                    $entity->setCreatedAt(new \DateTime());
-                }
-
-                $entity->setUpdatedAt(new \DateTime());
+        if (Model::isTimestampable($entity)) {
+            if (is_null($entity->getCreatedAt())) {
+                $entity->setCreatedAt(new \DateTime());
             }
+
+            $entity->setUpdatedAt(new \DateTime());
         }
+
 
         $entityArray = array();
         foreach ($reflectionClass->getProperties() as $property) {

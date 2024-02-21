@@ -55,7 +55,7 @@ class PostRepository extends AbstractRepository
             ->orderBy('published_at', 'DESC');
 
 
-        if (!is_null($limit)) {
+        if ($limit !== null) {
             $query->limit($limit);
         }
 
