@@ -178,8 +178,11 @@ class UserController extends AbstractController
 
         $user
             ->setName(trim($data->get('name')))
-            ->setEmail(trim($data->get('email')))
-            ->setIsAdmin(!empty($data->get('is_admin')));
+            ->setEmail(trim($data->get('email')));
+
+        if ($user->getId() != $this->getUser()->getId()) {
+            $user->setIsAdmin(!empty($data->get('is_admin')));
+        }
 
         if ($this->hasFormErrors()) {
             return false;
