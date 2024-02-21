@@ -316,6 +316,9 @@ class Router
         return $result;
     }
 
+    /**
+     * @return string|null
+     */
     public function getCurrentRoute()
     {
         return $this->currentRoute;

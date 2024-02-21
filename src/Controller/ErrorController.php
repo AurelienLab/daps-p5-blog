@@ -8,7 +8,18 @@ use Symfony\Component\HttpFoundation\Response;
 class ErrorController extends AbstractController
 {
 
-
+    /**
+     * Specific controller for error display on prod env (called from public/index.php)
+     *
+     * @param $code
+     * @param $message
+     * @param $displayMessage
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function error($code = 500, $message = '', $displayMessage = false)
     {
         if ($code == 0) {

@@ -12,6 +12,11 @@ class UserRepository extends AbstractRepository
 
     const MODEL = User::class;
 
+    /**
+     * @param $email
+     *
+     * @return Query
+     */
     private static function getByEmailQuery($email): Query
     {
         $query = new Query(static::MODEL);
@@ -23,6 +28,12 @@ class UserRepository extends AbstractRepository
         return $query;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function getByEmail(string $email)
     {
         $query = self::getByEmailQuery($email);
@@ -30,6 +41,12 @@ class UserRepository extends AbstractRepository
         return Database::query($query);
     }
 
+    /**
+     * @param $email
+     *
+     * @return bool
+     * @throws \Exception
+     */
     public static function isEmailExist($email): bool
     {
         $query = self::getByEmailQuery($email);

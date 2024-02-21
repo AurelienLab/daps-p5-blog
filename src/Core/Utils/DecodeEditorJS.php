@@ -29,6 +29,14 @@ class DecodeEditorJS
         }
     }
 
+    /**
+     * Convert js from editorJS to html string using components concatenation
+     *
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function toHTML()
     {
         $html = '';

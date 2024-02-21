@@ -15,6 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends AbstractController
 {
 
+    /**
+     * Display profile forms (profile & password)
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function editProfile()
     {
         $this->setTitle('Mon compte');
@@ -24,6 +32,16 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * Handle forms post (profile & password)
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function updateProfile(Request $request)
     {
         $this->setTitle('Mon compte');
@@ -46,6 +64,15 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * Handle save from profile form
+     *
+     * @param User $user
+     * @param Request $request
+     *
+     * @return false|mixed|object|null
+     * @throws \Exception
+     */
     private function saveProfile(User $user, Request $request)
     {
         $data = $this->validateForm($request, 'user_profile_form', [
@@ -82,6 +109,16 @@ class UserController extends AbstractController
         return UserRepository::save($user);
     }
 
+
+    /**
+     * Handle save from password form
+     *
+     * @param User $user
+     * @param Request $request
+     *
+     * @return false|mixed|object|null
+     * @throws \Exception
+     */
     private function savePassword(User $user, Request $request)
     {
         $data = $this->validateForm($request, 'user_password_form', [

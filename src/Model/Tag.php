@@ -24,8 +24,14 @@ class Tag implements \JsonSerializable
      */
     private string $name;
 
+    /**
+     * @var EntityCollection
+     */
     private EntityCollection $posts;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->posts = new EntityCollection(
@@ -94,11 +100,17 @@ class Tag implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return EntityCollection
+     */
     public function getPosts(): EntityCollection
     {
         return $this->posts;
     }
 
+    /**
+     * @return mixed
+     */
     public function jsonSerialize(): mixed
     {
         return [

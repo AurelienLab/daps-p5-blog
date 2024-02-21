@@ -2,6 +2,10 @@
 
 namespace App\Core\Router\Facades;
 
+/**
+ * Transforms any static call to object instance
+ * and perform call
+ */
 class Route
 {
 

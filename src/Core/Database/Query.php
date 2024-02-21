@@ -114,6 +114,13 @@ class Query
         return $this;
     }
 
+    /**
+     * Add GROUP BY to statement
+     *
+     * @param string $column
+     *
+     * @return $this
+     */
     public function groupBy(string $column): self
     {
         $this->groupBy = $column;
@@ -285,6 +292,15 @@ class Query
         return $this->firstOrLast;
     }
 
+    /**
+     * Add ORDER BY to statement
+     *
+     * @param string $field
+     * @param string $order
+     *
+     * @return $this
+     * @throws Exception
+     */
     public function orderBy(string $field, string $order = 'ASC')
     {
         if (in_array(strtolower($order), ['asc', 'desc']) == false) {
@@ -298,6 +314,13 @@ class Query
         return $this;
     }
 
+    /**
+     * Add LIMIT to statement
+     *
+     * @param int $limit
+     *
+     * @return $this
+     */
     public function limit(int $limit): self
     {
         $this->limit = $limit;
@@ -316,6 +339,8 @@ class Query
 
 
     /**
+     * Construct statement from object property
+     *
      * @return string
      */
     public function getStatement(): string
@@ -397,7 +422,6 @@ class Query
                 continue;
             }
             $result[] = $where['column'].' '.$where['comparator'].' '.$where['parameterName'];
-
         }
 
         if ($this->withTrashed === false) {
@@ -459,11 +483,6 @@ class Query
         return array_merge($this->leftJoin);
     }
 
-    public function setTable(string $table): Query
-    {
-        $this->table = $table;
-        return $this;
-    }
 
     public function isInsert()
     {

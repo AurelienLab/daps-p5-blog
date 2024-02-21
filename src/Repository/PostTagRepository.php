@@ -14,6 +14,13 @@ class PostTagRepository extends AbstractRepository
 
     const MODEL = PostTag::class;
 
+    /**
+     * @param Post $post
+     * @param Tag $tag
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function getByPostAndTag(Post $post, Tag $tag)
     {
         $query = new Query(static::MODEL);

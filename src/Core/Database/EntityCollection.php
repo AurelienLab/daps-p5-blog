@@ -2,6 +2,11 @@
 
 namespace App\Core\Database;
 
+/**
+ * This class allow Many To One and Many to Many relationships in Model object
+ * and can be automatically retrieved by Database class
+ * Example: a Post has a Collection of Tags
+ */
 class EntityCollection implements \Iterator, \Countable
 {
 
@@ -10,6 +15,14 @@ class EntityCollection implements \Iterator, \Countable
 
     private array $collection = [];
 
+    /**
+     * @param string $relatedEntity
+     * @param int $relationType
+     * @param string|null $originEntityProperty
+     * @param string|null $targetEntityProperty
+     * @param string|null $relationModel
+     * @param array $targetRelations
+     */
     public function __construct(
         private string  $relatedEntity,
         private int     $relationType,
@@ -21,6 +34,14 @@ class EntityCollection implements \Iterator, \Countable
     {
     }
 
+    /**
+     * Add and object to the collection
+     *
+     * @param $entity
+     *
+     * @return $this
+     * @throws \Exception
+     */
     public function add($entity): self
     {
         if (($entity instanceof $this->relatedEntity) === false) {
@@ -32,6 +53,11 @@ class EntityCollection implements \Iterator, \Countable
         return $this;
     }
 
+    /**
+     * Returns
+     *
+     * @return string
+     */
     public function getRelatedEntity(): string
     {
         return $this->relatedEntity;

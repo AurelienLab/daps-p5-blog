@@ -44,6 +44,13 @@ class Str
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
     }
 
+    /**
+     * Remove slash of string if it's at the last pos
+     *
+     * @param string $string
+     *
+     * @return string
+     */
     public static function removeTrailingSlash(string $string): string
     {
         $newString = $string;
@@ -54,7 +61,14 @@ class Str
         return $newString;
     }
 
-
+    /**
+     * Generate a random string
+     *
+     * @param int $length
+     *
+     * @return string
+     * @throws \Random\RandomException
+     */
     public static function rand(int $length = 64)
     {
         $length = ($length < 4) ? 4 : $length;

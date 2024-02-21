@@ -5,14 +5,27 @@ namespace App\Validator;
 use App\Core\Abstracts\AbstractValidator;
 use App\Repository\PostCategoryRepository;
 
+/**
+ * Check if the value is a valid category id
+ * transforms data into PostCategory object
+ */
 class PostCategoryValidator extends AbstractValidator
 {
 
+    /**
+     * @return string
+     */
     protected function getErrorMessage(): string
     {
         return "Vous devez sélectionner une catégorie";
     }
 
+    /**
+     * @param $data
+     *
+     * @return bool
+     * @throws \Exception
+     */
     protected function processData($data): bool
     {
         if (!is_numeric($data) || empty($data)) {

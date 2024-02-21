@@ -18,6 +18,14 @@ use Symfony\Component\HttpFoundation\Request;
 class ResetPasswordController extends AbstractController
 {
 
+    /**
+     * Password reset request form
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index()
     {
         if ($this->getUser()) {
@@ -28,6 +36,16 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset-password/request-form.html.twig');
     }
 
+    /**
+     * Handle password request form post
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function post(Request $request)
     {
         $this->setTitle('Mot de passe oublié');
@@ -78,6 +96,17 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset-password/request-confirm.html.twig');
     }
 
+    /**
+     * Accessed via link in request password email
+     * Check token and display password change form
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function resetPassword(Request $request)
     {
         $token = $request->query->get('token');
@@ -120,6 +149,16 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
+    /**
+     * Handle change password form post
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function resetPasswordPost(Request $request)
     {
         $this->setTitle('Mot de passe oublié');

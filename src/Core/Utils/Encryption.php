@@ -2,9 +2,18 @@
 
 namespace App\Core\Utils;
 
+/**
+ * Shorthands to encrypt / decrypt data to / from token
+ */
 class Encryption
 {
 
+    /**
+     * @param mixed $data
+     *
+     * @return string
+     * @throws \Exception
+     */
     public static function encrypt(mixed $data): string
     {
         $key = config('app.key');
@@ -16,6 +25,12 @@ class Encryption
         return $token;
     }
 
+    /**
+     * @param string $token
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function decrypt(string $token): mixed
     {
         $data = explode('//', base64_decode($token));

@@ -12,6 +12,16 @@ use Symfony\Component\HttpFoundation\Request;
 class PostController extends AbstractController
 {
 
+    /**
+     * List posts and filters
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index(Request $request)
     {
 
@@ -62,6 +72,17 @@ class PostController extends AbstractController
         ]);
     }
 
+    /**
+     * Display post from slug
+     *
+     * @param string $slug
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws NotFoundException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function show(string $slug)
     {
         $post = PostRepository::getOnePublishedBySlug($slug);
@@ -82,6 +103,14 @@ class PostController extends AbstractController
         ]);
     }
 
+    /**
+     * Used to sort tag or entity by name
+     *
+     * @param $a
+     * @param $b
+     *
+     * @return int
+     */
     private function sortByEntityName($a, $b)
     {
         return strcmp(trim(strtolower($a->getName())), trim(strtolower($b->getName())));

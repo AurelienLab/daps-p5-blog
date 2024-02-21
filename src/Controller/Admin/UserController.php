@@ -165,7 +165,6 @@ class UserController extends AbstractController
         $profilePicture = $request->files->get('profile_picture');
 
 
-        $profilePicturePath = $user->getProfilePicture() ?? '';
         $uploadImage = false;
         if ($profilePicture != null) {
             if (!str_starts_with($profilePicture->getMimeType(), 'image/')) {

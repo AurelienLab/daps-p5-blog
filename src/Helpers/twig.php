@@ -57,6 +57,14 @@ function editorJsToHtml(string $data): Markup
     return new Markup((new DecodeEditorJS($data))->toHTML(), 'UTF-8');
 }
 
+/**
+ * Simplify str_starts_with usage in twig by allowing null value
+ *
+ * @param string|null $haystack
+ * @param string $needle
+ *
+ * @return bool
+ */
 function twigStartsWith(?string $haystack, string $needle)
 {
     if (!empty($haystack)) {

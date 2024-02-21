@@ -15,6 +15,12 @@ class PasswordRequestRepository extends AbstractRepository
 
     const DEFAULT_RELATIONS = ['user'];
 
+    /**
+     * @param string $token
+     *
+     * @return PasswordRequest|null
+     * @throws \Exception
+     */
     public static function findByToken(string $token): ?PasswordRequest
     {
         $relations = static::DEFAULT_RELATIONS;
@@ -30,6 +36,12 @@ class PasswordRequestRepository extends AbstractRepository
         return Database::query($query);
     }
 
+    /**
+     * @param User $user
+     *
+     * @return PasswordRequest|null
+     * @throws \Exception
+     */
     public static function findByUser(User $user): ?PasswordRequest
     {
         $relations = static::DEFAULT_RELATIONS;

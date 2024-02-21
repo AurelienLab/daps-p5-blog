@@ -5,6 +5,10 @@ namespace App\Core\Components\Flash;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Collection of messages displayed and consumed in views
+ * Based on sessions
+ */
 class FlashesBag implements \Iterator
 {
 
@@ -25,11 +29,23 @@ class FlashesBag implements \Iterator
         }
     }
 
+    /**
+     * Add a flash message to the collection
+     *
+     * @param FlashMessage $flashMessage
+     *
+     * @return void
+     */
     public function addFlash(FlashMessage $flashMessage)
     {
         $this->flashes[] = $flashMessage;
     }
 
+    /**
+     * Update session with current flashMessages
+     *
+     * @return void
+     */
     public function saveToSession()
     {
         $data = [];

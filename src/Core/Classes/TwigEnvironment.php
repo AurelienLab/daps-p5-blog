@@ -13,6 +13,9 @@ use Twig\Loader\LoaderInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
+/**
+ * Defines globals, extensions and function to get them in twig views
+ */
 class TwigEnvironment extends Environment
 {
 

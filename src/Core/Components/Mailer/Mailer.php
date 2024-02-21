@@ -34,6 +34,19 @@ class Mailer
         $this->mailer = new SymfonyMailer($transport, null, $eventDispatcher);
     }
 
+    /**
+     *
+     * Shorthand to send a templated mail with project base template
+     *
+     * @param string $to
+     * @param string $subject
+     * @param string $template
+     * @param array $templateArgs
+     * @param string|null $from
+     *
+     * @return void
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     */
     public function sendMail(
         string $to,
         string $subject,

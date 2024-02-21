@@ -263,6 +263,8 @@ class Database
 
 
     /**
+     * Convert entity object to object compatible with database table
+     *
      * @param stdClass $entity Entity to convert
      * @param string $model Original model
      *
@@ -387,6 +389,14 @@ class Database
         return null;
     }
 
+    /**
+     * Automatically generate query to get Many to Many or Many to One relationships
+     *
+     * @param mixed $result
+     *
+     * @return void
+     * @throws \ReflectionException
+     */
     private static function queryRelations(mixed $result)
     {
         if (empty($result)) {
@@ -465,7 +475,7 @@ class Database
                     );
                 }
 
-
+                // Define query selectors
                 $query
                     ->select()
                     ->where($originEntityFieldName, 'IN', array_keys($ids));
@@ -474,11 +484,17 @@ class Database
                 foreach ($relation->getTargetRelations() as $targetRelation) {
                     if ($reflection->hasProperty($targetRelation)) {
                         $class = $reflection->getProperty($targetRelation)->getType()->getName();
-                        $query->leftJoin($class, [$relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id', $class::TABLE.'.id']);
+                        $query->leftJoin(
+                            $class,
+                            [
+                                $relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id',
+                                $class::TABLE.'.id'
+                            ]
+                        );
                     }
                 }
 
-
+                // Execute query
                 $results = self::query($query, false, PDO::FETCH_ASSOC, false);
 
                 $originalGetter = 'get'.Str::toPascalCase($originProperty);
@@ -488,6 +504,7 @@ class Database
                     $targetGetter = 'get'.Str::toPascalCase($relation->getTargetEntityProperty());
                 }
 
+                // Add results to collection
                 foreach ($results as $result) {
                     $originalObject = $ids[$result->$originalGetter()->$primaryKeyGetter()];
                     if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {

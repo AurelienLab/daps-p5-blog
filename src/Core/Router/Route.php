@@ -125,6 +125,11 @@ class Route
         return $this;
     }
 
+    /**
+     * @param string $prefix
+     *
+     * @return $this
+     */
     public function prefix(string $prefix): self
     {
         $this->prefix = $prefix;
@@ -132,6 +137,9 @@ class Route
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getPrefix(): string
     {
         $prefix = '';

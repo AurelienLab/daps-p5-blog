@@ -15,7 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeController extends AbstractController
 {
 
-
+    /**
+     * Homepage
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index(): Response
     {
         $lastPost = PostRepository::getLastPublished(['category']);
@@ -28,6 +35,16 @@ class HomeController extends AbstractController
         );
     }
 
+    /**
+     * Contact form post handle
+     *
+     * @param Request $request
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function contact(Request $request)
     {
         $data = $this->validateForm($request, 'contact_form', [

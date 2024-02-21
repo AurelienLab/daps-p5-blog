@@ -4,6 +4,10 @@ namespace App\Core\Form;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class to manipulate form data in a more flexible way
+ * than HttpFoundation\Request object
+ */
 class FormData
 {
 
