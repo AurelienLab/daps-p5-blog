@@ -243,8 +243,23 @@ class PostController extends AbstractController
         $post = PostRepository::save($post);
 
         // Generate Tags
+        $this->generateTags($data->get('tags'), $post);
 
-        $tags = json_decode($data->get('tags'), true);
+        return true;
+    }
+
+    /**
+     * Generate tag associations to post
+     *
+     * @param string $formData
+     * @param Post $post
+     *
+     * @return void
+     * @throws NotFoundException
+     */
+    private function generateTags(string $formData, Post $post)
+    {
+        $tags = json_decode($formData, true);
 
         $existingTags = [];
         foreach ($post->getTags() as $tag) {
@@ -278,7 +293,5 @@ class PostController extends AbstractController
             $relation = PostTagRepository::getByPostAndTag($post, $tag);
             PostTagRepository::remove($relation);
         }
-
-        return true;
     }
 }
