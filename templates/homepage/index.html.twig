@@ -14,63 +14,65 @@
                         <h2 class="heading heading--light">Dernier billet de blog</h2>
                         <a href="{{ route('articles.index') }}">Voir tous les billets</a>
                     </div>
-                    <article class="last-post__article">
-                        <div class="last-post__article__illustration">
-                            <img src="{{ lastPost.featuredImage }}"
-                                 alt="Titre de l'article"/>
-                            <div class="card-overlay">
-                                <a href="{{ route('articles.show', { slug:lastPost.slug }) }}" class="extended">
-                                    Lire l'article
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke-width="1.5"
-                                         stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/>
-                                    </svg>
+                    {% if lastPost %}
+                        <article class="last-post__article">
+                            <div class="last-post__article__illustration">
+                                <img src="{{ lastPost.featuredImage }}"
+                                     alt="Titre de l'article"/>
+                                <div class="card-overlay">
+                                    <a href="{{ route('articles.show', { slug:lastPost.slug }) }}" class="extended">
+                                        Lire l'article
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5"
+                                             stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/>
+                                        </svg>
 
 
-                                </a>
-                                <div class="card-overlay__heading">
+                                    </a>
+                                    <div class="card-overlay__heading">
                             <span>
                                 {{ lastPost.category.name }}
                             </span>
-                                    <h3>{{ lastPost.title }}</h3>
+                                        <h3>{{ lastPost.title }}</h3>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
-                        <div class="last-post__article__content">
-                            <ul class="tag-list">
-                                {% for tag in lastPost.tags %}
-                                    {% include 'post/_tag.html.twig' with { tag } %}
-                                {% endfor %}
-                            </ul>
-                            <p>
-                                {{ lastPost.chapo|nl2br }}
-                            </p>
-                            <ul class="card__extra-data">
-                                <li>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke-width="1.5"
-                                         stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
-                                    </svg>
-                                    <span>Le {{ lastPost.publishedAt|format_datetime('long', 'short', locale='fr') }}</span>
-                                </li>
-                                <li>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke-width="1.5"
-                                         stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
-                                    </svg>
+                            <div class="last-post__article__content">
+                                <ul class="tag-list">
+                                    {% for tag in lastPost.tags %}
+                                        {% include 'post/_tag.html.twig' with { tag } %}
+                                    {% endfor %}
+                                </ul>
+                                <p>
+                                    {{ lastPost.chapo|nl2br }}
+                                </p>
+                                <ul class="card__extra-data">
+                                    <li>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5"
+                                             stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                                        </svg>
+                                        <span>Le {{ lastPost.publishedAt|format_datetime('long', 'short', locale='fr') }}</span>
+                                    </li>
+                                    <li>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5"
+                                             stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                                        </svg>
 
-                                    <span>{{ lastPost.readTime }} min</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
+                                        <span>{{ lastPost.readTime }} min</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </article>
+                    {% endif %}
                 </section>
             </div>
         </div>
