@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost&family=Lalezar&family=Ubuntu+Mono&display=swap");
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: "Jost", sans-serif;
+  margin: 0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.wrapper {
+  width: 100%;
+  background: #f1f1f1;
+  height: 100%;
+}
+.wrapper > tr {
+  vertical-align: center;
+}
+
+.email {
+  background: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  max-width: 600px;
+  padding: 1.5rem 2rem;
+}
+.email__header {
+  font-family: "Lalezar", "Arial Black", sans-serif;
+  font-size: 0.8rem;
+}
+.email__footer {
+  color: #8f8f8f;
+  font-size: 0.9rem;
+}
+
+a {
+  color: #0569FF;
+}
+
+.button {
+  display: block;
+  color: #FFF;
+  background: #0569FF;
+  padding: 8px 35px;
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  text-decoration: none;
+  min-width: 100px;
+  width: fit-content;
+  text-align: center;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+code {
+  padding: 1rem 1rem;
+  display: block;
+  background: #fcf8e3;
+  color: gray;
+  border: 1px solid #8f8f8f;
+  border-radius: 2px;
+  overflow-wrap: anywhere;
+}
+
+p {
+  line-height: 1.4;
+  font-family: "Jost", sans-serif;
+  margin-bottom: 1.5rem;
+}
+
+/*# sourceMappingURL=email.css.map */

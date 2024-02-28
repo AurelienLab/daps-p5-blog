@@ -31,6 +31,7 @@ class Tag implements \JsonSerializable
         $this->posts = new EntityCollection(
             Post::class,
             EntityCollection::TYPE_MANY_TO_MANY,
+            'tag',
             'post',
             PostTag::class
         );
@@ -97,7 +98,7 @@ class Tag implements \JsonSerializable
     {
         return $this->posts;
     }
-    
+
     public function jsonSerialize(): mixed
     {
         return [

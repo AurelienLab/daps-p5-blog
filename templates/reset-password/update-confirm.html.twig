@@ -1,0 +1,18 @@
+{% extends 'base-login.html.twig' %}
+
+{% block content %}
+    <main>
+        <!-- SUBSCRIPTION FORM -->
+        <section class="subscription">
+            <div class="subscription__container">
+                <h2 class="subscription__heading">Mot de passe oublié</h2>
+                <div class="subscription__content">
+                    <h3>Votre mot de passe est modifié ! 🔑</h3>
+                    <p>Vous pouvez maintenant vous connecter au blog !</p>
+                    <p>À très vite !</p>
+                    <a href="{{ route('user.login') }}" class="btn btn--outline--primary">Me connecter</a>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

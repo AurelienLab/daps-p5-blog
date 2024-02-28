@@ -28,10 +28,10 @@ abstract class AbstractController
     /**
      * @var Environment
      */
-    private $twig;
+    protected $twig;
 
     private $formErrors;
-    private FlashesBag $flashesBag;
+    private ?FlashesBag $flashesBag = null;
 
     private array $cookies = [];
     private $user = null;
@@ -39,22 +39,22 @@ abstract class AbstractController
 
     public function __construct(Request $request)
     {
-        // Get User if logged in
-        $userId = $request->getSession()->get('userId');
-        if ($userId) {
-            $user = UserRepository::get($userId);
-            if ($user) {
-                $this->user = $user;
+        if ($request->hasSession()) {
+            // Get User if logged in
+            $userId = $request->getSession()->get('userId');
+            if ($userId) {
+                $user = UserRepository::get($userId);
+                if ($user && $user->canConnect()) {
+                    $this->user = $user;
+                }
             }
+            $this->flashesBag = new FlashesBag($request);
         }
 
-        // Initialize twig
-        $loader = new FilesystemLoader(ROOT.'/templates');
-
         $this->formErrors = new FormErrorBag();
-        $this->flashesBag = new FlashesBag($request);
 
-        $this->twig = new TwigEnvironment($loader, [
+        // Initialize twig
+        $this->twig = new TwigEnvironment([
             'formErrors' => $this->formErrors,
             'user' => $this->getUser(),
             'flashes' => $this->flashesBag
@@ -93,6 +93,19 @@ abstract class AbstractController
         $uri = Router::getInstance()->getUriByName($routeName, $args);
 
         $response = new RedirectResponse($uri);
+        $this->setCookiesInResponse($response);
+        return $response;
+    }
+
+    /**
+     * Redirect to given url
+     *
+     * @throws \Exception
+     */
+    protected function redirectUrl(string $url): RedirectResponse
+    {
+        $this->flashesBag->saveToSession();
+        $response = new RedirectResponse($url);
         $this->setCookiesInResponse($response);
         return $response;
     }

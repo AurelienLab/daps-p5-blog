@@ -26,6 +26,10 @@
     "nesbot/carbon": "^2.72",
     "symfony/security-csrf": "^6.4",
     "codex-team/editor.js": "dev-master",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "symfony/mailer": "^6.4",
+    "symfony/twig-bridge": "^6.4",
+    "twig/cssinliner-extra": "^3.8",
+    "symfony/mailgun-mailer": "^6.4"
   }
 }

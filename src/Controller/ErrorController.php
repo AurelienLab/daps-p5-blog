@@ -3,21 +3,25 @@
 namespace App\Controller;
 
 use App\Core\Abstracts\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 class ErrorController extends AbstractController
 {
 
 
-    public function error($code = 500, $message = '')
+    public function error($code = 500, $message = '', $displayMessage = false)
     {
-        http_response_code($code);
+        if ($code == 0) {
+            $code = 500;
+        }
 
-        $this->display(
-            '_error/default.html.twig',
-            [
-                'code' => $code,
-                'message' => $message
-            ]
-        );
+        $response = new Response();
+        $response->setStatusCode($code);
+        $response->setContent($this->twig->render('_error/default.html.twig', [
+            'code' => $code,
+            'message' => $message,
+            'displayMessage' => $displayMessage
+        ]));
+        return $response;
     }
 }

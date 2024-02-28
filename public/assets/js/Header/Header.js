@@ -5,6 +5,11 @@ export class Header {
 
     init = () => {
         const headerElement = this.headerElement
+
+        if (window.scrollY > 90) {
+            headerElement.classList.add('scrolled')
+        }
+
         document.querySelector('.js-toggle-menu').addEventListener('click', function (e) {
             e.preventDefault()
             headerElement.classList.toggle('open')

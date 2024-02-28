@@ -1,0 +1,10 @@
+.career {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__content {
+    @include default-container;
+    line-height: 1.4;
+  }
+}

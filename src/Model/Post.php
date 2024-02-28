@@ -83,13 +83,25 @@ class Post
 
     private EntityCollection $tags;
 
+    private EntityCollection $comments;
+
     public function __construct()
     {
         $this->tags = new EntityCollection(
             Tag::class,
             EntityCollection::TYPE_MANY_TO_MANY,
+            'post',
             'tag',
             PostTag::class
+        );
+
+        $this->comments = new EntityCollection(
+            Comment::class,
+            EntityCollection::TYPE_MANY_TO_ONE,
+            null,
+            null,
+            null,
+            ['user']
         );
     }
 
@@ -244,5 +256,16 @@ class Post
     public function getTagsJson(): string
     {
         return json_encode($this->getTags()->toArray());
+    }
+
+    public function getComments(): EntityCollection
+    {
+        return $this->comments;
+    }
+
+    public function setComments(EntityCollection $comments): Post
+    {
+        $this->comments = $comments;
+        return $this;
     }
 }

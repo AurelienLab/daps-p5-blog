@@ -19,8 +19,7 @@ class DecodeEditorJS
     public function __construct($json_content)
     {
         // Initialize twig
-        $loader = new FilesystemLoader(ROOT.'/templates');
-        $this->twig = new TwigEnvironment($loader);
+        $this->twig = new TwigEnvironment();
 
         try {
             $editor = new EditorJS($json_content, json_encode(config('editor')));

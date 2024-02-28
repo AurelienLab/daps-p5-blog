@@ -1,6 +1,7 @@
 html {
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
+  scroll-padding-top: calc($header-height + 1rem);
 }
 
 
@@ -12,6 +13,13 @@ body {
   background-color: #EFEFEF;
   font-family: $font-default;
   font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+main {
+  flex-grow: 1;
 }
 
 p {
@@ -48,4 +56,16 @@ a.extended {
     top: 0;
     left: 0;
   }
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+button {
+  background: transparent;
+  border: none;
+  color: #000;
+  cursor: pointer;
 }

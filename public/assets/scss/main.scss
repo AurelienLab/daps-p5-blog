@@ -17,6 +17,7 @@
 @import 'components/editor';
 @import 'components/dropzone';
 @import 'components/alert';
+@import 'components/modal';
 
 @import "layouts/base_login";
 @import 'layouts/last-post';
@@ -29,3 +30,5 @@
 @import 'layouts/user-area';
 
 @import "pages/post-show";
+@import "pages/career";
+@import "pages/error";

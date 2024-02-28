@@ -14,11 +14,15 @@ class LoginController extends AbstractController
 
     public function login(Request $request)
     {
+        $referer = $request->headers->get('referer');
+
         if ($this->getUser()) {
             return $this->redirect('homepage.index');
         }
 
-        return $this->render('user/login.html.twig');
+        return $this->render('user/login.html.twig', [
+            'referer' => $referer
+        ]);
     }
 
     public function loginPost(Request $request)
@@ -38,6 +42,13 @@ class LoginController extends AbstractController
             }
         }
 
+        if (!$this->hasFormErrors() && $user != null && $user->canConnect() == false) {
+            $this->addFormError(
+                'form',
+                'Vous ne pouvez pas accéder à votre compte pour le moment. Avez-vous validé votre adresse email ?'
+            );
+        }
+
         if (!$this->hasFormErrors() && $user !== null) {
             $request->getSession()->set('userId', $user->getId());
             if ($data->get('remember_me') == 'on') {
@@ -47,6 +58,10 @@ class LoginController extends AbstractController
                 $this->addCookie(new Cookie('_app_remember_me', $token, $cookieExpiration));
             }
 
+
+            if (!empty($data->get('referer'))) {
+                return $this->redirectUrl($data->get('referer'));
+            }
             return $this->redirect('homepage.index');
         }
 

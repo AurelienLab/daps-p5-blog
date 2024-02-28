@@ -2,8 +2,8 @@
 
 {% block content %}
 
-    <main>
-        <div class="hero hero--homepage">
+    <main class="error">
+        <div class="hero hero--default">
             <div class="hero__overlay"></div>
             <img class="hero__image" src="/assets/images/hero-pattern.svg">
             <div class="hero__container">
@@ -11,7 +11,22 @@
             </div>
         </div>
 
-        <h1>Oups, il semblerait qu'une erreur est survenue sur la page ({{ code }})</h1>
+        <div class="error__container">
+            <h1 class="error__code">{{ code }}</h1>
+            {% if displayMessage %}
+                <p class="error__message">{{ message }}</p>
+            {% else %}
+                {% if code == '404' %}
+                    <p class="error__message">Oups ! La page que vous recherchez ne semble pas exister...</p>
+                {% elseif code == '403' %}
+                    <p class="error__message">Il semblerait que vous n'ayez pas le droit de vous balader par ici !</p>
+                {% else %}
+                    <p class="error__message">Oups, il semblerait qu'une erreur est survenue sur la page.</p>
+                {% endif %}
+            {% endif %}
+            <a href="{{ route('homepage.index') }}" class="btn btn--primary">Retourner à l'accueil</a>
+
+        </div>
 
     </main>
 

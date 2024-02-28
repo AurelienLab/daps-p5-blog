@@ -14,6 +14,31 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    flex-grow: 1;
+  }
+
+  &__moderation {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.5rem;
+
+    a {
+      font-size: 0.9rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .edit {
+      color: #0030a9;
+    }
+
+    .remove {
+      color: #a40101;
+    }
   }
 
   &__author {

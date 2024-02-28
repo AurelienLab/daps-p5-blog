@@ -1,5 +1,9 @@
-<li {% if starts_with(app.router.currentRoute, 'homepage') %}class="active"{% endif %}><a href="/">Accueil</a></li>
+<li {% if starts_with(app.router.currentRoute, 'homepage') %}class="active"{% endif %}>
+    <a href="/">Accueil</a>
+</li>
 <li {% if starts_with(app.router.currentRoute, 'article') %}class="active"{% endif %}>
     <a href="{{ route('articles.index') }}">Articles</a>
 </li>
-<li><a href="#">Mon parcours</a></li>
+<li {% if starts_with(app.router.currentRoute, 'career') %}class="active"{% endif %}>
+    <a href="{{ route('career.index') }}">Mon parcours</a>
+</li>

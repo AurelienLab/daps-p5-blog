@@ -2,6 +2,7 @@
 
 namespace App\Core\Router;
 
+use App\Core\Exception\DisplayableException;
 use App\Core\Utils\Str;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -221,6 +222,8 @@ class Router
                     gettype($response)
                 ));
             }
+        } catch (DisplayableException $e) {
+            throw $e;
         } catch (\PDOException $e) {
             throw new Exception(
                 sprintf(
@@ -243,7 +246,7 @@ class Router
                     $e->getFile(),
                     $e->getLine(),
                 ),
-                $e->getCode(),
+                $e->getCode() ?: 500,
             );
         }
 

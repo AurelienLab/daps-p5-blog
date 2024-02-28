@@ -8,6 +8,11 @@
   transition: all 150ms ease-in-out;
   min-width: 190px;
 
+  &--sm {
+    padding: 5px 15px;
+    min-width: 100px;
+  }
+
   &--wide {
     display: block;
     width: 100%;
@@ -17,10 +22,24 @@
   &--primary {
     background: map-get($colors, primary);
     color: #FFFFFF;
+    outline: 2px solid map-get($colors, primary);
 
     &:hover, &:focus {
       background: #FFFFFF;
       color: map-get($colors, primary);
+
+    }
+  }
+
+  &--danger {
+    background: map-get($colors, danger);
+    color: #FFFFFF;
+    outline: 2px solid map-get($colors, danger);
+
+    &:hover, &:focus {
+      background: #FFFFFF;
+      color: map-get($colors, danger);
+
     }
   }
 
@@ -34,6 +53,16 @@
 
     &:hover, &:focus {
       background: map-get($colors, primary);
+      color: #FFFFFF;
+    }
+  }
+
+  &--outline--danger {
+    border: 2px solid map-get($colors, danger);
+    color: map-get($colors, danger);
+
+    &:hover, &:focus {
+      background: map-get($colors, danger);
       color: #FFFFFF;
     }
   }
