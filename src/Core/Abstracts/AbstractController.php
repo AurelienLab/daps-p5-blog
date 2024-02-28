@@ -31,9 +31,11 @@ abstract class AbstractController
     protected $twig;
 
     private $formErrors;
+
     private ?FlashesBag $flashesBag = null;
 
     private array $cookies = [];
+
     private $user = null;
 
     private $pageTitle = null;

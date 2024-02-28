@@ -202,7 +202,6 @@ class ResetPasswordController extends AbstractController
         UserRepository::save($user);
         PasswordRequestRepository::remove($passwordRequest);
 
-
         return $this->render('reset-password/update-confirm.html.twig');
     }
 

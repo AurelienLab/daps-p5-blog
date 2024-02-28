@@ -379,7 +379,6 @@ class Query
             $statement .= implode(' AND ', $wheres);
         }
 
-
         if (!empty($this->groupBy)) {
             $statement .= ' GROUP BY '.$this->groupBy;
         }
@@ -391,7 +390,6 @@ class Query
         if (!empty($this->limit)) {
             $statement .= ' LIMIT '.$this->limit;
         }
-
 
         $statement .= ';';
 

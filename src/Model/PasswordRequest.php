@@ -15,14 +15,17 @@ class PasswordRequest
      * @var integer
      */
     private int $id;
+
     /**
      * @var User
      */
     private User $user;
+
     /**
      * @var string
      */
     private string $token;
+
     /**
      * @var \DateTime
      */

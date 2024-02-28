@@ -15,6 +15,7 @@ class FlashesBag implements \Iterator
     const SESSION_DATA_NAME = '_app.flashes';
 
     private array $flashes = [];
+
     private Session $session;
 
     public function __construct(Request $request)

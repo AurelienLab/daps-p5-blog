@@ -164,7 +164,6 @@ class UserController extends AbstractController
         ]);
         $profilePicture = $request->files->get('profile_picture');
 
-
         $uploadImage = false;
         if ($profilePicture != null) {
             if (!str_starts_with($profilePicture->getMimeType(), 'image/')) {
@@ -173,7 +172,6 @@ class UserController extends AbstractController
                 $uploadImage = true;
             }
         }
-
 
         $user
             ->setName(trim($data->get('name')))

@@ -15,14 +15,17 @@ class Comment
      * @var integer
      */
     private int $id;
+
     /**
      * @var User
      */
     private User $user;
+
     /**
      * @var Post
      */
     private Post $post;
+
     /**
      * @var string
      */

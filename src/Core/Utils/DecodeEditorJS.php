@@ -14,6 +14,7 @@ class DecodeEditorJS
      * @var Environment
      */
     private $twig;
+
     private $blocks = [];
 
     public function __construct($json_content)

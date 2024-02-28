@@ -123,7 +123,6 @@ class Router
         foreach ($collection as $route) {
             /* @var Route $route */
 
-
             if ($route->matchUri($requestedUri) === true) {
                 // Initialize sessions
                 $sessionStorage = new NativeSessionStorage();

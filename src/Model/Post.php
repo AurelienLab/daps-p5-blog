@@ -61,6 +61,7 @@ class Post
      * @var \DateTime
      */
     private \DateTime $publishedAt;
+
     /**
      * @var \DateTime
      */

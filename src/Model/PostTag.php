@@ -11,10 +11,12 @@ class PostTag
      * @var integer
      */
     private int $id;
+
     /**
      * @var Post
      */
     private Post $post;
+
     /**
      * @var Tag
      */

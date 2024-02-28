@@ -134,7 +134,6 @@ class Database
             dd($e, $statement);
         }
 
-
         if ($query->isInsert() === true) {
             return $database->lastInsertId();
         }
@@ -142,7 +141,6 @@ class Database
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
-
 
         $result = [];
 
@@ -283,7 +281,6 @@ class Database
         // Get table fields.
         $tableFields = self::getTableData($model);
 
-
         // Transform entity to array.
         $reflectionClass = new ReflectionClass(get_class($entity));
 
@@ -295,7 +292,6 @@ class Database
 
             $entity->setUpdatedAt(new \DateTime());
         }
-
 
         $entityArray = array();
         foreach ($reflectionClass->getProperties() as $property) {
@@ -447,7 +443,6 @@ class Database
                     Str::toSnakeCase($reflectionClass->getShortName());
 
                 $originEntityFieldName = $originProperty.'_id';
-
 
                 // If many to many, we join on pivot table
                 if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {

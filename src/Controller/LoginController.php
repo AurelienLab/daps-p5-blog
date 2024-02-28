@@ -56,7 +56,6 @@ class LoginController extends AbstractController
             'password' => [NotEmptyValidator::class]
         ]);
 
-
         if (!$this->hasFormErrors()) {
             $user = UserRepository::getByEmail(strtolower($data->get('email')));
             if (!$user || !password_verify($data->get('password'), $user->getPassword())) {
@@ -79,7 +78,6 @@ class LoginController extends AbstractController
                 $cookieExpiration = time() + (config('app.remember_me_lifetime') * 3600);
                 $this->addCookie(new Cookie('_app_remember_me', $token, $cookieExpiration));
             }
-
 
             if (!empty($data->get('referer'))) {
                 return $this->redirectUrl($data->get('referer'));

@@ -103,7 +103,6 @@ class SubscriptionController extends AbstractController
     {
         $data = $request->request;
 
-
         $this->validateForm($request, 'subscription_form', [
             'name' => [NotEmptyValidator::class, NicknameLengthValidator::class],
             'email' => [NotEmptyValidator::class, EmailValidator::class, ExistingEmailValidator::class],
@@ -121,7 +120,6 @@ class SubscriptionController extends AbstractController
         if ($data->get('password1') != $data->get('password2')) {
             $this->addFormError('password2', 'Les mots de passe ne correspondent pas');
         }
-
 
         if ($this->hasFormErrors()) {
             return false;

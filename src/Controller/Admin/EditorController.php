@@ -52,7 +52,6 @@ class EditorController extends AbstractController
         $file = config('uploads.editor.image').'/'.Str::rand(16).'.'.$info['extension'];
         file_put_contents($file, $contents);
 
-
         return new JsonResponse([
             'success' => 1,
             'file' => [

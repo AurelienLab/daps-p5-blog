@@ -222,7 +222,6 @@ class PostController extends AbstractController
             ->setValidatedAt(new \DateTime())
             ->setValidatorUserId(1);
 
-
         if ($this->hasFormErrors()) {
             return false;
         }

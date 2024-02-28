@@ -151,7 +151,6 @@ abstract class AbstractRepository
             }
         }
 
-
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
         $query = new Query(static::MODEL);
 
