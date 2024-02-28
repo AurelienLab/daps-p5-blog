@@ -8,6 +8,7 @@ use Exception;
 use PDOException;
 use ReflectionException;
 use ReflectionMethod;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -19,7 +20,7 @@ class Router
     /**
      * @var array
      */
-    private array $routingFiles;
+    private array $routingFiles = [];
 
     /**
      * @var Route[]
@@ -42,8 +43,11 @@ class Router
      */
     public function __construct(private readonly string $routesFolder)
     {
-        $directory = scandir($routesFolder);
-        $this->routingFiles = array_diff($directory, ['..', '.']);
+        $finder = new Finder();
+        $finder->in($routesFolder)->name('*.php')->sortByName();
+        foreach ($finder as $file) {
+            $this->routingFiles[] = $file->getFilename();
+        }
     }
 
 

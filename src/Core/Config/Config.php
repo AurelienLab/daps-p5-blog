@@ -3,6 +3,7 @@
 namespace App\Core\Config;
 
 use Exception;
+use Symfony\Component\Finder\Finder;
 
 class Config
 {
@@ -10,7 +11,7 @@ class Config
     /**
      * @var array|false
      */
-    private array $configFiles;
+    private array $configFiles = [];
 
     /**
      * @var Config|null
@@ -30,8 +31,11 @@ class Config
      */
     public function __construct(private readonly string $configFolder)
     {
-        $directory = scandir($configFolder);
-        $this->configFiles = array_diff($directory, ['..', '.']);
+        $finder = new Finder();
+        $finder->in($configFolder)->name('*.php')->sortByName();
+        foreach ($finder as $file) {
+            $this->configFiles[] = $file->getFilename();
+        }
     }
 
 

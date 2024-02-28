@@ -2,6 +2,8 @@
 
 namespace App\Core\Utils;
 
+use Symfony\Component\Finder\Finder;
+
 class Utils
 {
 
@@ -15,15 +17,10 @@ class Utils
      */
     public static function loadHelpers(string $directory): void
     {
-
-        // Get file list and remove current & parent pointers.
-        $files = scandir($directory);
-        $files = array_diff($files, ['..', '.']);
-
-        // Load files.
-        foreach ($files as $file) {
-            $filePath = $directory.'/'.$file;
-            include_once $filePath;
+        $finder = new Finder();
+        $finder->in($directory)->name('*.php')->sortByName();
+        foreach ($finder as $file) {
+            include_once $file->getPathname();
         }
     }
 }
