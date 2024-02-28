@@ -27,4 +27,6 @@ class ChapoLengthValidator extends AbstractValidator
     {
         return strlen(trim($data)) >= 50;
     }
+
+
 }

@@ -332,4 +332,6 @@ class Router
     {
         return $this->currentRoute;
     }
+
+
 }

@@ -56,4 +56,6 @@ class PasswordRequestRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
+
 }

@@ -15,4 +15,6 @@ abstract class AbstractMiddleware
      * @return void
      */
     abstract public function handle(Request $request): void;
+
+
 }

@@ -33,4 +33,6 @@ class PasswordStrengthValidator extends AbstractValidator
 
         return preg_match($passwordPattern, $data);
     }
+
+
 }

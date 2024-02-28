@@ -47,6 +47,7 @@ function generateCsrfField(string $string): Markup
     return new Markup($rawString, 'UTF-8');
 }
 
+
 /**
  * @param string $data
  *
@@ -56,6 +57,7 @@ function editorJsToHtml(string $data): Markup
 {
     return new Markup((new DecodeEditorJS($data))->toHTML(), 'UTF-8');
 }
+
 
 /**
  * Simplify str_starts_with usage in twig by allowing null value

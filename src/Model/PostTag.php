@@ -76,4 +76,6 @@ class PostTag
         $this->tag = $tag;
         return $this;
     }
+
+
 }

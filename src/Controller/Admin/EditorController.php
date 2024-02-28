@@ -76,4 +76,6 @@ class EditorController extends AbstractController
             'file' => null
         ], 500);
     }
+
+
 }

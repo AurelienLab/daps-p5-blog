@@ -115,4 +115,6 @@ class PostController extends AbstractController
     {
         return strcmp(trim(strtolower($a->getName())), trim(strtolower($b->getName())));
     }
+
+
 }

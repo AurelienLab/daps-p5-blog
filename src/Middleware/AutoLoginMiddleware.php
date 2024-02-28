@@ -44,4 +44,6 @@ class AutoLoginMiddleware extends AbstractMiddleware
             }
         }
     }
+
+
 }

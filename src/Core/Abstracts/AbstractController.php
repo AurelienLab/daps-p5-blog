@@ -267,4 +267,6 @@ abstract class AbstractController
     {
         $this->pageTitle = $title;
     }
+
+
 }

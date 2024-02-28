@@ -10,5 +10,5 @@ class CommentRepository extends AbstractRepository
 
     const MODEL = Comment::class;
 
-    
+
 }

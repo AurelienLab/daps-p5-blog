@@ -56,4 +56,6 @@ class UserRepository extends AbstractRepository
 
         return $result != null;
     }
+
+
 }

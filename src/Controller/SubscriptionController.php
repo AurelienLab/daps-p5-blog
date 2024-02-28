@@ -189,4 +189,6 @@ class SubscriptionController extends AbstractController
 
         return $this->render('user/verify_confirm.html.twig');
     }
+
+
 }

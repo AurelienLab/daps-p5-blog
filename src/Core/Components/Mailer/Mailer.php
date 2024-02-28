@@ -66,4 +66,6 @@ class Mailer
 
         $this->mailer->send($email);
     }
+
+
 }

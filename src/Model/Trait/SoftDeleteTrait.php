@@ -10,7 +10,7 @@ trait SoftDeleteTrait
      */
     private ?\DateTime $deletedAt = null;
 
-    
+
     /**
      * @return \DateTime|null
      */
@@ -29,4 +29,6 @@ trait SoftDeleteTrait
         $this->deletedAt = $deletedAt;
         return $this;
     }
+
+
 }

@@ -32,4 +32,6 @@ class AdminAuthMiddleware extends AbstractMiddleware
 
         throw new ForbiddenException();
     }
+
+
 }

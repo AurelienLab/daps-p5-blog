@@ -164,4 +164,6 @@ class EntityCollection implements \Iterator, \Countable
     {
         return count($this->collection);
     }
+
+
 }

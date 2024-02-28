@@ -29,4 +29,6 @@ class ExistingEmailValidator extends AbstractValidator
     {
         return !UserRepository::isEmailExist($data);
     }
+
+
 }

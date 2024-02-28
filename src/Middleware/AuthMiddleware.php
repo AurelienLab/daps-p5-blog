@@ -32,4 +32,6 @@ class AuthMiddleware extends AbstractMiddleware
 
         throw new ForbiddenException();
     }
+
+
 }

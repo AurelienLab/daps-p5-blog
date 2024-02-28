@@ -47,4 +47,6 @@ class DecodeEditorJS
 
         return $html;
     }
+
+
 }

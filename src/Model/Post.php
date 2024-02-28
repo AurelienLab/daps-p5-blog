@@ -395,4 +395,6 @@ class Post
         $this->comments = $comments;
         return $this;
     }
+
+
 }

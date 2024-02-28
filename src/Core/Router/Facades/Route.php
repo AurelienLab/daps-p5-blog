@@ -14,4 +14,6 @@ class Route
         $route = new \App\Core\Router\Route();
         return call_user_func_array([$route, $name], $arguments);
     }
+
+
 }

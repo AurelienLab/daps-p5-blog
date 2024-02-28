@@ -205,4 +205,6 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('reset-password/update-confirm.html.twig');
     }
+
+
 }

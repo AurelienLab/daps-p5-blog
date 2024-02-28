@@ -15,4 +15,6 @@ class ForbiddenException extends \Exception
         }
         parent::__construct($message, 403);
     }
+
+
 }

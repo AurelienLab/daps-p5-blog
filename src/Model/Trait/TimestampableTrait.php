@@ -16,7 +16,7 @@ trait TimestampableTrait
      */
     private ?\DateTime $updatedAt = null;
 
-    
+
     /**
      * @return \DateTime|null
      */

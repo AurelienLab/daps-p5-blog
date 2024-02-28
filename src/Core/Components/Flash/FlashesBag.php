@@ -94,4 +94,6 @@ class FlashesBag implements \Iterator
     {
         return key($this->flashes) !== null;
     }
+
+
 }

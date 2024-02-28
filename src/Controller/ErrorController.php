@@ -35,4 +35,6 @@ class ErrorController extends AbstractController
         ]));
         return $response;
     }
+
+
 }

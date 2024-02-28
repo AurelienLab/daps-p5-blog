@@ -27,4 +27,6 @@ class NicknameLengthValidator extends AbstractValidator
     {
         return strlen(trim($data)) >= 3;
     }
+
+
 }

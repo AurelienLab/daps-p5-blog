@@ -497,4 +497,6 @@ class Query
     {
         return str_starts_with($this->verb, 'INSERT INTO');
     }
+
+
 }

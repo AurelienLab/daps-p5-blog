@@ -72,4 +72,6 @@ class TwigEnvironment extends Environment
         // Get datetime value as (XX min ago)
         $this->addFilter(new TwigFilter('diff', 'dateTimeAgo'));
     }
+
+
 }

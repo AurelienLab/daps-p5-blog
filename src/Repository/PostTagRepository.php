@@ -32,4 +32,6 @@ class PostTagRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
+
 }

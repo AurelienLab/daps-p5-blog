@@ -32,4 +32,6 @@ class PostContentBlocksValidator extends AbstractValidator
 
         return !empty($data['blocks']);
     }
+
+
 }

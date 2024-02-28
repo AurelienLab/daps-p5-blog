@@ -24,4 +24,5 @@ class FlashMessage
         return $this->message;
     }
 
+
 }

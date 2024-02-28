@@ -82,4 +82,6 @@ class CommentController extends AbstractController
 
         return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
     }
+
+
 }

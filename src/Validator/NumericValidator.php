@@ -27,4 +27,6 @@ class NumericValidator extends AbstractValidator
     {
         return is_numeric($data);
     }
+
+
 }

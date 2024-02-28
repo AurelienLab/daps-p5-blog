@@ -20,4 +20,6 @@ class CareerController extends AbstractController
         $this->setTitle('Mon parcours');
         return $this->render('career/index.html.twig');
     }
+
+
 }

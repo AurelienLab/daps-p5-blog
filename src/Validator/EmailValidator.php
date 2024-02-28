@@ -30,4 +30,6 @@ class EmailValidator extends AbstractValidator
         $this->transformData($cleanEmail);
         return filter_var(trim(strtolower($data)), FILTER_VALIDATE_EMAIL);
     }
+
+
 }

@@ -15,4 +15,6 @@ class NotFoundException extends \Exception
         }
         parent::__construct($message, 404);
     }
+
+
 }

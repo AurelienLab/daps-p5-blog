@@ -25,4 +25,6 @@ class PostCategoryRepository extends \App\Core\Abstracts\AbstractRepository
 
         return Database::query($query);
     }
+
+
 }

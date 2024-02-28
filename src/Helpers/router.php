@@ -16,6 +16,7 @@ function route(string $name, array $args = []): string
     return $router->getUriByName($name, $args);
 }
 
+
 /**
  * Get route url from route name and parameters
  *

@@ -335,4 +335,6 @@ class Route
         }
         return Str::removeTrailingSlash(str_replace('//', '/', $uri));
     }
+
+
 }
