@@ -261,6 +261,7 @@ class Router
         $response->send();
     }
 
+
     /**
      * Get the first route that matches given name
      *
@@ -281,6 +282,7 @@ class Router
 
         throw new Exception(sprintf('Unable to find route named "%s"', $name));
     }
+
 
     /**
      * Return matching route name as URI constructed with passed arguments
@@ -323,6 +325,7 @@ class Router
 
         return $result;
     }
+
 
     /**
      * @return string|null

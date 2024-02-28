@@ -41,6 +41,7 @@ class CommentController extends AbstractController
         return $this->redirect('articles.show', ['slug' => $post->getSlug()]);
     }
 
+
     /**
      * Handle admin comment edition
      *
@@ -65,6 +66,7 @@ class CommentController extends AbstractController
 
         return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
     }
+
 
     /**
      * Handle admin comment removal

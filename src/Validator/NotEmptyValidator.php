@@ -18,6 +18,7 @@ class NotEmptyValidator extends AbstractValidator
         return "Le champ ne doit pas être vide.";
     }
 
+
     /**
      * @param $data
      *

@@ -252,6 +252,7 @@ class Database
         return $entity;
     }
 
+
     /**
      * Get the amount of query executed by this class (for debug only)
      *
@@ -333,6 +334,7 @@ class Database
         return $result;
     }
 
+
     /**
      * Get information about the table associated to $model
      *
@@ -351,6 +353,7 @@ class Database
 
         return self::$_instance->tableData[$model];
     }
+
 
     /**
      * Get a list of field names
@@ -390,6 +393,7 @@ class Database
 
         return null;
     }
+
 
     /**
      * Automatically generate query to get Many to Many or Many to One relationships

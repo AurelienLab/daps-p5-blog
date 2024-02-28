@@ -19,6 +19,7 @@ class Mailer
 
     private SymfonyMailer $mailer;
 
+
     public function __construct()
     {
         // Twig init
@@ -33,6 +34,7 @@ class Mailer
         $transport = Transport::fromDsn(config('mail.dsn'), $eventDispatcher);
         $this->mailer = new SymfonyMailer($transport, null, $eventDispatcher);
     }
+
 
     /**
      *

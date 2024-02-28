@@ -18,6 +18,7 @@ class NicknameLengthValidator extends AbstractValidator
         return "Le nom d'utilisateur doit contenir au moins 3 caractères";
     }
 
+
     /**
      * @param $data
      *

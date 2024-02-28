@@ -35,6 +35,7 @@ class HomeController extends AbstractController
         );
     }
 
+
     /**
      * Contact form post handle
      *

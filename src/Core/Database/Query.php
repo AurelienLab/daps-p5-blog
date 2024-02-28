@@ -73,6 +73,7 @@ class Query
      */
     private ?bool $withTrashed = null;
 
+
     /**
      * @param string $model Model on which we'll do a query
      *
@@ -117,6 +118,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Add GROUP BY to statement
      *
@@ -158,6 +160,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Add a left join in the statement
      *
@@ -181,6 +184,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Generate an INSERT statement from object instance data
      *
@@ -199,6 +203,7 @@ class Query
 
         $this->verb .= $columns.$values;
     }
+
 
     /**
      * Generate an UPDATE statement from object instance data
@@ -234,6 +239,7 @@ class Query
         ];
     }
 
+
     /**
      * Generate a DELETE statement to delete one entity
      *
@@ -257,6 +263,7 @@ class Query
         ];
     }
 
+
     /**
      * Get all data included deleted
      *
@@ -267,6 +274,7 @@ class Query
         $this->withTrashed = true;
         return $this;
     }
+
 
     /**
      * Get Only first row of query result
@@ -279,6 +287,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Get Only last row of query result
      *
@@ -290,6 +299,7 @@ class Query
         return $this;
     }
 
+
     /**
      * @return int|null
      */
@@ -297,6 +307,7 @@ class Query
     {
         return $this->firstOrLast;
     }
+
 
     /**
      * Add ORDER BY to statement
@@ -320,6 +331,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Add LIMIT to statement
      *
@@ -332,6 +344,7 @@ class Query
         $this->limit = $limit;
         return $this;
     }
+
 
     /**
      * Describe table statement (get columns information)
@@ -396,6 +409,7 @@ class Query
         return $statement;
     }
 
+
     /**
      * Generate a where clause string from current query object
      *
@@ -444,6 +458,7 @@ class Query
         return $this->model;
     }
 
+
     /**
      * @return array
      */
@@ -451,6 +466,7 @@ class Query
     {
         return $this->select;
     }
+
 
     /**
      * Generate parameters array with ":parameter" notation as key
@@ -469,6 +485,7 @@ class Query
         $this->parameters = array_combine($paramsNames, $paramsValues);
     }
 
+
     /**
      * @return array
      */
@@ -476,6 +493,7 @@ class Query
     {
         return $this->parameters;
     }
+
 
     /**
      * Get a list of queried joins

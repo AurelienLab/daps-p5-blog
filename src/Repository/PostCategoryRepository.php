@@ -10,6 +10,7 @@ class PostCategoryRepository extends \App\Core\Abstracts\AbstractRepository
 
     const MODEL = \App\Model\PostCategory::class;
 
+
     /**
      * @param string $slug
      *

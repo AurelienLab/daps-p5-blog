@@ -89,6 +89,7 @@ abstract class AbstractController
         return $response;
     }
 
+
     /**
      * Redirect to given route
      *
@@ -103,6 +104,7 @@ abstract class AbstractController
         $this->setCookiesInResponse($response);
         return $response;
     }
+
 
     /**
      * Redirect to given url
@@ -134,6 +136,7 @@ abstract class AbstractController
         $this->twig->display($template, $data);
     }
 
+
     /**
      * Add an error to form error bag
      *
@@ -147,6 +150,7 @@ abstract class AbstractController
         $this->formErrors->addError($fieldName, $errorMessage);
     }
 
+
     /**
      * Is there any error in form error bag ?
      *
@@ -156,6 +160,7 @@ abstract class AbstractController
     {
         return $this->formErrors->hasError();
     }
+
 
     /**
      * Verify each form data through validators passed in $fields array
@@ -192,6 +197,7 @@ abstract class AbstractController
         return $formData;
     }
 
+
     /**
      * Check CSRF token validity
      *
@@ -208,6 +214,7 @@ abstract class AbstractController
         return $tokenManager->isTokenValid($token);
     }
 
+
     /**
      * Get current user (null if not logged in)
      *
@@ -217,6 +224,7 @@ abstract class AbstractController
     {
         return $this->user;
     }
+
 
     /**
      * Add a flash message that must be consumed in views
@@ -232,6 +240,7 @@ abstract class AbstractController
         $this->flashesBag->addFlash($flash);
     }
 
+
     /**
      * Add cookie that will be added to response
      *
@@ -243,6 +252,7 @@ abstract class AbstractController
     {
         $this->cookies[] = $cookie;
     }
+
 
     /**
      * Insert cookies in response object
@@ -257,6 +267,7 @@ abstract class AbstractController
             $response->headers->setCookie($cookie);
         }
     }
+
 
     /**
      * Set meta tile

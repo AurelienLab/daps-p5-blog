@@ -15,6 +15,7 @@ class PasswordRequestRepository extends AbstractRepository
 
     const DEFAULT_RELATIONS = ['user'];
 
+
     /**
      * @param string $token
      *
@@ -35,6 +36,7 @@ class PasswordRequestRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
 
     /**
      * @param User $user

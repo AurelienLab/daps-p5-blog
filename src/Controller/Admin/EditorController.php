@@ -37,6 +37,7 @@ class EditorController extends AbstractController
         ]);
     }
 
+
     /**
      * Upload a file from image url paste in EditorJS
      *
@@ -59,6 +60,7 @@ class EditorController extends AbstractController
             ]
         ]);
     }
+
 
     /**
      * Return error in json format

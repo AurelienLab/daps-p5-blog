@@ -72,6 +72,7 @@ class PostController extends AbstractController
         ]);
     }
 
+
     /**
      * Display post from slug
      *
@@ -102,6 +103,7 @@ class PostController extends AbstractController
             'relatedPosts' => $relatedPosts
         ]);
     }
+
 
     /**
      * Used to sort tag or entity by name

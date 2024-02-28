@@ -12,6 +12,7 @@ class UserRepository extends AbstractRepository
 
     const MODEL = User::class;
 
+
     /**
      * @param $email
      *
@@ -28,6 +29,7 @@ class UserRepository extends AbstractRepository
         return $query;
     }
 
+
     /**
      * @param string $email
      *
@@ -40,6 +42,7 @@ class UserRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
 
     /**
      * @param $email

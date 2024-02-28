@@ -48,6 +48,7 @@ class PostController extends AbstractController
         ]);
     }
 
+
     /**
      * Display form to add a new post
      *
@@ -67,6 +68,7 @@ class PostController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle add form post
@@ -90,6 +92,7 @@ class PostController extends AbstractController
             'categories' => $categories
         ]);
     }
+
 
     /**
      * Display edit post form
@@ -115,6 +118,7 @@ class PostController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle edit post form post
@@ -142,6 +146,7 @@ class PostController extends AbstractController
         ]);
     }
 
+
     /**
      * Delete post
      *
@@ -158,6 +163,7 @@ class PostController extends AbstractController
 
         return $this->redirect('admin.post.index');
     }
+
 
     /**
      * Validate & save data from a form post
@@ -246,6 +252,7 @@ class PostController extends AbstractController
 
         return true;
     }
+
 
     /**
      * Generate tag associations to post

@@ -32,6 +32,7 @@ class SubscriptionController extends AbstractController
         return $this->render('user/subscribe.html.twig');
     }
 
+
     /**
      * Handle subscription form post
      *
@@ -76,6 +77,7 @@ class SubscriptionController extends AbstractController
         ]);
     }
 
+
     /**
      * Success message display
      *
@@ -89,6 +91,7 @@ class SubscriptionController extends AbstractController
         $this->setTitle('Inscription');
         return $this->render('user/subscribe_confirm.html.twig');
     }
+
 
     /**
      * Hydrate and save user entity
@@ -131,6 +134,7 @@ class SubscriptionController extends AbstractController
 
         return UserRepository::save($user);
     }
+
 
     /**
      * Verify email via link sent in confirmation email

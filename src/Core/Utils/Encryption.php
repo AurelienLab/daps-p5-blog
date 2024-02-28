@@ -25,6 +25,7 @@ class Encryption
         return $token;
     }
 
+
     /**
      * @param string $token
      *

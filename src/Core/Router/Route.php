@@ -48,6 +48,7 @@ class Route
      */
     private ?Route $parent;
 
+
     /**
      * @return void
      * @throws Exception
@@ -111,6 +112,7 @@ class Route
         return $this;
     }
 
+
     /**
      * Set a name to retrieve path in views
      *
@@ -125,6 +127,7 @@ class Route
         return $this;
     }
 
+
     /**
      * @param string $prefix
      *
@@ -136,6 +139,7 @@ class Route
 
         return $this;
     }
+
 
     /**
      * @return string
@@ -165,6 +169,7 @@ class Route
         return $name.$this->name;
     }
 
+
     /**
      * Add middleware to execute before controller
      *
@@ -183,6 +188,7 @@ class Route
         return $this;
     }
 
+
     /**
      * Get middleware(s) of the route
      *
@@ -196,6 +202,7 @@ class Route
         }
         return array_merge($middlewares, $this->middleware);
     }
+
 
     /**
      * Define multiple routes and apply the same config to them
@@ -214,6 +221,7 @@ class Route
 
         return $this;
     }
+
 
     /**
      * Convert parameters given in route declaration to RouteParameter object
@@ -308,6 +316,7 @@ class Route
         return $this->function;
     }
 
+
     /**
      * @return RouteParameter[]
      */
@@ -315,6 +324,7 @@ class Route
     {
         return $this->parameters;
     }
+
 
     /**
      * Returns Route uri with parameters values inside

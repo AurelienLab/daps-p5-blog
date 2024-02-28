@@ -19,6 +19,7 @@ class ExistingEmailValidator extends AbstractValidator
         return "L'adresse email est déjà utilisée";
     }
 
+
     /**
      * @param $data
      *

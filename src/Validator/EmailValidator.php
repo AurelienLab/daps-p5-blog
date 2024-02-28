@@ -19,6 +19,7 @@ class EmailValidator extends AbstractValidator
         return "Le format de l'adresse email est incorrect";
     }
 
+
     /**
      * @param $data
      *

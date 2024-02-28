@@ -36,6 +36,7 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset-password/request-form.html.twig');
     }
 
+
     /**
      * Handle password request form post
      *
@@ -96,6 +97,7 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset-password/request-confirm.html.twig');
     }
 
+
     /**
      * Accessed via link in request password email
      * Check token and display password change form
@@ -148,6 +150,7 @@ class ResetPasswordController extends AbstractController
             'token' => $token
         ]);
     }
+
 
     /**
      * Handle change password form post

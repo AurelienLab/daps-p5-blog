@@ -40,6 +40,7 @@ class Comment
         return $this->id;
     }
 
+
     /**
      * @param int $id
      *
@@ -51,6 +52,7 @@ class Comment
         return $this;
     }
 
+
     /**
      * @return User
      */
@@ -58,6 +60,7 @@ class Comment
     {
         return $this->user;
     }
+
 
     /**
      * @param User $user
@@ -70,6 +73,7 @@ class Comment
         return $this;
     }
 
+
     /**
      * @return Post
      */
@@ -77,6 +81,7 @@ class Comment
     {
         return $this->post;
     }
+
 
     /**
      * @param Post $post
@@ -89,6 +94,7 @@ class Comment
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -96,6 +102,7 @@ class Comment
     {
         return $this->content;
     }
+
 
     /**
      * @param string $content

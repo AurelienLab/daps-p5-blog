@@ -18,6 +18,7 @@ class ChapoLengthValidator extends AbstractValidator
         return "Le chapo doit contenir au moins 50 caractères";
     }
 
+
     /**
      * @param $data
      *

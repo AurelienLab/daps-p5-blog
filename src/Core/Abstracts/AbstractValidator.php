@@ -17,12 +17,14 @@ abstract class AbstractValidator
     {
     }
 
+
     /**
      * Error message to display in case of the value is not validated
      *
      * @return string
      */
     abstract protected function getErrorMessage(): string;
+
 
     /**
      * Logical to apply to validate data
@@ -32,6 +34,7 @@ abstract class AbstractValidator
      * @return bool
      */
     abstract protected function processData($data): bool;
+
 
     /**
      * Called by the controller and automatically set error message if the field is not valid
@@ -47,6 +50,7 @@ abstract class AbstractValidator
 
         return true;
     }
+
 
     /**
      * Can be used to transfer a modified data to the next validator

@@ -18,6 +18,7 @@ class EntityCollection implements \Iterator, \Countable
      */
     private array $collection = [];
 
+
     /**
      * @param string $relatedEntity
      * @param int $relationType
@@ -36,6 +37,7 @@ class EntityCollection implements \Iterator, \Countable
     )
     {
     }
+
 
     /**
      * Add and object to the collection
@@ -56,6 +58,7 @@ class EntityCollection implements \Iterator, \Countable
         return $this;
     }
 
+
     /**
      * Returns
      *
@@ -66,6 +69,7 @@ class EntityCollection implements \Iterator, \Countable
         return $this->relatedEntity;
     }
 
+
     /**
      * @return int
      */
@@ -73,6 +77,7 @@ class EntityCollection implements \Iterator, \Countable
     {
         return $this->relationType;
     }
+
 
     /**
      * @return string|null
@@ -91,6 +96,7 @@ class EntityCollection implements \Iterator, \Countable
         return $this->targetEntityProperty;
     }
 
+
     /**
      * @return string|null
      */
@@ -99,6 +105,7 @@ class EntityCollection implements \Iterator, \Countable
         return $this->relationModel;
     }
 
+
     /**
      * @return array
      */
@@ -106,6 +113,7 @@ class EntityCollection implements \Iterator, \Countable
     {
         return $this->collection;
     }
+
 
     /**
      * @return array
@@ -125,6 +133,7 @@ class EntityCollection implements \Iterator, \Countable
         reset($this->collection);
     }
 
+
     /**
      * @return mixed
      */
@@ -132,6 +141,7 @@ class EntityCollection implements \Iterator, \Countable
     {
         return current($this->collection);
     }
+
 
     /**
      * @return string|int|null
@@ -141,6 +151,7 @@ class EntityCollection implements \Iterator, \Countable
         return key($this->collection);
     }
 
+
     /**
      * @return void
      */
@@ -149,6 +160,7 @@ class EntityCollection implements \Iterator, \Countable
         next($this->collection);
     }
 
+
     /**
      * @return bool
      */
@@ -156,6 +168,7 @@ class EntityCollection implements \Iterator, \Countable
     {
         return key($this->collection) !== null;
     }
+
 
     /**
      * @return int

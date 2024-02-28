@@ -17,6 +17,7 @@ class DecodeEditorJS
 
     private $blocks = [];
 
+
     public function __construct($json_content)
     {
         // Initialize twig
@@ -29,6 +30,7 @@ class DecodeEditorJS
             throw new \Exception('Error while parsing editorJS content : '.$e->getMessage());
         }
     }
+
 
     /**
      * Convert js from editorJS to html string using components concatenation

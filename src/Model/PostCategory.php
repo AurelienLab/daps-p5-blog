@@ -29,6 +29,7 @@ class PostCategory
      */
     private EntityCollection $posts;
 
+
     /**
      *
      */
@@ -41,6 +42,7 @@ class PostCategory
         );
     }
 
+
     /**
      * @return int
      */
@@ -48,6 +50,7 @@ class PostCategory
     {
         return $this->id;
     }
+
 
     /**
      * @param int $id
@@ -60,6 +63,7 @@ class PostCategory
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -67,6 +71,7 @@ class PostCategory
     {
         return $this->name;
     }
+
 
     /**
      * @param string $name
@@ -79,6 +84,7 @@ class PostCategory
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -86,6 +92,7 @@ class PostCategory
     {
         return $this->slug;
     }
+
 
     /**
      * @param string $slug
@@ -97,6 +104,7 @@ class PostCategory
         $this->slug = $slug;
         return $this;
     }
+
 
     /**
      * @return EntityCollection

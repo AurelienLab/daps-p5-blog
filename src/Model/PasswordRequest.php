@@ -31,6 +31,7 @@ class PasswordRequest
      */
     private \DateTime $expiresAt;
 
+
     /**
      * @return int
      */
@@ -38,6 +39,7 @@ class PasswordRequest
     {
         return $this->id;
     }
+
 
     /**
      * @param int $id
@@ -50,6 +52,7 @@ class PasswordRequest
         return $this;
     }
 
+
     /**
      * @return User
      */
@@ -57,6 +60,7 @@ class PasswordRequest
     {
         return $this->user;
     }
+
 
     /**
      * @param User $user
@@ -69,6 +73,7 @@ class PasswordRequest
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -76,6 +81,7 @@ class PasswordRequest
     {
         return $this->token;
     }
+
 
     /**
      * @param string $token
@@ -88,6 +94,7 @@ class PasswordRequest
         return $this;
     }
 
+
     /**
      * @return \DateTime
      */
@@ -95,6 +102,7 @@ class PasswordRequest
     {
         return $this->expiresAt;
     }
+
 
     /**
      * @param \DateTime $expiresAt

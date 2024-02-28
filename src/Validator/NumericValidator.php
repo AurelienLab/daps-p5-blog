@@ -18,6 +18,7 @@ class NumericValidator extends AbstractValidator
         return "Vous devez entrer une valeur numérique";
     }
 
+
     /**
      * @param $data
      *

@@ -32,6 +32,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+
     /**
      * Display form to add a new category
      *
@@ -44,6 +45,7 @@ class CategoryController extends AbstractController
     {
         return $this->render('Admin/category/add.html.twig');
     }
+
 
     /**
      * Handle add form post
@@ -63,6 +65,7 @@ class CategoryController extends AbstractController
 
         return $this->render('Admin/category/add.html.twig');
     }
+
 
     /**
      * Display edit category form
@@ -86,6 +89,7 @@ class CategoryController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle edit category form post
@@ -114,6 +118,7 @@ class CategoryController extends AbstractController
         );
     }
 
+
     /**
      * Delete category
      *
@@ -130,6 +135,7 @@ class CategoryController extends AbstractController
 
         return $this->redirect('admin.category.index');
     }
+
 
     /**
      * Validate & save data from a form post

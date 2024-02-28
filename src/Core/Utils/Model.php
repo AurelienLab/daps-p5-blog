@@ -28,6 +28,7 @@ class Model
         return false;
     }
 
+
     /**
      * Analyse Model class to check if it's a timestampable model
      *

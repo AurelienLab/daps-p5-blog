@@ -19,6 +19,7 @@ trait SoftDeleteTrait
         return $this->deletedAt;
     }
 
+
     /**
      * @param \DateTime|null $deletedAt
      *

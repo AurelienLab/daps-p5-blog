@@ -37,6 +37,7 @@ class LoginController extends AbstractController
         ]);
     }
 
+
     /**
      * Handle login form post
      *
@@ -96,6 +97,7 @@ class LoginController extends AbstractController
             'credentials' => $credentials
         ]);
     }
+
 
     /**
      * Logout user

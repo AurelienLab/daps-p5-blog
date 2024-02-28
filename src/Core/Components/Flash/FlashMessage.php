@@ -14,10 +14,12 @@ class FlashMessage
     {
     }
 
+
     public function getType(): string
     {
         return $this->type;
     }
+
 
     public function getMessage(): string
     {

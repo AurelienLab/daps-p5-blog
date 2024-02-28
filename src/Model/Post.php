@@ -92,6 +92,7 @@ class Post
      */
     private EntityCollection $comments;
 
+
     /**
      *
      */
@@ -115,6 +116,7 @@ class Post
         );
     }
 
+
     /**
      * @return int|null
      */
@@ -122,6 +124,7 @@ class Post
     {
         return $this->id;
     }
+
 
     /**
      * @param int $id
@@ -134,6 +137,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -141,6 +145,7 @@ class Post
     {
         return $this->title;
     }
+
 
     /**
      * @param string $title
@@ -153,6 +158,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -160,6 +166,7 @@ class Post
     {
         return $this->slug;
     }
+
 
     /**
      * @param string $slug
@@ -172,6 +179,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -179,6 +187,7 @@ class Post
     {
         return $this->chapo;
     }
+
 
     /**
      * @param string $chapo
@@ -191,6 +200,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return PostCategory|null
      */
@@ -198,6 +208,7 @@ class Post
     {
         return isset($this->category) ? $this->category : null;
     }
+
 
     /**
      * @param PostCategory $category
@@ -210,6 +221,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -217,6 +229,7 @@ class Post
     {
         return $this->content;
     }
+
 
     /**
      * @param string $content
@@ -229,6 +242,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return string|null
      */
@@ -236,6 +250,7 @@ class Post
     {
         return $this->featuredImage ?? null;
     }
+
 
     /**
      * @param string $featuredImage
@@ -248,6 +263,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return User
      */
@@ -255,6 +271,7 @@ class Post
     {
         return $this->user;
     }
+
 
     /**
      * @param User $user
@@ -267,6 +284,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return \DateTime
      */
@@ -274,6 +292,7 @@ class Post
     {
         return $this->publishedAt;
     }
+
 
     /**
      * @param \DateTime $publishedAt
@@ -286,6 +305,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return \DateTime
      */
@@ -293,6 +313,7 @@ class Post
     {
         return $this->validatedAt;
     }
+
 
     /**
      * @param \DateTime $validatedAt
@@ -305,6 +326,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return int|null
      */
@@ -312,6 +334,7 @@ class Post
     {
         return $this->validatorUserId;
     }
+
 
     /**
      * @param int|null $validatorUserId
@@ -324,6 +347,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return int
      */
@@ -331,6 +355,7 @@ class Post
     {
         return $this->readTime;
     }
+
 
     /**
      * @param int $readTime
@@ -343,6 +368,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return int
      */
@@ -350,6 +376,7 @@ class Post
     {
         return $this->status;
     }
+
 
     /**
      * @param int $status
@@ -362,6 +389,7 @@ class Post
         return $this;
     }
 
+
     /**
      * @return EntityCollection
      */
@@ -369,6 +397,7 @@ class Post
     {
         return $this->tags;
     }
+
 
     /**
      * @return string
@@ -378,6 +407,7 @@ class Post
         return json_encode($this->getTags()->toArray());
     }
 
+
     /**
      * @return EntityCollection
      */
@@ -385,6 +415,7 @@ class Post
     {
         return $this->comments;
     }
+
 
     /**
      * @param EntityCollection $comments

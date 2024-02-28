@@ -44,6 +44,7 @@ class Str
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
     }
 
+
     /**
      * Remove slash of string if it's at the last pos
      *
@@ -60,6 +61,7 @@ class Str
 
         return $newString;
     }
+
 
     /**
      * Generate a random string

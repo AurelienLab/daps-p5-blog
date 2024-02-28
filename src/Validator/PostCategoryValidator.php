@@ -20,6 +20,7 @@ class PostCategoryValidator extends AbstractValidator
         return "Vous devez sélectionner une catégorie";
     }
 
+
     /**
      * @param $data
      *

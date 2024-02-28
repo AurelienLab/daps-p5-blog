@@ -12,6 +12,7 @@ class TagRepository extends AbstractRepository
 
     const MODEL = Tag::class;
 
+
     /**
      * @param string $slug
      *
@@ -28,6 +29,7 @@ class TagRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
 
     /**
      * @param string $searchString

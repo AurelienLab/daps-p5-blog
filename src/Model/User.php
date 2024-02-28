@@ -63,6 +63,7 @@ class User
         return $this->id;
     }
 
+
     /**
      * @param int $id
      *
@@ -74,6 +75,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -81,6 +83,7 @@ class User
     {
         return $this->name;
     }
+
 
     /**
      * @param string $name
@@ -93,6 +96,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return string|null
      */
@@ -100,6 +104,7 @@ class User
     {
         return $this->email;
     }
+
 
     /**
      * @param string $email
@@ -112,6 +117,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -119,6 +125,7 @@ class User
     {
         return $this->password;
     }
+
 
     /**
      * @param string $password
@@ -131,6 +138,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return string|null
      */
@@ -138,6 +146,7 @@ class User
     {
         return $this->rememberMeToken;
     }
+
 
     /**
      * @param string|null $rememberMeToken
@@ -150,6 +159,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return bool
      */
@@ -157,6 +167,7 @@ class User
     {
         return $this->isAdmin;
     }
+
 
     /**
      * @param bool $isAdmin
@@ -169,6 +180,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return string|null
      */
@@ -176,6 +188,7 @@ class User
     {
         return $this->profilePicture;
     }
+
 
     /**
      * @param string|null $profilePicture
@@ -188,6 +201,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return \DateTimeImmutable|null
      */
@@ -195,6 +209,7 @@ class User
     {
         return $this->emailValidatedAt;
     }
+
 
     /**
      * @param \DateTimeImmutable|null $emailValidatedAt
@@ -206,6 +221,7 @@ class User
         $this->emailValidatedAt = $emailValidatedAt;
         return $this;
     }
+
 
     /**
      * @return string
@@ -226,6 +242,7 @@ class User
 
         return $token;
     }
+
 
     /**
      * Check if the user is allowed to log in

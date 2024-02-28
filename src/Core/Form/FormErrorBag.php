@@ -10,6 +10,7 @@ class FormErrorBag
 
     private array $errors = [];
 
+
     /**
      * @param string $fieldName
      * @param string $errorMessage
@@ -20,6 +21,7 @@ class FormErrorBag
     {
         $this->errors[$fieldName] = $errorMessage;
     }
+
 
     /**
      * @param string $fieldName
@@ -34,6 +36,7 @@ class FormErrorBag
 
         return null;
     }
+
 
     /**
      * @return bool

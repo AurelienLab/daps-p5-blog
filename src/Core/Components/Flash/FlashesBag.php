@@ -18,6 +18,7 @@ class FlashesBag implements \Iterator
 
     private Session $session;
 
+
     public function __construct(Request $request)
     {
         $this->session = $request->getSession();
@@ -30,6 +31,7 @@ class FlashesBag implements \Iterator
         }
     }
 
+
     /**
      * Add a flash message to the collection
      *
@@ -41,6 +43,7 @@ class FlashesBag implements \Iterator
     {
         $this->flashes[] = $flashMessage;
     }
+
 
     /**
      * Update session with current flashMessages
@@ -66,12 +69,14 @@ class FlashesBag implements \Iterator
         $this->session->save();
     }
 
+
     // ITERATION METHODS
 
     public function rewind(): void
     {
         reset($this->flashes);
     }
+
 
     public function current(): mixed
     {
@@ -81,15 +86,18 @@ class FlashesBag implements \Iterator
         return $flash;
     }
 
+
     public function key(): string|int|null
     {
         return key($this->flashes);
     }
 
+
     public function next(): void
     {
         next($this->flashes);
     }
+
 
     public function valid(): bool
     {

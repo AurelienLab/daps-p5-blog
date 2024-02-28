@@ -18,6 +18,7 @@ class JsonValidator extends AbstractValidator
         return "La valeur n'est pas un JSON valide";
     }
 
+
     /**
      * @param $data
      *

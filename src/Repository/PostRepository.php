@@ -15,6 +15,7 @@ class PostRepository extends AbstractRepository
     const DEFAULT_RELATIONS = ['user', 'category'];
     const MODEL = Post::class;
 
+
     /**
      * @param $relations
      *
@@ -35,6 +36,7 @@ class PostRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
 
     /**
      * @param $relations
@@ -78,6 +80,7 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
     /**
      * @param $relations
      *
@@ -100,6 +103,7 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
     /**
      * @param string $slug
      * @param $relations
@@ -121,6 +125,7 @@ class PostRepository extends AbstractRepository
         static::addRelationsToQuery($relations, $query);
         return Database::query($query);
     }
+
 
     /**
      * @param Post $post

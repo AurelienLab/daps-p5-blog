@@ -25,6 +25,7 @@ trait TimestampableTrait
         return $this->createdAt;
     }
 
+
     /**
      * @param \DateTime|null $createdAt
      *
@@ -36,6 +37,7 @@ trait TimestampableTrait
         return $this;
     }
 
+
     /**
      * @return \DateTime|null
      */
@@ -43,6 +45,7 @@ trait TimestampableTrait
     {
         return $this->updatedAt;
     }
+
 
     /**
      * @param \DateTime|null $updatedAt

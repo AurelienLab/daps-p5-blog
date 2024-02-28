@@ -18,6 +18,7 @@ class PostContentBlocksValidator extends AbstractValidator
         return "L'article doit avoir un contenu";
     }
 
+
     /**
      * @param $data
      *

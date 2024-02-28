@@ -32,6 +32,7 @@ class UserController extends AbstractController
         ]);
     }
 
+
     /**
      * Handle forms post (profile & password)
      *
@@ -63,6 +64,7 @@ class UserController extends AbstractController
             'user' => $user
         ]);
     }
+
 
     /**
      * Handle save from profile form

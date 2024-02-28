@@ -22,6 +22,7 @@ class PostTag
      */
     private Tag $tag;
 
+
     /**
      * @return int
      */
@@ -29,6 +30,7 @@ class PostTag
     {
         return $this->id;
     }
+
 
     /**
      * @param int $id
@@ -41,6 +43,7 @@ class PostTag
         return $this;
     }
 
+
     /**
      * @return Post
      */
@@ -48,6 +51,7 @@ class PostTag
     {
         return $this->post;
     }
+
 
     /**
      * @param Post $post
@@ -60,6 +64,7 @@ class PostTag
         return $this;
     }
 
+
     /**
      * @return Tag
      */
@@ -67,6 +72,7 @@ class PostTag
     {
         return $this->tag;
     }
+
 
     /**
      * @param Tag $tag

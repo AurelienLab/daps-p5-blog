@@ -18,6 +18,7 @@ class PasswordStrengthValidator extends AbstractValidator
         return "Le mot de passe doit contenir au minimum: 8 caractères, 1 lettre minuscule, 1 caractère special";
     }
 
+
     /**
      * @param $data
      *

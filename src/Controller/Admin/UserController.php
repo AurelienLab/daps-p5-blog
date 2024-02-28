@@ -42,6 +42,7 @@ class UserController extends AbstractController
         ]);
     }
 
+
     /**
      *
      * @return Response
@@ -53,6 +54,7 @@ class UserController extends AbstractController
     {
         return $this->render('Admin/user/add.html.twig');
     }
+
 
     /**
      *
@@ -76,6 +78,7 @@ class UserController extends AbstractController
         ]);
     }
 
+
     /**
      * Display edit user form
      *
@@ -98,6 +101,7 @@ class UserController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle edit user form post
@@ -126,6 +130,7 @@ class UserController extends AbstractController
         );
     }
 
+
     /**
      * Delete user
      *
@@ -142,6 +147,7 @@ class UserController extends AbstractController
 
         return $this->redirect('admin.user.index');
     }
+
 
     /**
      * Validate & save data from a form post

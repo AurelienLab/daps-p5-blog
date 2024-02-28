@@ -17,6 +17,7 @@ abstract class AbstractRepository
     const MODEL = '';
     const DEFAULT_RELATIONS = [];
 
+
     /**
      * Get all records for entity managed by current repository
      *
@@ -78,6 +79,7 @@ abstract class AbstractRepository
         return $result[0];
     }
 
+
     /**
      * Same as get() but throw a NotFoundException if no result
      *
@@ -133,6 +135,7 @@ abstract class AbstractRepository
         return $entity;
     }
 
+
     /**
      * Remove an entity from the database
      *
@@ -163,6 +166,7 @@ abstract class AbstractRepository
         Database::query($query);
     }
 
+
     public static function refresh(object $entity): void
     {
         $dbMapping = Database::mapEntityToTable($entity, static::MODEL);
@@ -171,6 +175,7 @@ abstract class AbstractRepository
             $entity = static::get($dbMapping->entityArray[$dbMapping->primaryKey]);
         }
     }
+
 
     /**
      * Transforms array of relation names to left join in query

@@ -14,6 +14,7 @@ class PostTagRepository extends AbstractRepository
 
     const MODEL = PostTag::class;
 
+
     /**
      * @param Post $post
      * @param Tag $tag
