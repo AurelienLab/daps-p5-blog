@@ -20,7 +20,7 @@ class Utils
         $finder = new Finder();
         $finder->in($directory)->name('*.php')->sortByName();
         foreach ($finder as $file) {
-            include_once $file->getPathname();
+            require_once $file->getPathname();
         }
     }
 }

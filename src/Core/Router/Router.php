@@ -84,7 +84,7 @@ class Router
     {
         foreach ($this->routingFiles as $file) {
             $filePath = $this->routesFolder.'/'.$file;
-            include_once $filePath;
+            require_once $filePath;
         }
 
         foreach ($this->routeCollection as $method) {

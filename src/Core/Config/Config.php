@@ -74,7 +74,7 @@ class Config
         foreach ($this->configFiles as $file) {
             $fileName = basename($file, '.php');
             $filePath = $this->configFolder.'/'.$file;
-            $fileConfig = include $filePath;
+            $fileConfig = require_once $filePath;
 
             if (is_array($fileConfig) === false) {
                 throw new Exception(sprintf('Config file %s in %s is not an array', $file, $this->configFolder));
