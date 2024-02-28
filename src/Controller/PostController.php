@@ -28,7 +28,7 @@ class PostController extends AbstractController
         $filters = [];
 
         $category = $request->query->get('category');
-        if (!is_null($category) && $category != 'all') {
+        if ($category !== null && $category != 'all') {
             $category = PostCategoryRepository::findBySlug($category);
             if ($category) {
                 $filters['category'] = $category->getId();
@@ -36,7 +36,7 @@ class PostController extends AbstractController
         }
 
         $tag = $request->query->get('tag');
-        if (!is_null($tag) && $tag != 'all') {
+        if ($tag !== null && $tag != 'all') {
             $tag = TagRepository::getOneBySlug($tag);
             if ($tag) {
                 $filters['tag'] = $tag->getId();

@@ -47,13 +47,13 @@ class UserController extends AbstractController
         $this->setTitle('Mon compte');
         $user = $this->getUser();
 
-        if (!is_null($request->request->get('save-profile'))) {
+        if ($request->request->get('save-profile') !== null) {
             if ($this->saveProfile($user, $request)) {
                 $this->addFlash('success', 'Vos informations ont été mises à jour.');
             }
         }
 
-        if (!is_null($request->request->get('save-password'))) {
+        if ($request->request->get('save-password') !== null) {
             if ($this->savePassword($user, $request)) {
                 $this->addFlash('success', 'Votre mot de passe a été mis à jour.');
             }

@@ -289,7 +289,7 @@ class Database
 
         //Set timestamps if applicable
         if (Model::isTimestampable($entity)) {
-            if (is_null($entity->getCreatedAt())) {
+            if ($entity->getCreatedAt() === null) {
                 $entity->setCreatedAt(new \DateTime());
             }
 

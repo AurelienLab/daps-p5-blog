@@ -21,7 +21,7 @@ class EditorController extends AbstractController
     {
         $image = $request->files->get('image');
 
-        if (is_null($image) === true) {
+        if ($image === null) {
             return $this->generateError('Unable to find image in post data');
         }
 
