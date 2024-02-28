@@ -79,7 +79,6 @@ class Query
      *
      * @throws Exception
      */
-
     public function __construct(string $model)
     {
         if (empty($model) === true) {

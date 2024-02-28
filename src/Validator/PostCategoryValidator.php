@@ -12,6 +12,7 @@ use App\Repository\PostCategoryRepository;
 class PostCategoryValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

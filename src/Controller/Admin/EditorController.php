@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EditorController extends AbstractController
 {
 
+
     /**
      * Upload a file from EditorJS Image tool
      *

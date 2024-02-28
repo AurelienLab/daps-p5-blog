@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class NotEmptyValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

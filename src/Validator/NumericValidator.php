@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class NumericValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

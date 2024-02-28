@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class NicknameLengthValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

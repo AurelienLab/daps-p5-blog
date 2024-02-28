@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 class ExistingEmailValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class CategoryController extends AbstractController
 {
 
+
     /**
      * Categories list
      *

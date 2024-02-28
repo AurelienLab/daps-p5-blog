@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractValidator
 {
 
+
     public function __construct(
         private string       $fieldName,
         private FormErrorBag $errorBag,

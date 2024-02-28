@@ -8,6 +8,7 @@ use App\Model\Trait\TimestampableTrait;
 class Model
 {
 
+
     /**
      * Analyse Model class to check if it's a soft deletable model
      *

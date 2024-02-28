@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PostController extends AbstractController
 {
 
+
     /**
      * posts list
      *

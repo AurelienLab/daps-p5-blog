@@ -19,6 +19,7 @@ use Twig\TwigFunction;
 class TwigEnvironment extends Environment
 {
 
+
     public function __construct($options = [])
     {
         $loader = new FilesystemLoader([ROOT.'/templates', ROOT.'/public']);

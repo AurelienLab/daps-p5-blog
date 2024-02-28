@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TagController
 {
 
+
     /**
      * Retrieve a list of tags that matches the query
      *

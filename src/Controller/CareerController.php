@@ -7,6 +7,7 @@ use App\Core\Abstracts\AbstractController;
 class CareerController extends AbstractController
 {
 
+
     /**
      * Career page
      *

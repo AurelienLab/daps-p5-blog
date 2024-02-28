@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends AbstractController
 {
 
+
     /**
      * Display profile forms (profile & password)
      *

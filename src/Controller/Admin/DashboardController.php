@@ -8,6 +8,7 @@ use App\Core\Router\Router;
 class DashboardController extends AbstractController
 {
 
+
     /**
      * Admin dashboard
      *

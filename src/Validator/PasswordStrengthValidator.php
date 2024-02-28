@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class PasswordStrengthValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

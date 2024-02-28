@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class PostContentBlocksValidator extends AbstractValidator
 {
 
+    
     /**
      * @return string
      */

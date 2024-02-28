@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ErrorController extends AbstractController
 {
 
+
     /**
      * Specific controller for error display on prod env (called from public/index.php)
      *

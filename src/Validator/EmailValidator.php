@@ -11,6 +11,7 @@ use App\Core\Abstracts\AbstractValidator;
 class EmailValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

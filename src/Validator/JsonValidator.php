@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class JsonValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

@@ -10,6 +10,7 @@ use App\Core\Abstracts\AbstractValidator;
 class ChapoLengthValidator extends AbstractValidator
 {
 
+
     /**
      * @return string
      */

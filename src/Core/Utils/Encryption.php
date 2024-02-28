@@ -8,6 +8,7 @@ namespace App\Core\Utils;
 class Encryption
 {
 
+
     /**
      * @param mixed $data
      *

@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SubscriptionController extends AbstractController
 {
 
+
     /**
      * Subscription form
      *

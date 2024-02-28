@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ResetPasswordController extends AbstractController
 {
 
+
     /**
      * Password reset request form
      *
