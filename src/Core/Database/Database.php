@@ -38,7 +38,7 @@ class Database
     private string $dbHost;
 
     /**
-     * @var int
+     * @var integer
      */
     private int $dbPort;
 
@@ -48,7 +48,7 @@ class Database
     private array $tableData = [];
 
     /**
-     * @var int
+     * @var integer
      */
     private int $queryCount = 0;
 
@@ -435,7 +435,7 @@ class Database
             }
 
             foreach ($relationsToFetch as $name => $relation) {
-                /** @var EntityCollection $relation */
+                /* @var EntityCollection $relation */
                 $targetProperty = $relation->getTargetEntityProperty() !== null ?
                     $relation->getTargetEntityProperty() :
                     Str::toSnakeCase((new ReflectionClass($relation->getRelatedEntity()))->getShortName());

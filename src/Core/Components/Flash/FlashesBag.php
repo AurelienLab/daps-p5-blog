@@ -65,7 +65,7 @@ class FlashesBag implements \Iterator
         $this->session->save();
     }
 
-    /* ITERATION METHODS */
+    // ITERATION METHODS
 
     public function rewind(): void
     {

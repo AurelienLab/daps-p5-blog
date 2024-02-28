@@ -181,7 +181,7 @@ class PostController extends AbstractController
             'published_at' => [NotEmptyValidator::class, DateTimeValidator::class]
         ]);
 
-        /** @var UploadedFile $featuredImage */
+        /* @var UploadedFile $featuredImage */
         $featuredImage = $request->files->get('featured_image');
 
         //Generate Slug

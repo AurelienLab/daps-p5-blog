@@ -221,7 +221,7 @@ class Router
         }
 
         try {
-            /** @var Response $response */
+            /* @var Response $response */
             $response = call_user_func_array([$controller, $method], $args);
 
             if (($response instanceof Response) === false) {

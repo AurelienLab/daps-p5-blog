@@ -15,7 +15,7 @@ class User
     const TABLE = 'users';
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     private ?int $id = null;
 
@@ -40,7 +40,7 @@ class User
     private ?string $rememberMeToken = null;
 
     /**
-     * @var bool
+     * @var boolean
      */
     private bool $isAdmin = false;
 
@@ -54,7 +54,7 @@ class User
      */
     private ?\DateTimeImmutable $emailValidatedAt = null;
 
-    
+
     /**
      * @return int|null
      */

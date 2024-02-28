@@ -10,7 +10,7 @@ class Tag implements \JsonSerializable
     const TABLE = 'tags';
 
     /**
-     * @var int
+     * @var integer
      */
     private int $id;
 

@@ -208,7 +208,7 @@ class Route
     {
         $this->group = $group;
         foreach ($this->group as $route) {
-            /** @var Route $route */
+            /* @var Route $route */
             $route->parent = $this;
         }
 

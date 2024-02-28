@@ -34,7 +34,7 @@ class Query
     private ?string $groupBy;
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     private ?int $limit;
 
@@ -44,7 +44,7 @@ class Query
     private array $leftJoin = [];
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     private ?int $firstOrLast = null;
 
@@ -69,7 +69,7 @@ class Query
     private $parameters = [];
 
     /**
-     * @var bool
+     * @var boolean
      */
     private ?bool $withTrashed = null;
 

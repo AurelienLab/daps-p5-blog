@@ -12,7 +12,7 @@ class PasswordRequest
     use TimestampableTrait;
 
     /**
-     * @var int
+     * @var integer
      */
     private int $id;
     /**

@@ -18,7 +18,7 @@ class Post
     const STATE_PUBLISHED = 1;
 
     /**
-     * @var int
+     * @var integer
      */
     private ?int $id = null;
 
@@ -53,7 +53,7 @@ class Post
     private string $featuredImage;
 
     /**
-     * @var int
+     * @var integer
      */
     private User $user;
 
@@ -67,17 +67,17 @@ class Post
     private \DateTime $validatedAt;
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     private ?int $validatorUserId;
 
     /**
-     * @var int
+     * @var integer
      */
     private int $readTime;
 
     /**
-     * @var int
+     * @var integer
      */
     private int $status;
 

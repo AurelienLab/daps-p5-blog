@@ -8,7 +8,7 @@ class PostTag
     const TABLE = 'posts_tags';
 
     /**
-     * @var int
+     * @var integer
      */
     private int $id;
     /**

@@ -175,7 +175,7 @@ abstract class AbstractController
 
         foreach ($fields as $fieldName => $validators) {
             foreach ($validators as $validator) {
-                /** @var AbstractValidator $validator */
+                /* @var AbstractValidator $validator */
                 $validator = new $validator(
                     $fieldName,
                     $this->formErrors,

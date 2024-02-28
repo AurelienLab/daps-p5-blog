@@ -10,7 +10,7 @@ class PostCategory
     const TABLE = 'post_categories';
 
     /**
-     * @var int
+     * @var integer
      */
     private int $id;
 

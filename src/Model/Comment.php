@@ -12,7 +12,7 @@ class Comment
     const TABLE = 'comments';
 
     /**
-     * @var int
+     * @var integer
      */
     private int $id;
     /**
