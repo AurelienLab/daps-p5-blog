@@ -13,7 +13,7 @@ $dotenv->safeLoad();
 
 // Initialize Error Handler
 Spatie\Ignition\Ignition::make()
-    // ->shouldDisplayException(env('APP_ENV') === 'dev')
+    ->shouldDisplayException(env('APP_ENV') === 'dev')
     ->applicationPath(realpath(ROOT))
     ->register();
 

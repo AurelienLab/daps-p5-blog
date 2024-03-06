@@ -49,7 +49,7 @@ class RouteParameter
         return $this->value;
     }
 
-    
+
     /**
      * @param mixed $value Value retrieved from uri
      *
@@ -59,4 +59,6 @@ class RouteParameter
     {
         $this->value = $value;
     }
+
+
 }

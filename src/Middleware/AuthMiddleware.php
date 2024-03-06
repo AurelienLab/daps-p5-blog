@@ -8,6 +8,9 @@ use App\Model\User;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Check if user is logged in
+ */
 class AuthMiddleware extends AbstractMiddleware
 {
 
@@ -29,4 +32,6 @@ class AuthMiddleware extends AbstractMiddleware
 
         throw new ForbiddenException();
     }
+
+
 }

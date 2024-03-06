@@ -31,10 +31,14 @@ abstract class AbstractController
     protected $twig;
 
     private $formErrors;
+
     private ?FlashesBag $flashesBag = null;
 
     private array $cookies = [];
+
     private $user = null;
+
+    private $pageTitle = null;
 
 
     public function __construct(Request $request)
@@ -77,10 +81,14 @@ abstract class AbstractController
     {
         $response = new Response();
         $this->flashesBag->saveToSession();
+        if ($this->pageTitle !== null) {
+            $data['_title'] = $this->pageTitle;
+        }
         $response->setContent($this->twig->render($template, $data));
         $this->setCookiesInResponse($response);
         return $response;
     }
+
 
     /**
      * Redirect to given route
@@ -96,6 +104,7 @@ abstract class AbstractController
         $this->setCookiesInResponse($response);
         return $response;
     }
+
 
     /**
      * Redirect to given url
@@ -127,6 +136,7 @@ abstract class AbstractController
         $this->twig->display($template, $data);
     }
 
+
     /**
      * Add an error to form error bag
      *
@@ -140,6 +150,7 @@ abstract class AbstractController
         $this->formErrors->addError($fieldName, $errorMessage);
     }
 
+
     /**
      * Is there any error in form error bag ?
      *
@@ -150,6 +161,17 @@ abstract class AbstractController
         return $this->formErrors->hasError();
     }
 
+
+    /**
+     * Verify each form data through validators passed in $fields array
+     *
+     * @param Request $request
+     * @param string $csrfName
+     * @param array $fields
+     *
+     * @return FormData
+     * @throws \Exception
+     */
     protected function validateForm(Request $request, string $csrfName, array $fields): FormData
     {
         $formData = new FormData($request);
@@ -160,7 +182,7 @@ abstract class AbstractController
 
         foreach ($fields as $fieldName => $validators) {
             foreach ($validators as $validator) {
-                /** @var AbstractValidator $validator */
+                /* @var AbstractValidator $validator */
                 $validator = new $validator(
                     $fieldName,
                     $this->formErrors,
@@ -175,6 +197,15 @@ abstract class AbstractController
         return $formData;
     }
 
+
+    /**
+     * Check CSRF token validity
+     *
+     * @param string $name
+     * @param string $tokenValue
+     *
+     * @return bool
+     */
     protected function isCsrfValid(string $name, string $tokenValue): bool
     {
         $token = new CsrfToken($name, $tokenValue);
@@ -183,26 +214,72 @@ abstract class AbstractController
         return $tokenManager->isTokenValid($token);
     }
 
+
+    /**
+     * Get current user (null if not logged in)
+     *
+     * @return User|null
+     */
     protected function getUser(): ?User
     {
         return $this->user;
     }
 
+
+    /**
+     * Add a flash message that must be consumed in views
+     *
+     * @param string $type
+     * @param string $message
+     *
+     * @return void
+     */
     protected function addFlash(string $type, string $message)
     {
         $flash = new FlashMessage($type, $message);
         $this->flashesBag->addFlash($flash);
     }
 
+
+    /**
+     * Add cookie that will be added to response
+     *
+     * @param Cookie $cookie
+     *
+     * @return void
+     */
     protected function addCookie(Cookie $cookie)
     {
         $this->cookies[] = $cookie;
     }
 
+
+    /**
+     * Insert cookies in response object
+     *
+     * @param Response $response
+     *
+     * @return void
+     */
     protected function setCookiesInResponse(Response $response)
     {
         foreach ($this->cookies as $cookie) {
             $response->headers->setCookie($cookie);
         }
     }
+
+
+    /**
+     * Set meta tile
+     *
+     * @param string $title
+     *
+     * @return void
+     */
+    protected function setTitle(string $title)
+    {
+        $this->pageTitle = $title;
+    }
+
+
 }

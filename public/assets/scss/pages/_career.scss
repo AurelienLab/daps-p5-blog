@@ -5,6 +5,15 @@
 
   &__content {
     @include default-container;
-    line-height: 1.4;
+    line-height: 1.5;
+
+    .heading {
+      margin-top: 4rem;
+      margin-bottom: 3rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
   }
 }

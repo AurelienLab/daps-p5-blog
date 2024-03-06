@@ -12,6 +12,17 @@ use Symfony\Component\HttpFoundation\Request;
 class LoginController extends AbstractController
 {
 
+
+    /**
+     * Login form
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function login(Request $request)
     {
         $referer = $request->headers->get('referer');
@@ -20,11 +31,24 @@ class LoginController extends AbstractController
             return $this->redirect('homepage.index');
         }
 
+        $this->setTitle('Connexion');
+
         return $this->render('user/login.html.twig', [
             'referer' => $referer
         ]);
     }
 
+
+    /**
+     * Handle login form post
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function loginPost(Request $request)
     {
         $user = null;
@@ -33,7 +57,6 @@ class LoginController extends AbstractController
             'email' => [NotEmptyValidator::class, EmailValidator::class],
             'password' => [NotEmptyValidator::class]
         ]);
-
 
         if (!$this->hasFormErrors()) {
             $user = UserRepository::getByEmail(strtolower($data->get('email')));
@@ -58,7 +81,6 @@ class LoginController extends AbstractController
                 $this->addCookie(new Cookie('_app_remember_me', $token, $cookieExpiration));
             }
 
-
             if (!empty($data->get('referer'))) {
                 return $this->redirectUrl($data->get('referer'));
             }
@@ -70,11 +92,22 @@ class LoginController extends AbstractController
             'password' => $data->get('password')
         ];
 
+        $this->setTitle('Connexion');
+
         return $this->render('user/login.html.twig', [
             'credentials' => $credentials
         ]);
     }
 
+
+    /**
+     * Logout user
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
+     */
     public function logout(Request $request)
     {
         $request->getSession()->remove('userId');
@@ -83,4 +116,6 @@ class LoginController extends AbstractController
 
         return $this->redirect('homepage.index');
     }
+
+
 }

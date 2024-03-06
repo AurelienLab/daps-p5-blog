@@ -10,6 +10,13 @@ class PostCategoryRepository extends \App\Core\Abstracts\AbstractRepository
 
     const MODEL = \App\Model\PostCategory::class;
 
+
+    /**
+     * @param string $slug
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function findBySlug(string $slug)
     {
         $query = new Query(static::MODEL);
@@ -19,4 +26,6 @@ class PostCategoryRepository extends \App\Core\Abstracts\AbstractRepository
 
         return Database::query($query);
     }
+
+
 }

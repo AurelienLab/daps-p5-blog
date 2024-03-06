@@ -12,13 +12,24 @@ use Symfony\Component\HttpFoundation\Request;
 class PostController extends AbstractController
 {
 
+
+    /**
+     * List posts and filters
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index(Request $request)
     {
 
         $filters = [];
 
         $category = $request->query->get('category');
-        if (!is_null($category) && $category != 'all') {
+        if ($category !== null && $category != 'all') {
             $category = PostCategoryRepository::findBySlug($category);
             if ($category) {
                 $filters['category'] = $category->getId();
@@ -26,7 +37,7 @@ class PostController extends AbstractController
         }
 
         $tag = $request->query->get('tag');
-        if (!is_null($tag) && $tag != 'all') {
+        if ($tag !== null && $tag != 'all') {
             $tag = TagRepository::getOneBySlug($tag);
             if ($tag) {
                 $filters['tag'] = $tag->getId();
@@ -53,6 +64,8 @@ class PostController extends AbstractController
         }
         usort($tagList, [$this, 'sortByEntityName']);
 
+        $this->setTitle('Les articles');
+
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
             'categoryList' => $categoryList,
@@ -60,6 +73,18 @@ class PostController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Display post from slug
+     *
+     * @param string $slug
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws NotFoundException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function show(string $slug)
     {
         $post = PostRepository::getOnePublishedBySlug($slug);
@@ -73,15 +98,26 @@ class PostController extends AbstractController
         } else {
             $relatedPosts = PostRepository::getRelatedPosts($post);
         }
-
+        $this->setTitle($post->getTitle());
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'relatedPosts' => $relatedPosts
         ]);
     }
 
+
+    /**
+     * Used to sort tag or entity by name
+     *
+     * @param $a
+     * @param $b
+     *
+     * @return int
+     */
     private function sortByEntityName($a, $b)
     {
         return strcmp(trim(strtolower($a->getName())), trim(strtolower($b->getName())));
     }
+
+
 }

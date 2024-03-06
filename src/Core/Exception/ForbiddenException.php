@@ -8,6 +8,7 @@ namespace App\Core\Exception;
 class ForbiddenException extends \Exception
 {
 
+
     public function __construct(string $message = '')
     {
         if (empty($message)) {
@@ -15,4 +16,6 @@ class ForbiddenException extends \Exception
         }
         parent::__construct($message, 403);
     }
+
+
 }

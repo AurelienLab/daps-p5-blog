@@ -16,10 +16,18 @@ class HomeController extends AbstractController
 {
 
 
+    /**
+     * Homepage
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index(): Response
     {
         $lastPost = PostRepository::getLastPublished(['category']);
-
+        $this->setTitle('Accueil');
         return $this->render(
             'homepage/index.html.twig',
             [
@@ -28,6 +36,17 @@ class HomeController extends AbstractController
         );
     }
 
+
+    /**
+     * Contact form post handle
+     *
+     * @param Request $request
+     *
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function contact(Request $request)
     {
         $data = $this->validateForm($request, 'contact_form', [
@@ -62,4 +81,6 @@ class HomeController extends AbstractController
 
         return $this->render('homepage/contact-confirm.html.twig');
     }
+
+
 }

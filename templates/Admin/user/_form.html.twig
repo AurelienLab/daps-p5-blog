@@ -41,13 +41,18 @@
             <div>
                 <p class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Administration</p>
             </div>
-            <div class="mt-2 sm:col-span-2 sm:mt-0">
-                {% include 'Admin/_components/form/_switch.html.twig' with {
-                    switch_value: user.isAdmin,
-                    switch_field_name: 'is_admin',
-                    switch_label: 'Est un administrateur'
-                } %}
-            </div>
+            {% if user and user.id and user.id == app.user.id %}
+                <p class="text-sm text-gray-500 pt-2">Impossible de modifier ce paramètre sur son propre compte.</p>
+            {% else %}
+                <div class="mt-2 sm:col-span-2 sm:mt-0">
+                    {% include 'Admin/_components/form/_switch.html.twig' with {
+                        switch_value: user.isAdmin,
+                        switch_field_name: 'is_admin',
+                        switch_label: 'Est un administrateur'
+                    } %}
+                </div>
+            {% endif %}
+
         </div>
         <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
             <div>

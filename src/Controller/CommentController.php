@@ -12,6 +12,16 @@ use Symfony\Component\HttpFoundation\Request;
 class CommentController extends AbstractController
 {
 
+
+    /**
+     * Handle comment post
+     *
+     * @param Request $request
+     * @param int $postId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \App\Core\Exception\NotFoundException
+     */
     public function postComment(Request $request, int $postId)
     {
         $post = PostRepository::getOrError($postId);
@@ -33,6 +43,15 @@ class CommentController extends AbstractController
     }
 
 
+    /**
+     * Handle admin comment edition
+     *
+     * @param Request $request
+     * @param int $commentId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \App\Core\Exception\NotFoundException
+     */
     public function editComment(Request $request, int $commentId)
     {
         $comment = CommentRepository::getOrError($commentId);
@@ -49,7 +68,16 @@ class CommentController extends AbstractController
         return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
     }
 
-    public function removeComment(Request $request, int $commentId)
+
+    /**
+     * Handle admin comment removal
+     *
+     * @param int $commentId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \App\Core\Exception\NotFoundException
+     */
+    public function removeComment(int $commentId)
     {
         $comment = CommentRepository::getOrError($commentId);
 
@@ -57,4 +85,6 @@ class CommentController extends AbstractController
 
         return $this->redirect('articles.show', ['slug' => $comment->getPost()->getSlug()]);
     }
+
+
 }

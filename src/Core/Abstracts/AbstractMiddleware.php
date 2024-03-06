@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractMiddleware
 {
 
+
     /**
      * Content of the middleware
      *
@@ -15,4 +16,6 @@ abstract class AbstractMiddleware
      * @return void
      */
     abstract public function handle(Request $request): void;
+
+
 }

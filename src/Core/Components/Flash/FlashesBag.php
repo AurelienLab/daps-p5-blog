@@ -5,13 +5,19 @@ namespace App\Core\Components\Flash;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Collection of messages displayed and consumed in views
+ * Based on sessions
+ */
 class FlashesBag implements \Iterator
 {
 
     const SESSION_DATA_NAME = '_app.flashes';
 
     private array $flashes = [];
+
     private Session $session;
+
 
     public function __construct(Request $request)
     {
@@ -25,11 +31,25 @@ class FlashesBag implements \Iterator
         }
     }
 
+
+    /**
+     * Add a flash message to the collection
+     *
+     * @param FlashMessage $flashMessage
+     *
+     * @return void
+     */
     public function addFlash(FlashMessage $flashMessage)
     {
         $this->flashes[] = $flashMessage;
     }
 
+
+    /**
+     * Update session with current flashMessages
+     *
+     * @return void
+     */
     public function saveToSession()
     {
         $data = [];
@@ -49,12 +69,14 @@ class FlashesBag implements \Iterator
         $this->session->save();
     }
 
-    /* ITERATION METHODS */
+
+    // ITERATION METHODS
 
     public function rewind(): void
     {
         reset($this->flashes);
     }
+
 
     public function current(): mixed
     {
@@ -64,18 +86,23 @@ class FlashesBag implements \Iterator
         return $flash;
     }
 
+
     public function key(): string|int|null
     {
         return key($this->flashes);
     }
+
 
     public function next(): void
     {
         next($this->flashes);
     }
 
+
     public function valid(): bool
     {
         return key($this->flashes) !== null;
     }
+
+
 }

@@ -5,6 +5,10 @@ namespace App\Core\Router;
 use App\Core\Exception\DisplayableException;
 use App\Core\Utils\Str;
 use Exception;
+use PDOException;
+use ReflectionException;
+use ReflectionMethod;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -16,7 +20,7 @@ class Router
     /**
      * @var array
      */
-    private array $routingFiles;
+    private array $routingFiles = [];
 
     /**
      * @var Route[]
@@ -39,8 +43,11 @@ class Router
      */
     public function __construct(private readonly string $routesFolder)
     {
-        $directory = scandir($routesFolder);
-        $this->routingFiles = array_diff($directory, ['..', '.']);
+        $finder = new Finder();
+        $finder->in($routesFolder)->name('*.php')->sortByName();
+        foreach ($finder as $file) {
+            $this->routingFiles[] = $file->getFilename();
+        }
     }
 
 
@@ -77,7 +84,7 @@ class Router
     {
         foreach ($this->routingFiles as $file) {
             $filePath = $this->routesFolder.'/'.$file;
-            include_once $filePath;
+            require_once $filePath;
         }
 
         foreach ($this->routeCollection as $method) {
@@ -115,7 +122,6 @@ class Router
         $collection = $this->routeCollection[$request->getMethod()];
         foreach ($collection as $route) {
             /* @var Route $route */
-
 
             if ($route->matchUri($requestedUri) === true) {
                 // Initialize sessions
@@ -184,8 +190,10 @@ class Router
      *
      * @param Route $route
      * @param string $requestedUri
+     * @param Request $request
      *
      * @return void
+     * @throws ReflectionException
      * @throws Exception
      */
     private function runController(Route $route, string $requestedUri, Request $request): void
@@ -203,7 +211,7 @@ class Router
 
         $args = $route->retrieveParametersFromUri($requestedUri);
 
-        $reflectionMethod = new \ReflectionMethod($class, $method);
+        $reflectionMethod = new ReflectionMethod($class, $method);
 
         foreach ($reflectionMethod->getParameters() as $parameter) {
             if ($parameter->getType() == Request::class) {
@@ -212,7 +220,7 @@ class Router
         }
 
         try {
-            /** @var Response $response */
+            /* @var Response $response */
             $response = call_user_func_array([$controller, $method], $args);
 
             if (($response instanceof Response) === false) {
@@ -224,7 +232,7 @@ class Router
             }
         } catch (DisplayableException $e) {
             throw $e;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new Exception(
                 sprintf(
                     'Error while trying to call %s::%s. %s in %s::%s',
@@ -253,6 +261,7 @@ class Router
         $response->send();
     }
 
+
     /**
      * Get the first route that matches given name
      *
@@ -273,6 +282,7 @@ class Router
 
         throw new Exception(sprintf('Unable to find route named "%s"', $name));
     }
+
 
     /**
      * Return matching route name as URI constructed with passed arguments
@@ -316,8 +326,14 @@ class Router
         return $result;
     }
 
-    public function getCurrentRoute()
+
+    /**
+     * @return string|null
+     */
+    public function getCurrentRoute(): ?string
     {
         return $this->currentRoute;
     }
+
+
 }

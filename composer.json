@@ -30,6 +30,7 @@
     "symfony/mailer": "^6.4",
     "symfony/twig-bridge": "^6.4",
     "twig/cssinliner-extra": "^3.8",
-    "symfony/mailgun-mailer": "^6.4"
+    "symfony/mailgun-mailer": "^6.4",
+    "symfony/finder": "^7.0"
   }
 }

@@ -34,7 +34,7 @@ class Query
     private ?string $groupBy;
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     private ?int $limit;
 
@@ -44,10 +44,13 @@ class Query
     private array $leftJoin = [];
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     private ?int $firstOrLast = null;
 
+    /**
+     * @var array
+     */
     private array $orderBy = [];
 
     /**
@@ -66,16 +69,16 @@ class Query
     private $parameters = [];
 
     /**
-     * @var bool
+     * @var boolean
      */
     private ?bool $withTrashed = null;
+
 
     /**
      * @param string $model Model on which we'll do a query
      *
      * @throws Exception
      */
-
     public function __construct(string $model)
     {
         if (empty($model) === true) {
@@ -114,6 +117,14 @@ class Query
         return $this;
     }
 
+
+    /**
+     * Add GROUP BY to statement
+     *
+     * @param string $column
+     *
+     * @return $this
+     */
     public function groupBy(string $column): self
     {
         $this->groupBy = $column;
@@ -148,6 +159,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Add a left join in the statement
      *
@@ -171,6 +183,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Generate an INSERT statement from object instance data
      *
@@ -189,6 +202,7 @@ class Query
 
         $this->verb .= $columns.$values;
     }
+
 
     /**
      * Generate an UPDATE statement from object instance data
@@ -224,6 +238,7 @@ class Query
         ];
     }
 
+
     /**
      * Generate a DELETE statement to delete one entity
      *
@@ -247,6 +262,7 @@ class Query
         ];
     }
 
+
     /**
      * Get all data included deleted
      *
@@ -257,6 +273,7 @@ class Query
         $this->withTrashed = true;
         return $this;
     }
+
 
     /**
      * Get Only first row of query result
@@ -269,6 +286,7 @@ class Query
         return $this;
     }
 
+
     /**
      * Get Only last row of query result
      *
@@ -280,11 +298,25 @@ class Query
         return $this;
     }
 
+
+    /**
+     * @return int|null
+     */
     public function getFirstOrLast(): ?int
     {
         return $this->firstOrLast;
     }
 
+
+    /**
+     * Add ORDER BY to statement
+     *
+     * @param string $field
+     * @param string $order
+     *
+     * @return $this
+     * @throws Exception
+     */
     public function orderBy(string $field, string $order = 'ASC')
     {
         if (in_array(strtolower($order), ['asc', 'desc']) == false) {
@@ -298,11 +330,20 @@ class Query
         return $this;
     }
 
+
+    /**
+     * Add LIMIT to statement
+     *
+     * @param int $limit
+     *
+     * @return $this
+     */
     public function limit(int $limit): self
     {
         $this->limit = $limit;
         return $this;
     }
+
 
     /**
      * Describe table statement (get columns information)
@@ -316,6 +357,8 @@ class Query
 
 
     /**
+     * Construct statement from object property
+     *
      * @return string
      */
     public function getStatement(): string
@@ -348,7 +391,6 @@ class Query
             $statement .= implode(' AND ', $wheres);
         }
 
-
         if (!empty($this->groupBy)) {
             $statement .= ' GROUP BY '.$this->groupBy;
         }
@@ -361,11 +403,11 @@ class Query
             $statement .= ' LIMIT '.$this->limit;
         }
 
-
         $statement .= ';';
 
         return $statement;
     }
+
 
     /**
      * Generate a where clause string from current query object
@@ -397,7 +439,6 @@ class Query
                 continue;
             }
             $result[] = $where['column'].' '.$where['comparator'].' '.$where['parameterName'];
-
         }
 
         if ($this->withTrashed === false) {
@@ -416,6 +457,7 @@ class Query
         return $this->model;
     }
 
+
     /**
      * @return array
      */
@@ -423,6 +465,7 @@ class Query
     {
         return $this->select;
     }
+
 
     /**
      * Generate parameters array with ":parameter" notation as key
@@ -441,6 +484,7 @@ class Query
         $this->parameters = array_combine($paramsNames, $paramsValues);
     }
 
+
     /**
      * @return array
      */
@@ -448,6 +492,7 @@ class Query
     {
         return $this->parameters;
     }
+
 
     /**
      * Get a list of queried joins
@@ -459,14 +504,14 @@ class Query
         return array_merge($this->leftJoin);
     }
 
-    public function setTable(string $table): Query
-    {
-        $this->table = $table;
-        return $this;
-    }
 
+    /**
+     * @return bool
+     */
     public function isInsert()
     {
         return str_starts_with($this->verb, 'INSERT INTO');
     }
+
+
 }
