@@ -2,6 +2,7 @@
 
 namespace App\Core\Database;
 
+use App\Core\Utils\Model;
 use App\Core\Utils\Str;
 use App\Model\Comment;
 use App\Model\Trait\TimestampableTrait;
@@ -37,12 +38,18 @@ class Database
     private string $dbHost;
 
     /**
-     * @var int
+     * @var integer
      */
     private int $dbPort;
 
+    /**
+     * @var array
+     */
     private array $tableData = [];
 
+    /**
+     * @var integer
+     */
     private int $queryCount = 0;
 
     /**
@@ -127,7 +134,6 @@ class Database
             dd($e, $statement);
         }
 
-
         if ($query->isInsert() === true) {
             return $database->lastInsertId();
         }
@@ -135,7 +141,6 @@ class Database
         if ($raw === true) {
             return $sth->fetchAll($fetchFlag);
         }
-
 
         $result = [];
 
@@ -247,6 +252,7 @@ class Database
         return $entity;
     }
 
+
     /**
      * Get the amount of query executed by this class (for debug only)
      *
@@ -263,6 +269,8 @@ class Database
 
 
     /**
+     * Convert entity object to object compatible with database table
+     *
      * @param stdClass $entity Entity to convert
      * @param string $model Original model
      *
@@ -274,19 +282,16 @@ class Database
         // Get table fields.
         $tableFields = self::getTableData($model);
 
-
         // Transform entity to array.
         $reflectionClass = new ReflectionClass(get_class($entity));
 
         //Set timestamps if applicable
-        foreach ($reflectionClass->getTraits() as $trait => $reflexionTrait) {
-            if ($trait == TimestampableTrait::class) {
-                if (is_null($entity->getCreatedAt())) {
-                    $entity->setCreatedAt(new \DateTime());
-                }
-
-                $entity->setUpdatedAt(new \DateTime());
+        if (Model::isTimestampable($entity)) {
+            if ($entity->getCreatedAt() === null) {
+                $entity->setCreatedAt(new \DateTime());
             }
+
+            $entity->setUpdatedAt(new \DateTime());
         }
 
         $entityArray = array();
@@ -329,6 +334,7 @@ class Database
         return $result;
     }
 
+
     /**
      * Get information about the table associated to $model
      *
@@ -347,6 +353,7 @@ class Database
 
         return self::$_instance->tableData[$model];
     }
+
 
     /**
      * Get a list of field names
@@ -387,6 +394,15 @@ class Database
         return null;
     }
 
+
+    /**
+     * Automatically generate query to get Many to Many or Many to One relationships
+     *
+     * @param mixed $result
+     *
+     * @return void
+     * @throws \ReflectionException
+     */
     private static function queryRelations(mixed $result)
     {
         if (empty($result)) {
@@ -419,7 +435,7 @@ class Database
             }
 
             foreach ($relationsToFetch as $name => $relation) {
-                /** @var EntityCollection $relation */
+                /* @var EntityCollection $relation */
                 $targetProperty = $relation->getTargetEntityProperty() !== null ?
                     $relation->getTargetEntityProperty() :
                     Str::toSnakeCase((new ReflectionClass($relation->getRelatedEntity()))->getShortName());
@@ -431,7 +447,6 @@ class Database
                     Str::toSnakeCase($reflectionClass->getShortName());
 
                 $originEntityFieldName = $originProperty.'_id';
-
 
                 // If many to many, we join on pivot table
                 if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
@@ -465,7 +480,7 @@ class Database
                     );
                 }
 
-
+                // Define query selectors
                 $query
                     ->select()
                     ->where($originEntityFieldName, 'IN', array_keys($ids));
@@ -474,11 +489,17 @@ class Database
                 foreach ($relation->getTargetRelations() as $targetRelation) {
                     if ($reflection->hasProperty($targetRelation)) {
                         $class = $reflection->getProperty($targetRelation)->getType()->getName();
-                        $query->leftJoin($class, [$relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id', $class::TABLE.'.id']);
+                        $query->leftJoin(
+                            $class,
+                            [
+                                $relation->getRelatedEntity()::TABLE.'.'.$targetRelation.'_id',
+                                $class::TABLE.'.id'
+                            ]
+                        );
                     }
                 }
 
-
+                // Execute query
                 $results = self::query($query, false, PDO::FETCH_ASSOC, false);
 
                 $originalGetter = 'get'.Str::toPascalCase($originProperty);
@@ -488,6 +509,7 @@ class Database
                     $targetGetter = 'get'.Str::toPascalCase($relation->getTargetEntityProperty());
                 }
 
+                // Add results to collection
                 foreach ($results as $result) {
                     $originalObject = $ids[$result->$originalGetter()->$primaryKeyGetter()];
                     if ($relation->getRelationType() === EntityCollection::TYPE_MANY_TO_MANY) {
@@ -501,4 +523,6 @@ class Database
             }
         }
     }
+
+
 }

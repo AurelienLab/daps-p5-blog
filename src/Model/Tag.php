@@ -10,7 +10,7 @@ class Tag implements \JsonSerializable
     const TABLE = 'tags';
 
     /**
-     * @var int
+     * @var integer
      */
     private int $id;
 
@@ -24,8 +24,15 @@ class Tag implements \JsonSerializable
      */
     private string $name;
 
+    /**
+     * @var EntityCollection
+     */
     private EntityCollection $posts;
 
+
+    /**
+     *
+     */
     public function __construct()
     {
         $this->posts = new EntityCollection(
@@ -37,6 +44,7 @@ class Tag implements \JsonSerializable
         );
     }
 
+
     /**
      * @return int
      */
@@ -44,6 +52,7 @@ class Tag implements \JsonSerializable
     {
         return $this->id;
     }
+
 
     /**
      * @param int $id
@@ -56,6 +65,7 @@ class Tag implements \JsonSerializable
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -63,6 +73,7 @@ class Tag implements \JsonSerializable
     {
         return $this->slug;
     }
+
 
     /**
      * @param string $slug
@@ -75,6 +86,7 @@ class Tag implements \JsonSerializable
         return $this;
     }
 
+
     /**
      * @return string
      */
@@ -82,6 +94,7 @@ class Tag implements \JsonSerializable
     {
         return $this->name;
     }
+
 
     /**
      * @param string $name
@@ -94,11 +107,19 @@ class Tag implements \JsonSerializable
         return $this;
     }
 
+
+    /**
+     * @return EntityCollection
+     */
     public function getPosts(): EntityCollection
     {
         return $this->posts;
     }
 
+
+    /**
+     * @return mixed
+     */
     public function jsonSerialize(): mixed
     {
         return [
@@ -107,4 +128,6 @@ class Tag implements \JsonSerializable
             'name' => $this->getName()
         ];
     }
+
+
 }

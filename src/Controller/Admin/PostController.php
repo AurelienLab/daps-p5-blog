@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PostController extends AbstractController
 {
 
+
     /**
      * posts list
      *
@@ -47,6 +48,7 @@ class PostController extends AbstractController
             'posts' => $posts
         ]);
     }
+
 
     /**
      * Display form to add a new post
@@ -67,6 +69,7 @@ class PostController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle add form post
@@ -90,6 +93,7 @@ class PostController extends AbstractController
             'categories' => $categories
         ]);
     }
+
 
     /**
      * Display edit post form
@@ -115,6 +119,7 @@ class PostController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle edit post form post
@@ -142,6 +147,7 @@ class PostController extends AbstractController
         ]);
     }
 
+
     /**
      * Delete post
      *
@@ -158,6 +164,7 @@ class PostController extends AbstractController
 
         return $this->redirect('admin.post.index');
     }
+
 
     /**
      * Validate & save data from a form post
@@ -181,7 +188,7 @@ class PostController extends AbstractController
             'published_at' => [NotEmptyValidator::class, DateTimeValidator::class]
         ]);
 
-        /** @var UploadedFile $featuredImage */
+        /* @var UploadedFile $featuredImage */
         $featuredImage = $request->files->get('featured_image');
 
         //Generate Slug
@@ -222,7 +229,6 @@ class PostController extends AbstractController
             ->setValidatedAt(new \DateTime())
             ->setValidatorUserId(1);
 
-
         if ($this->hasFormErrors()) {
             return false;
         }
@@ -243,8 +249,24 @@ class PostController extends AbstractController
         $post = PostRepository::save($post);
 
         // Generate Tags
+        $this->generateTags($data->get('tags'), $post);
 
-        $tags = json_decode($data->get('tags'), true);
+        return true;
+    }
+
+
+    /**
+     * Generate tag associations to post
+     *
+     * @param string $formData
+     * @param Post $post
+     *
+     * @return void
+     * @throws NotFoundException
+     */
+    private function generateTags(string $formData, Post $post)
+    {
+        $tags = json_decode($formData, true);
 
         $existingTags = [];
         foreach ($post->getTags() as $tag) {
@@ -278,7 +300,7 @@ class PostController extends AbstractController
             $relation = PostTagRepository::getByPostAndTag($post, $tag);
             PostTagRepository::remove($relation);
         }
-
-        return true;
     }
+
+
 }

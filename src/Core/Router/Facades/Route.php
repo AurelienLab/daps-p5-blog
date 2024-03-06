@@ -2,6 +2,10 @@
 
 namespace App\Core\Router\Facades;
 
+/**
+ * Transforms any static call to object instance
+ * and perform call
+ */
 class Route
 {
 
@@ -10,4 +14,6 @@ class Route
         $route = new \App\Core\Router\Route();
         return call_user_func_array([$route, $name], $arguments);
     }
+
+
 }

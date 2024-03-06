@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EditorController extends AbstractController
 {
 
+
     /**
      * Upload a file from EditorJS Image tool
      *
@@ -21,7 +22,7 @@ class EditorController extends AbstractController
     {
         $image = $request->files->get('image');
 
-        if (is_null($image) === true) {
+        if ($image === null) {
             return $this->generateError('Unable to find image in post data');
         }
 
@@ -36,6 +37,7 @@ class EditorController extends AbstractController
             ]
         ]);
     }
+
 
     /**
      * Upload a file from image url paste in EditorJS
@@ -52,7 +54,6 @@ class EditorController extends AbstractController
         $file = config('uploads.editor.image').'/'.Str::rand(16).'.'.$info['extension'];
         file_put_contents($file, $contents);
 
-
         return new JsonResponse([
             'success' => 1,
             'file' => [
@@ -60,6 +61,7 @@ class EditorController extends AbstractController
             ]
         ]);
     }
+
 
     /**
      * Return error in json format
@@ -76,4 +78,6 @@ class EditorController extends AbstractController
             'file' => null
         ], 500);
     }
+
+
 }

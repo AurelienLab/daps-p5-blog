@@ -15,25 +15,47 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends AbstractController
 {
 
+
+    /**
+     * Display profile forms (profile & password)
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function editProfile()
     {
+        $this->setTitle('Mon compte');
         $user = $this->getUser();
         return $this->render('user/edit-profile.html.twig', [
             'user' => $user
         ]);
     }
 
+
+    /**
+     * Handle forms post (profile & password)
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function updateProfile(Request $request)
     {
+        $this->setTitle('Mon compte');
         $user = $this->getUser();
 
-        if (!is_null($request->request->get('save-profile'))) {
+        if ($request->request->get('save-profile') !== null) {
             if ($this->saveProfile($user, $request)) {
                 $this->addFlash('success', 'Vos informations ont été mises à jour.');
             }
         }
 
-        if (!is_null($request->request->get('save-password'))) {
+        if ($request->request->get('save-password') !== null) {
             if ($this->savePassword($user, $request)) {
                 $this->addFlash('success', 'Votre mot de passe a été mis à jour.');
             }
@@ -44,13 +66,22 @@ class UserController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Handle save from profile form
+     *
+     * @param User $user
+     * @param Request $request
+     *
+     * @return false|mixed|object|null
+     * @throws \Exception
+     */
     private function saveProfile(User $user, Request $request)
     {
         $data = $this->validateForm($request, 'user_profile_form', [
             'name' => [NotEmptyValidator::class, NicknameLengthValidator::class],
         ]);
         $profilePicture = $request->files->get('profile_picture');
-
 
         $profilePicturePath = $user->getProfilePicture() ?? '';
         $uploadImage = false;
@@ -80,6 +111,16 @@ class UserController extends AbstractController
         return UserRepository::save($user);
     }
 
+
+    /**
+     * Handle save from password form
+     *
+     * @param User $user
+     * @param Request $request
+     *
+     * @return false|mixed|object|null
+     * @throws \Exception
+     */
     private function savePassword(User $user, Request $request)
     {
         $data = $this->validateForm($request, 'user_password_form', [
@@ -103,4 +144,6 @@ class UserController extends AbstractController
 
         return UserRepository::save($user);
     }
+
+
 }

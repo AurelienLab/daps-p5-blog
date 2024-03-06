@@ -25,6 +25,7 @@ use Twig\Error\SyntaxError;
 class UserController extends AbstractController
 {
 
+    
     /**
      * Users list
      *
@@ -42,6 +43,7 @@ class UserController extends AbstractController
         ]);
     }
 
+
     /**
      *
      * @return Response
@@ -53,6 +55,7 @@ class UserController extends AbstractController
     {
         return $this->render('Admin/user/add.html.twig');
     }
+
 
     /**
      *
@@ -76,6 +79,7 @@ class UserController extends AbstractController
         ]);
     }
 
+
     /**
      * Display edit user form
      *
@@ -98,6 +102,7 @@ class UserController extends AbstractController
             ]
         );
     }
+
 
     /**
      * Handle edit user form post
@@ -126,6 +131,7 @@ class UserController extends AbstractController
         );
     }
 
+
     /**
      * Delete user
      *
@@ -142,6 +148,7 @@ class UserController extends AbstractController
 
         return $this->redirect('admin.user.index');
     }
+
 
     /**
      * Validate & save data from a form post
@@ -164,8 +171,6 @@ class UserController extends AbstractController
         ]);
         $profilePicture = $request->files->get('profile_picture');
 
-
-        $profilePicturePath = $user->getProfilePicture() ?? '';
         $uploadImage = false;
         if ($profilePicture != null) {
             if (!str_starts_with($profilePicture->getMimeType(), 'image/')) {
@@ -175,11 +180,13 @@ class UserController extends AbstractController
             }
         }
 
-
         $user
             ->setName(trim($data->get('name')))
-            ->setEmail(trim($data->get('email')))
-            ->setIsAdmin(!empty($data->get('is_admin')));
+            ->setEmail(trim($data->get('email')));
+
+        if ($user->getId() != $this->getUser()->getId()) {
+            $user->setIsAdmin(!empty($data->get('is_admin')));
+        }
 
         if ($this->hasFormErrors()) {
             return false;
@@ -208,4 +215,6 @@ class UserController extends AbstractController
 
         return UserRepository::save($user);
     }
+
+
 }

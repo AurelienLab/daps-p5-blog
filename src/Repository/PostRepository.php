@@ -15,6 +15,13 @@ class PostRepository extends AbstractRepository
     const DEFAULT_RELATIONS = ['user', 'category'];
     const MODEL = Post::class;
 
+
+    /**
+     * @param $relations
+     *
+     * @return false|array
+     * @throws \Exception
+     */
     public static function getAll($relations = []): false|array
     {
         if (empty($relations)) {
@@ -30,6 +37,15 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
+    /**
+     * @param $relations
+     * @param $limit
+     * @param $filters
+     *
+     * @return false|array
+     * @throws \Exception
+     */
     public static function getPublished($relations = [], $limit = null, $filters = []): false|array
     {
         $query = new Query(static::MODEL);
@@ -40,8 +56,7 @@ class PostRepository extends AbstractRepository
             ->where('status', '=', Post::STATE_PUBLISHED)
             ->orderBy('published_at', 'DESC');
 
-
-        if (!is_null($limit)) {
+        if ($limit !== null) {
             $query->limit($limit);
         }
 
@@ -65,6 +80,13 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
+    /**
+     * @param $relations
+     *
+     * @return Post|null
+     * @throws \Exception
+     */
     public static function getLastPublished($relations = []): ?Post
     {
         $query = new Query(static::MODEL);
@@ -81,6 +103,14 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
+    /**
+     * @param string $slug
+     * @param $relations
+     *
+     * @return Post|null
+     * @throws \Exception
+     */
     public static function getOnePublishedBySlug(string $slug, $relations = []): ?Post
     {
         $query = new Query(static::MODEL);
@@ -96,6 +126,14 @@ class PostRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
+    /**
+     * @param Post $post
+     * @param int $amount
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function getRelatedPosts(Post $post, int $amount = 3)
     {
         $tagIds = [];
@@ -121,4 +159,6 @@ class PostRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
+
 }

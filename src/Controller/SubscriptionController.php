@@ -18,13 +18,35 @@ use Symfony\Component\HttpFoundation\Request;
 class SubscriptionController extends AbstractController
 {
 
-    public function subscribe(Request $request)
+
+    /**
+     * Subscription form
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function subscribe()
     {
+        $this->setTitle('Inscription');
         return $this->render('user/subscribe.html.twig');
     }
 
+
+    /**
+     * Handle subscription form post
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function register(Request $request)
     {
+        $this->setTitle('Inscription');
         $user = new User();
 
         $result = $this->save($user, $request);
@@ -56,15 +78,34 @@ class SubscriptionController extends AbstractController
         ]);
     }
 
-    public function success(Request $request)
+
+    /**
+     * Success message display
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function success()
     {
+        $this->setTitle('Inscription');
         return $this->render('user/subscribe_confirm.html.twig');
     }
 
-    public function save(User $user, Request $request)
+
+    /**
+     * Hydrate and save user entity
+     *
+     * @param User $user
+     * @param Request $request
+     *
+     * @return false|mixed|object|null
+     * @throws \Exception
+     */
+    private function save(User $user, Request $request)
     {
         $data = $request->request;
-
 
         $this->validateForm($request, 'subscription_form', [
             'name' => [NotEmptyValidator::class, NicknameLengthValidator::class],
@@ -84,7 +125,6 @@ class SubscriptionController extends AbstractController
             $this->addFormError('password2', 'Les mots de passe ne correspondent pas');
         }
 
-
         if ($this->hasFormErrors()) {
             return false;
         }
@@ -96,8 +136,21 @@ class SubscriptionController extends AbstractController
         return UserRepository::save($user);
     }
 
+
+    /**
+     * Verify email via link sent in confirmation email
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws DisplayableException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function verifyEmail(Request $request)
     {
+        $this->setTitle('Vérification de l\'adresse');
         $token = $request->query->get('token');
         $email = $request->query->get('email');
 
@@ -139,4 +192,6 @@ class SubscriptionController extends AbstractController
 
         return $this->render('user/verify_confirm.html.twig');
     }
+
+
 }

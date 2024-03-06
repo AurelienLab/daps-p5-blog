@@ -18,17 +18,40 @@ use Symfony\Component\HttpFoundation\Request;
 class ResetPasswordController extends AbstractController
 {
 
+
+    /**
+     * Password reset request form
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function index()
     {
         if ($this->getUser()) {
             return $this->redirect('user.profile.edit');
         }
 
+        $this->setTitle('Mot de passe oublié');
         return $this->render('reset-password/request-form.html.twig');
     }
 
+
+    /**
+     * Handle password request form post
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function post(Request $request)
     {
+        $this->setTitle('Mot de passe oublié');
+
         $data = $this->validateForm($request, 'reset_password_form', [
             'email' => [NotEmptyValidator::class, EmailValidator::class]
         ]);
@@ -75,9 +98,23 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset-password/request-confirm.html.twig');
     }
 
+
+    /**
+     * Accessed via link in request password email
+     * Check token and display password change form
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function resetPassword(Request $request)
     {
         $token = $request->query->get('token');
+
+        $this->setTitle('Mot de passe oublié');
 
         if (empty($token)) {
             return $this->render('reset-password/error.html.twig', [
@@ -115,8 +152,20 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Handle change password form post
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function resetPasswordPost(Request $request)
     {
+        $this->setTitle('Mot de passe oublié');
         // Check for form errors
         $formData = $this->validateForm($request, 'reset_password_form', [
             'password1' => [NotEmptyValidator::class, PasswordStrengthValidator::class]
@@ -159,4 +208,6 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('reset-password/update-confirm.html.twig');
     }
+
+
 }

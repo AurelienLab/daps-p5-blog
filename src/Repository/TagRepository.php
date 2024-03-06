@@ -12,6 +12,13 @@ class TagRepository extends AbstractRepository
 
     const MODEL = Tag::class;
 
+
+    /**
+     * @param string $slug
+     *
+     * @return Tag|null
+     * @throws \Exception
+     */
     public static function getOneBySlug(string $slug): ?Tag
     {
         $query = new Query(static::MODEL);
@@ -23,6 +30,13 @@ class TagRepository extends AbstractRepository
         return Database::query($query);
     }
 
+
+    /**
+     * @param string $searchString
+     *
+     * @return array
+     * @throws \Exception
+     */
     public static function searchByName(string $searchString): array
     {
         $query = new Query(static::MODEL);
@@ -32,4 +46,6 @@ class TagRepository extends AbstractRepository
 
         return Database::query($query);
     }
+
+
 }

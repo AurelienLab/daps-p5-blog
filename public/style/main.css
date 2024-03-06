@@ -1648,7 +1648,14 @@ button {
   margin: auto;
   max-width: 1200px;
   width: 95%;
-  line-height: 1.4;
+  line-height: 1.5;
+}
+.career__content .heading {
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+.career__content p {
+  margin-bottom: 1rem;
 }
 
 .error {

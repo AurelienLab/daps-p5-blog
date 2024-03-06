@@ -28,7 +28,7 @@ class Route
     private array $function;
 
     /**
-     * @var array|null
+     * @var array
      */
     private array $middleware = [];
 
@@ -48,6 +48,7 @@ class Route
      */
     private ?Route $parent;
 
+
     /**
      * @return void
      * @throws Exception
@@ -64,7 +65,7 @@ class Route
      * @param string $path Route path
      * @param array $function Controller class & method
      *
-     * @return void
+     * @return Route
      * @throws Exception
      */
     public function get(string $path, array $function): self
@@ -111,6 +112,7 @@ class Route
         return $this;
     }
 
+
     /**
      * Set a name to retrieve path in views
      *
@@ -125,6 +127,12 @@ class Route
         return $this;
     }
 
+
+    /**
+     * @param string $prefix
+     *
+     * @return $this
+     */
     public function prefix(string $prefix): self
     {
         $this->prefix = $prefix;
@@ -132,6 +140,10 @@ class Route
         return $this;
     }
 
+
+    /**
+     * @return string
+     */
     public function getPrefix(): string
     {
         $prefix = '';
@@ -146,7 +158,7 @@ class Route
     /**
      * Get Route name
      *
-     * @return string
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -156,6 +168,7 @@ class Route
         }
         return $name.$this->name;
     }
+
 
     /**
      * Add middleware to execute before controller
@@ -175,10 +188,11 @@ class Route
         return $this;
     }
 
+
     /**
      * Get middleware(s) of the route
      *
-     * @return string|array|null
+     * @return array|null
      */
     public function getMiddleware(): array|null
     {
@@ -186,10 +200,9 @@ class Route
         if (!empty($this->parent)) {
             $middlewares = $this->parent->getMiddleware();
         }
-        $middlewares = array_merge($middlewares, $this->middleware);
-
-        return $middlewares;
+        return array_merge($middlewares, $this->middleware);
     }
+
 
     /**
      * Define multiple routes and apply the same config to them
@@ -202,12 +215,13 @@ class Route
     {
         $this->group = $group;
         foreach ($this->group as $route) {
-            /** @var Route $route */
+            /* @var Route $route */
             $route->parent = $this;
         }
 
         return $this;
     }
+
 
     /**
      * Convert parameters given in route declaration to RouteParameter object
@@ -302,6 +316,7 @@ class Route
         return $this->function;
     }
 
+
     /**
      * @return RouteParameter[]
      */
@@ -309,6 +324,7 @@ class Route
     {
         return $this->parameters;
     }
+
 
     /**
      * Returns Route uri with parameters values inside
@@ -329,4 +345,6 @@ class Route
         }
         return Str::removeTrailingSlash(str_replace('//', '/', $uri));
     }
+
+
 }

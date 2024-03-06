@@ -14,7 +14,9 @@ class DecodeEditorJS
      * @var Environment
      */
     private $twig;
+
     private $blocks = [];
+
 
     public function __construct($json_content)
     {
@@ -29,6 +31,15 @@ class DecodeEditorJS
         }
     }
 
+
+    /**
+     * Convert js from editorJS to html string using components concatenation
+     *
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function toHTML()
     {
         $html = '';
@@ -39,4 +50,6 @@ class DecodeEditorJS
 
         return $html;
     }
+
+
 }
