@@ -1,6 +1,6 @@
 <article class="card">
     <div class="card__illustration">
-        <img src="{{ post.featuredImage }}"/>
+        <img src="{{ post.featuredImage }}" alt="{{ post.title }}"/>
         <ul class="tag-list">
             {% for tag in post.tags %}
                 {% include 'post/_tag.html.twig' with { tag } %}
