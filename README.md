@@ -17,6 +17,8 @@ This project requires `PHP 8.3` and the following php extensions:
 - `curl`
 - `json`
 - `mbstring`
+- `pdo`
+- `openssl`
 
 ## Setup
 
@@ -29,15 +31,15 @@ cd daps-p5-blog
 
 ### 2 - Install dependencies
 
-In projet root directory excute this command:
+In projet root directory execute this command:
 
-```
+```shell
 composer install
 ```
 
 ### 3 - Setup database
 
-You'll need the empty database for this project. You can explicitely ask me for it in private message.
+You'll need the empty database for this project. You can explicitly ask me for it in private message.
 Once you imported it, remember the database name and your mysql credentials.
 
 ### 4 - Configure `.env`
